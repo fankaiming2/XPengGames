@@ -348,6 +348,97 @@
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
         }
         
+        /* 新增：倒计时样式 */
+        .countdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .countdown-number {
+            font-size: 12rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 0 30px rgba(37, 117, 252, 0.8);
+            margin-bottom: 20px;
+            animation: countdownPulse 1s ease infinite;
+        }
+        
+        .countdown-text {
+            font-size: 2rem;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: fadeInOut 1s ease infinite;
+        }
+        
+        @keyframes countdownPulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        /* 新增：准备界面样式 */
+        .ready-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .ready-title {
+            font-size: 2.5rem;
+            color: #2575fc;
+            margin-bottom: 20px;
+            animation: readyPulse 2s ease infinite;
+        }
+        
+        .ready-hint {
+            background: rgba(37, 117, 252, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            border: 2px dashed #2575fc;
+        }
+        
+        .ready-hint h3 {
+            color: #2575fc;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .ready-hint ul {
+            text-align: left;
+            list-style: none;
+            padding: 0;
+        }
+        
+        .ready-hint li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .ready-hint li i {
+            color: #2575fc;
+        }
+        
+        @keyframes readyPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
         /* 新增：回顾词语列表样式 */
         .review-section {
             margin-top: 25px;
@@ -497,6 +588,18 @@
                 font-size: 1.4rem;
             }
             
+            .countdown-number {
+                font-size: 8rem;
+            }
+            
+            .countdown-text {
+                font-size: 1.5rem;
+            }
+            
+            .ready-title {
+                font-size: 2rem;
+            }
+            
             .game-controls {
                 flex-direction: column;
                 align-items: center;
@@ -593,6 +696,12 @@
     </style>
 </head>
 <body>
+    <!-- 倒计时覆盖层 -->
+    <div class="countdown-overlay" id="countdownOverlay">
+        <div class="countdown-number" id="countdownNumber">5</div>
+        <div class="countdown-text">准备开始</div>
+    </div>
+    
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-gamepad"></i>你说我猜</h1>
@@ -618,7 +727,35 @@
                 <i class="fas fa-mobile-alt shake-icon"></i>
                 <span>顺时针晃动猜对</span>
                 <span>逆时针晃动跳过</span>
-
+            </div>
+        </section>
+        
+        <!-- 新增：准备界面 -->
+        <section id="readySection" class="game-section">
+            <div class="ready-section">
+                <h2 class="ready-title">准备开始！</h2>
+                <p style="font-size: 1.2rem; color: #666; margin-bottom: 30px;">
+                    主题: <span id="readyTheme">成语</span> · 时间: <span id="readyTime">2</span>分钟
+                </p>
+                
+                <div class="ready-hint">
+                    <h3><i class="fas fa-lightbulb"></i> 游戏提示</h3>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> 顺时针旋转手机 = 猜对</li>
+                        <li><i class="fas fa-forward"></i> 逆时针旋转手机 = 跳过</li>
+                        <li><i class="fas fa-mobile-alt"></i> 保持手机竖直以获得最佳体验</li>
+                        <li><i class="fas fa-bolt"></i> 动作要快速果断，旋转约15度即可</li>
+                    </ul>
+                </div>
+                
+                <div class="game-controls">
+                    <button class="btn btn-success" id="startNowBtn">
+                        <i class="fas fa-rocket"></i> 立即开始
+                    </button>
+                    <button class="btn btn-secondary" id="cancelStartBtn">
+                        <i class="fas fa-times"></i> 返回
+                    </button>
+                </div>
             </div>
         </section>
         
@@ -798,7 +935,10 @@
             lastGestureTime: 0,     // 上次手势时间戳
             lastAcceleration: { x: 0, y: 0, z: 0 }, // 上次加速度值
             // 新增：记录每个词语的状态
-            wordHistory: [] // 格式: { word: "词语", status: "correct"|"skipped", timestamp: 时间戳 }
+            wordHistory: [], // 格式: { word: "词语", status: "correct"|"skipped", timestamp: 时间戳 }
+            // 新增：倒计时相关
+            countdownTimer: null,
+            countdownValue: 5
         };
 
         // ==================== DOM元素 ====================
@@ -822,7 +962,16 @@
             reviewCorrectCount: document.getElementById('reviewCorrectCount'),
             reviewSkippedCount: document.getElementById('reviewSkippedCount'),
             toggleReview: document.getElementById('toggleReview'),
-            showReviewBtn: document.getElementById('showReviewBtn')
+            showReviewBtn: document.getElementById('showReviewBtn'),
+            // 新增：倒计时元素
+            countdownOverlay: document.getElementById('countdownOverlay'),
+            countdownNumber: document.getElementById('countdownNumber'),
+            // 新增：准备界面元素
+            readySection: document.getElementById('readySection'),
+            readyTheme: document.getElementById('readyTheme'),
+            readyTime: document.getElementById('readyTime'),
+            startNowBtn: document.getElementById('startNowBtn'),
+            cancelStartBtn: document.getElementById('cancelStartBtn')
         };
 
         // ==================== 核心功能 ====================
@@ -933,25 +1082,29 @@
             gameState.selectedTime = time;
         }
 
-        // 4. 开始游戏
+        // 4. 开始游戏 - 修改为进入准备界面
         function startGame() {
             if (!gameState.currentTheme) {
                 alert('请先选择一个主题！');
                 return;
             }
             
-            showLoader(true);
+            // 更新准备界面信息
+            elements.readyTheme.textContent = gameState.currentTheme.name;
+            elements.readyTime.textContent = gameState.selectedTime;
             
-            // 重置游戏状态
-            gameState.currentWordIndex = 0;
-            gameState.correctCount = 0;
-            gameState.skippedCount = 0;
-            gameState.totalWordsShown = 0;
-            gameState.timeLeft = gameState.selectedTime * 60;
-            gameState.timeLeftMs = 0;
-            gameState.wordHistory = []; // 清空历史记录
-            resetBaselineAngle(); // 重置基准角度
+            // 滚动到页面顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // 显示准备界面
+            showSection('ready');
+        }
 
+        // 5. 立即开始游戏（从准备界面）
+        function startGameNow() {
+            // 重置游戏状态
+            resetGameState();
+            
             // 准备词语
             gameState.wordsForGame = [...gameState.currentTheme.words];
             shuffleArray(gameState.wordsForGame);
@@ -959,13 +1112,87 @@
             // 更新UI
             elements.currentTheme.textContent = gameState.currentTheme.name + '猜猜猜';
             
-            setTimeout(() => {
-                showLoader(false);
-                showSection('game');
-                startTimer();
-                showNextWord();
-                initGestureDetection();
-            }, 800);
+            // 开始倒计时
+            startCountdown();
+        }
+
+        // 6. 开始倒计时
+        function startCountdown() {
+            // 重置倒计时值
+            gameState.countdownValue = 5;
+            elements.countdownNumber.textContent = gameState.countdownValue;
+            elements.countdownOverlay.style.display = 'flex';
+            
+            // 倒计时动画
+            const countdownAudio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ'); // 静音音频占位符
+            
+            gameState.countdownTimer = setInterval(() => {
+                gameState.countdownValue--;
+                
+                if (gameState.countdownValue > 0) {
+                    elements.countdownNumber.textContent = gameState.countdownValue;
+                    
+                    // 添加震动反馈（如果支持）
+                    if (navigator.vibrate) {
+                        navigator.vibrate(100);
+                    }
+                    
+                    // 可以在这里添加倒计时的声音效果
+                } else {
+                    elements.countdownNumber.textContent = "开始!";
+                    elements.countdownText.textContent = "游戏开始！";
+                    
+                    // 最后震动
+                    if (navigator.vibrate) {
+                        navigator.vibrate([100, 50, 100]);
+                    }
+                    
+                    clearInterval(gameState.countdownTimer);
+                    
+                    // 倒计时结束后开始游戏
+                    setTimeout(() => {
+                        elements.countdownOverlay.style.display = 'none';
+                        startActualGame();
+                    }, 1000);
+                }
+            }, 1000);
+        }
+
+        // 7. 实际开始游戏逻辑
+        function startActualGame() {
+            // 滚动到页面顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // 显示游戏界面
+            showSection('game');
+            
+            // 开始计时器
+            startTimer();
+            
+            // 显示第一个词语
+            showNextWord();
+            
+            // 初始化手势检测
+            initGestureDetection();
+        }
+
+        // 8. 重置游戏状态
+        function resetGameState() {
+            gameState.currentWordIndex = 0;
+            gameState.correctCount = 0;
+            gameState.skippedCount = 0;
+            gameState.totalWordsShown = 0;
+            gameState.timeLeft = gameState.selectedTime * 60;
+            gameState.timeLeftMs = 0;
+            gameState.wordHistory = []; // 清空历史记录
+            gameState.lastGestureTime = 0; // 重置手势时间
+            
+            // 重置UI
+            elements.correctCount.textContent = '0';
+            elements.skippedCount.textContent = '0';
+            elements.timer.classList.remove('timer-low');
+            
+            resetBaselineAngle(); // 重置基准角度
         }
 
         // 修改计时器HTML结构
@@ -973,8 +1200,10 @@
             clearInterval(gameState.timer);
             
             // 设置初始显示
-            elements.timer.innerHTML = `03:00<span class="timer-ms" id="timerMs">.000</span>`;
-            elements.timer.classList.remove('timer-low');
+            const minutes = Math.floor(gameState.timeLeft / 60);
+            const seconds = gameState.timeLeft % 60;
+            const timerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            elements.timer.innerHTML = `${timerText}<span class="timer-ms" id="timerMs">.000</span>`;
             
             const startTime = Date.now();
             const totalMs = gameState.timeLeft * 1000;
@@ -1011,7 +1240,7 @@
             }
         }
 
-        // 6. 游戏控制功能
+        // 9. 游戏控制功能
         function showNextWord() {
             if (gameState.currentWordIndex >= gameState.wordsForGame.length) {
                 shuffleArray(gameState.wordsForGame);
@@ -1030,31 +1259,7 @@
             elements.skippedCount.textContent = gameState.skippedCount;
         }
 
-        // 7. 添加popIn动画
-        if (!document.querySelector('#pop-animation-style')) {
-            const style = document.createElement('style');
-            style.id = 'pop-animation-style';
-            style.textContent = `
-                @keyframes popIn {
-                    0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
-                    70% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-                    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-                }
-                
-                @keyframes rotateCW {
-                    from { transform: translate(-50%, -50%) rotate(0deg); }
-                    to { transform: translate(-50%, -50%) rotate(360deg); }
-                }
-                
-                @keyframes rotateCCW {
-                    from { transform: translate(-50%, -50%) rotate(0deg); }
-                    to { transform: translate(-50%, -50%) rotate(-360deg); }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // 8. 增强markCorrect和skipWord的反馈 - 修改为记录历史
+        // 10. 增强markCorrect和skipWord的反馈 - 修改为记录历史
         function markCorrect() {
             const currentWord = elements.currentWord.textContent;
             // 记录到历史
@@ -1093,264 +1298,7 @@
             }, 10);
         }
         
-        // 9. 添加shake动画
-        if (!document.querySelector('#shake-animation-style')) {
-            const style = document.createElement('style');
-            style.id = 'shake-animation-style';
-            style.textContent = `
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                    20%, 40%, 60%, 80% { transform: translateX(5px); }
-                }
-                
-                @keyframes pulse {
-                    0%, 100% { transform: scale(1); }
-                    50% { transform: scale(1.05); }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // 11. 添加重置基准角度的功能
-        function resetBaselineAngle() {
-            console.log('重置基准角度');
-            baselineAlpha = null;
-        }
-
-        // 12. 初始化时提供校准提示
-        function initGestureDetection() {
-            if (!window.DeviceOrientationEvent) {
-                console.log('设备不支持方向传感器');
-                return;
-            }
-            
-            // iOS权限请求
-            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission()
-                    .then(permission => {
-                        if (permission === 'granted') {
-                            startGestureListening();
-                            showCalibrationHint();
-                        } else {
-                            console.log('用户拒绝了方向传感器权限');
-                        }
-                    })
-                    .catch(console.error);
-            } else {
-                startGestureListening();
-                showCalibrationHint();
-            }
-        }
-        
-        function showCalibrationHint() {
-            const hint = document.createElement('div');
-            hint.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                border-radius: 15px;
-                padding: 5px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-                z-index: 9998;
-                animation: fadeIn 0.3s ease;
-            `;
-            
-            document.body.appendChild(hint);
-            
-            // 3秒后自动消失
-            setTimeout(() => {
-                hint.style.opacity = '0';
-                hint.style.transition = 'opacity 0.3s ease';
-                setTimeout(() => hint.remove(), 300);
-            }, 3000);
-        }
-
-        // 2. 简化的手势检测函数
-        function startGestureListening() {
-            let rotationHistory = []; // 存储角度历史
-            let lastValidTime = 0;
-            let baselineAlpha = null; // 基准角度
-            let isCalibrated = false;
-            let calibrationSamples = [];
-            
-            window.addEventListener('deviceorientation', (event) => {
-                const currentTime = Date.now();
-                const currentAlpha = event.alpha; // Z轴旋转角度
-                
-                // 1. 校准阶段 - 收集初始角度
-                if (!isCalibrated) {
-                    calibrationSamples.push(currentAlpha);
-                    
-                    if (calibrationSamples.length >= 20) { // 收集20个样本
-                        // 计算平均值作为基准
-                        const sum = calibrationSamples.reduce((a, b) => a + b, 0);
-                        baselineAlpha = sum / calibrationSamples.length;
-                        isCalibrated = true;
-                        console.log('校准完成，基准角度:', baselineAlpha);
-                    }
-                    return;
-                }
-                
-                // 2. 防抖处理
-                if (currentTime - lastValidTime < CONFIG.GESTURE.DEBUNCE_TIME) {
-                    return;
-                }
-                
-                // 3. 计算相对于基准的角度
-                let relativeAngle = currentAlpha - baselineAlpha;
-                
-                // 规范化到 [-180, 180] 范围
-                if (relativeAngle > 180) relativeAngle -= 360;
-                if (relativeAngle < -180) relativeAngle += 360;
-                
-                // 4. 保存到历史记录
-                rotationHistory.push({
-                    time: currentTime,
-                    angle: relativeAngle
-                });
-                
-                // 保持历史记录大小
-                if (rotationHistory.length > CONFIG.GESTURE.HISTORY_SIZE) {
-                    rotationHistory.shift();
-                }
-                
-                // 5. 检测旋转手势（需要至少3个数据点）
-                if (rotationHistory.length >= 3) {
-                    detectSimpleRotation(rotationHistory);
-                }
-            });
-        }
-        
-        // 3. 简化的旋转检测
-        function detectSimpleRotation(history) {
-            const now = Date.now();
-            
-            // 冷却时间检查
-            if (now - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) {
-                return;
-            }
-            
-            // 取最近的数据点
-            const recentPoints = history.slice(-4); // 取最近4个点
-            
-            // 计算角度变化
-            const firstAngle = recentPoints[0].angle;
-            const lastAngle = recentPoints[recentPoints.length - 1].angle;
-            const timeDiff = recentPoints[recentPoints.length - 1].time - recentPoints[0].time;
-            
-            // 计算总角度变化（考虑360度边界）
-            let totalAngleChange = lastAngle - firstAngle;
-            if (totalAngleChange > 180) totalAngleChange -= 360;
-            if (totalAngleChange < -180) totalAngleChange += 360;
-            
-            // 计算旋转速度（度/秒）
-            const rotationSpeed = timeDiff > 0 ? Math.abs(totalAngleChange) / (timeDiff / 1000) : 0;
-            
-            console.log(`角度变化: ${totalAngleChange.toFixed(1)}°, 速度: ${rotationSpeed.toFixed(1)}°/秒`);
-            
-            // 4. 检测条件
-            const absAngleChange = Math.abs(totalAngleChange);
-            
-            // 条件1: 角度变化足够大
-            const isAngleSufficient = absAngleChange >= CONFIG.GESTURE.MIN_ROTATION_ANGLE && 
-                                    absAngleChange <= CONFIG.GESTURE.MAX_ROTATION_ANGLE;
-            
-            // 条件2: 旋转速度足够快
-            const isSpeedSufficient = rotationSpeed >= CONFIG.GESTURE.ROTATION_SPEED_THRESHOLD;
-            
-            // 条件3: 检查旋转方向是否一致
-            const isDirectionConsistent = checkDirectionConsistency(recentPoints);
-            
-            if (isAngleSufficient && isSpeedSufficient && isDirectionConsistent) {
-                // 确定旋转方向
-                if (totalAngleChange < 0) {
-                    // 负角度变化 = 顺时针旋转
-                    console.log(`检测到顺时针旋转: ${absAngleChange.toFixed(1)}°`);
-                    triggerGesture('clockwise');
-                    rotationHistory.length = 0; // 清空历史，避免重复检测
-                } else if (totalAngleChange > 0) {
-                    // 正角度变化 = 逆时针旋转
-                    console.log(`检测到逆时针旋转: ${absAngleChange.toFixed(1)}°`);
-                    triggerGesture('counterclockwise');
-                    rotationHistory.length = 0; // 清空历史
-                }
-            }
-        }
-        
-        // 4. 检查方向一致性
-        function checkDirectionConsistency(points) {
-            if (points.length < 3) return true;
-            
-            let consistentCount = 0;
-            for (let i = 1; i < points.length; i++) {
-                const angleDiff = points[i].angle - points[i-1].angle;
-                
-                // 检查主要方向
-                if (Math.abs(angleDiff) > 2) { // 忽略微小变化
-                    const firstSign = Math.sign(points[1].angle - points[0].angle);
-                    const currentSign = Math.sign(angleDiff);
-                    
-                    if (firstSign === currentSign) {
-                        consistentCount++;
-                    }
-                }
-            }
-            
-            // 至少70%的数据点方向一致
-            return consistentCount >= Math.floor((points.length - 1) * 0.7);
-        }
-
-        // 6. 优化triggerGesture函数
-        function triggerGesture(direction) {
-            const now = Date.now();
-            const cooldown = gameState.lastGestureTime ? CONFIG.GESTURE.COOLDOWN : 0;
-            
-            if (now - gameState.lastGestureTime < cooldown) {
-                console.log('手势冷却中...');
-                return;
-            }
-            
-            gameState.lastGestureTime = now;
-            
-            // 提供即时视觉反馈
-            const feedback = document.createElement('div');
-            feedback.className = 'instant-feedback';
-            feedback.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 4rem;
-                z-index: 9999;
-                pointer-events: none;
-                animation: popIn 0.3s ease-out;
-            `;
-            
-            if (direction === 'clockwise') {
-                feedback.textContent = '✅';
-                feedback.style.color = '#2ed573';
-                console.log('触发：顺时针旋转 - 猜对');
-                setTimeout(() => markCorrect(), 50); // 延迟50ms执行，让用户看到反馈
-            } else {
-                feedback.textContent = '⏭️';
-                feedback.style.color = '#ff9f43';
-                console.log('触发：逆时针旋转 - 跳过');
-                setTimeout(() => skipWord(), 50);
-            }
-            
-            document.body.appendChild(feedback);
-            
-            setTimeout(() => {
-                feedback.style.opacity = '0';
-                feedback.style.transition = 'opacity 0.2s ease';
-                setTimeout(() => feedback.remove(), 200);
-            }, 300);
-        }
-
-        // 8. 游戏结束 - 修改为包含回顾功能
+        // 11. 游戏结束 - 修改为包含回顾功能
         function endGame() {
             clearInterval(gameState.timer);
             
@@ -1369,6 +1317,9 @@
             
             // 初始化回顾内容
             initWordReview();
+            
+            // 滚动到页面顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             
             showSection('result');
         }
@@ -1438,8 +1389,253 @@
             });
         }
 
+        // ==================== 手势检测相关功能 ====================
+        
+        // 12. 添加重置基准角度的功能
+        function resetBaselineAngle() {
+            console.log('重置基准角度');
+            baselineAlpha = null;
+        }
+
+        // 13. 初始化时提供校准提示
+        function initGestureDetection() {
+            if (!window.DeviceOrientationEvent) {
+                console.log('设备不支持方向传感器');
+                return;
+            }
+            
+            // iOS权限请求
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permission => {
+                        if (permission === 'granted') {
+                            startGestureListening();
+                            showCalibrationHint();
+                        } else {
+                            console.log('用户拒绝了方向传感器权限');
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                startGestureListening();
+                showCalibrationHint();
+            }
+        }
+        
+        function showCalibrationHint() {
+            const hint = document.createElement('div');
+            hint.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border-radius: 15px;
+                padding: 5px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                z-index: 9998;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(hint);
+            
+            // 3秒后自动消失
+            setTimeout(() => {
+                hint.style.opacity = '0';
+                hint.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => hint.remove(), 300);
+            }, 3000);
+        }
+
+        // 手势检测函数
+        function startGestureListening() {
+            let rotationHistory = []; // 存储角度历史
+            let lastValidTime = 0;
+            let baselineAlpha = null; // 基准角度
+            let isCalibrated = false;
+            let calibrationSamples = [];
+            
+            window.addEventListener('deviceorientation', (event) => {
+                const currentTime = Date.now();
+                const currentAlpha = event.alpha; // Z轴旋转角度
+                
+                // 1. 校准阶段 - 收集初始角度
+                if (!isCalibrated) {
+                    calibrationSamples.push(currentAlpha);
+                    
+                    if (calibrationSamples.length >= 20) { // 收集20个样本
+                        // 计算平均值作为基准
+                        const sum = calibrationSamples.reduce((a, b) => a + b, 0);
+                        baselineAlpha = sum / calibrationSamples.length;
+                        isCalibrated = true;
+                        console.log('校准完成，基准角度:', baselineAlpha);
+                    }
+                    return;
+                }
+                
+                // 2. 防抖处理
+                if (currentTime - lastValidTime < CONFIG.GESTURE.DEBUNCE_TIME) {
+                    return;
+                }
+                
+                // 3. 计算相对于基准的角度
+                let relativeAngle = currentAlpha - baselineAlpha;
+                
+                // 规范化到 [-180, 180] 范围
+                if (relativeAngle > 180) relativeAngle -= 360;
+                if (relativeAngle < -180) relativeAngle += 360;
+                
+                // 4. 保存到历史记录
+                rotationHistory.push({
+                    time: currentTime,
+                    angle: relativeAngle
+                });
+                
+                // 保持历史记录大小
+                if (rotationHistory.length > CONFIG.GESTURE.HISTORY_SIZE) {
+                    rotationHistory.shift();
+                }
+                
+                // 5. 检测旋转手势（需要至少3个数据点）
+                if (rotationHistory.length >= 3) {
+                    detectSimpleRotation(rotationHistory);
+                }
+            });
+        }
+        
+        // 简化的旋转检测
+        function detectSimpleRotation(history) {
+            const now = Date.now();
+            
+            // 冷却时间检查
+            if (now - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) {
+                return;
+            }
+            
+            // 取最近的数据点
+            const recentPoints = history.slice(-4); // 取最近4个点
+            
+            // 计算角度变化
+            const firstAngle = recentPoints[0].angle;
+            const lastAngle = recentPoints[recentPoints.length - 1].angle;
+            const timeDiff = recentPoints[recentPoints.length - 1].time - recentPoints[0].time;
+            
+            // 计算总角度变化（考虑360度边界）
+            let totalAngleChange = lastAngle - firstAngle;
+            if (totalAngleChange > 180) totalAngleChange -= 360;
+            if (totalAngleChange < -180) totalAngleChange += 360;
+            
+            // 计算旋转速度（度/秒）
+            const rotationSpeed = timeDiff > 0 ? Math.abs(totalAngleChange) / (timeDiff / 1000) : 0;
+            
+            console.log(`角度变化: ${totalAngleChange.toFixed(1)}°, 速度: ${rotationSpeed.toFixed(1)}°/秒`);
+            
+            // 检测条件
+            const absAngleChange = Math.abs(totalAngleChange);
+            
+            // 条件1: 角度变化足够大
+            const isAngleSufficient = absAngleChange >= CONFIG.GESTURE.MIN_ROTATION_ANGLE && 
+                                    absAngleChange <= CONFIG.GESTURE.MAX_ROTATION_ANGLE;
+            
+            // 条件2: 旋转速度足够快
+            const isSpeedSufficient = rotationSpeed >= CONFIG.GESTURE.ROTATION_SPEED_THRESHOLD;
+            
+            // 条件3: 检查旋转方向是否一致
+            const isDirectionConsistent = checkDirectionConsistency(recentPoints);
+            
+            if (isAngleSufficient && isSpeedSufficient && isDirectionConsistent) {
+                // 确定旋转方向
+                if (totalAngleChange < 0) {
+                    // 负角度变化 = 顺时针旋转
+                    console.log(`检测到顺时针旋转: ${absAngleChange.toFixed(1)}°`);
+                    triggerGesture('clockwise');
+                    rotationHistory.length = 0; // 清空历史，避免重复检测
+                } else if (totalAngleChange > 0) {
+                    // 正角度变化 = 逆时针旋转
+                    console.log(`检测到逆时针旋转: ${absAngleChange.toFixed(1)}°`);
+                    triggerGesture('counterclockwise');
+                    rotationHistory.length = 0; // 清空历史
+                }
+            }
+        }
+        
+        // 检查方向一致性
+        function checkDirectionConsistency(points) {
+            if (points.length < 3) return true;
+            
+            let consistentCount = 0;
+            for (let i = 1; i < points.length; i++) {
+                const angleDiff = points[i].angle - points[i-1].angle;
+                
+                // 检查主要方向
+                if (Math.abs(angleDiff) > 2) { // 忽略微小变化
+                    const firstSign = Math.sign(points[1].angle - points[0].angle);
+                    const currentSign = Math.sign(angleDiff);
+                    
+                    if (firstSign === currentSign) {
+                        consistentCount++;
+                    }
+                }
+            }
+            
+            // 至少70%的数据点方向一致
+            return consistentCount >= Math.floor((points.length - 1) * 0.7);
+        }
+
+        // 触发手势
+        function triggerGesture(direction) {
+            const now = Date.now();
+            const cooldown = gameState.lastGestureTime ? CONFIG.GESTURE.COOLDOWN : 0;
+            
+            if (now - gameState.lastGestureTime < cooldown) {
+                console.log('手势冷却中...');
+                return;
+            }
+            
+            gameState.lastGestureTime = now;
+            
+            // 提供即时视觉反馈
+            const feedback = document.createElement('div');
+            feedback.className = 'instant-feedback';
+            feedback.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 4rem;
+                z-index: 9999;
+                pointer-events: none;
+                animation: popIn 0.3s ease-out;
+            `;
+            
+            if (direction === 'clockwise') {
+                feedback.textContent = '✅';
+                feedback.style.color = '#2ed573';
+                console.log('触发：顺时针旋转 - 猜对');
+                setTimeout(() => markCorrect(), 50); // 延迟50ms执行，让用户看到反馈
+            } else {
+                feedback.textContent = '⏭️';
+                feedback.style.color = '#ff9f43';
+                console.log('触发：逆时针旋转 - 跳过');
+                setTimeout(() => skipWord(), 50);
+            }
+            
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                feedback.style.opacity = '0';
+                feedback.style.transition = 'opacity 0.2s ease';
+                setTimeout(() => feedback.remove(), 200);
+            }, 300);
+        }
+
         // ==================== 工具函数 ====================
         function showSection(section) {
+            // 滚动到页面顶部
+            if (section !== 'theme') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
             document.querySelectorAll('.game-section').forEach(el => {
                 el.classList.remove('active-section');
             });
@@ -1494,9 +1690,13 @@
 
         // ==================== 事件监听 ====================
         document.getElementById('startGameBtn').addEventListener('click', startGame);
+        elements.startNowBtn.addEventListener('click', startGameNow);
+        elements.cancelStartBtn.addEventListener('click', () => showSection('theme'));
+        
         document.getElementById('correctBtn').addEventListener('click', markCorrect);
         document.getElementById('skipBtn').addEventListener('click', skipWord);
         document.getElementById('endGameBtn').addEventListener('click', endGame);
+        
         document.getElementById('playAgainBtn').addEventListener('click', () => showSection('theme'));
         document.getElementById('backToThemeBtn').addEventListener('click', () => showSection('theme'));
         
