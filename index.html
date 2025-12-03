@@ -232,6 +232,17 @@
             transform: translateY(-3px);
         }
         
+        .btn-info {
+            background: #2dd1db;
+            color: white;
+            box-shadow: 0 8px 20px rgba(45, 209, 219, 0.3);
+        }
+        
+        .btn-info:hover, .btn-info:active {
+            background: #25a4ac;
+            transform: translateY(-3px);
+        }
+        
         .shake-hint {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
@@ -337,6 +348,126 @@
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
         }
         
+        /* 新增：回顾词语列表样式 */
+        .review-section {
+            margin-top: 25px;
+            text-align: left;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .review-header h3 {
+            color: #2575fc;
+            font-size: 1.5rem;
+        }
+        
+        .review-toggle {
+            background: #f0f7ff;
+            border: 2px solid #2575fc;
+            color: #2575fc;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .review-toggle:hover {
+            background: #2575fc;
+            color: white;
+        }
+        
+        .review-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .review-content.expanded {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            padding: 10px 5px;
+        }
+        
+        .word-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px 8px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .word-item.correct {
+            background: linear-gradient(135deg, #2ed573 0%, #25b562 100%);
+            color: white;
+            border: 2px solid #25b562;
+        }
+        
+        .word-item.skipped {
+            background: linear-gradient(135deg, #ff6b81 0%, #ff4757 100%);
+            color: white;
+            border: 2px solid #ff4757;
+        }
+        
+        .word-item .word-status {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+        
+        .word-item.correct .word-status {
+            content: "✓";
+        }
+        
+        .word-item.skipped .word-status {
+            content: "→";
+        }
+        
+        .review-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .review-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .review-stat.correct {
+            color: #2ed573;
+        }
+        
+        .review-stat.skipped {
+            color: #ff4757;
+        }
+        
         @media (max-width: 500px) {
             .container {
                 padding: 20px;
@@ -374,6 +505,16 @@
             .btn {
                 width: 100%;
                 max-width: 300px;
+            }
+            
+            .word-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+            
+            .word-item {
+                padding: 12px 6px;
+                font-size: 1rem;
             }
         }
         
@@ -454,7 +595,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-gamepad"></i> 你说我猜</h1>
+            <h1><i class="fas fa-gamepad"></i>你说我猜</h1>
         </div>
         
         <section id="themeSection" class="game-section active-section">
@@ -469,13 +610,15 @@
             
             <div class="game-controls">
                 <button class="btn btn-primary" id="startGameBtn">
-                    <i class="fas fa-play-circle"></i> 开始游戏
+                    <i class="fas fa-play-circle"></i>开始游戏
                 </button>
             </div>
             
             <div class="shake-hint">
                 <i class="fas fa-mobile-alt shake-icon"></i>
-                <span>顺时针晃动猜对 · 逆时针晃动跳过</span>
+                <span>顺时针晃动猜对</span>
+                <span>逆时针晃动跳过</span>
+
             </div>
         </section>
         
@@ -502,10 +645,6 @@
                         <div class="stat-value" id="skippedCount">0</div>
                         <div class="stat-label">跳过</div>
                     </div>
-                    <!-- <div class="stat-item">
-                        <div class="stat-value" id="totalCount">0</div>
-                        <div class="stat-label">总数</div>
-                    </div> -->
                 </div>
             </div>
             
@@ -525,8 +664,8 @@
                 <i class="fas fa-mobile-alt shake-icon"></i>
                 <div>
                     <p>📱 手势控制：</p>
-                    <p>顺时针旋转 = 猜对</p>
-                    <p>逆时针旋转 = 跳过</p>
+                    <p>顺时针晃动 = 猜对</p>
+                    <p>逆时针晃动 = 跳过</p>
                 </div>
             </div>
         </section>
@@ -546,21 +685,47 @@
                         <div class="stat-value" id="finalSkipped">0</div>
                         <div class="stat-label">跳过</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="finalTotal">0</div>
-                        <div class="stat-label">总数</div>
-                    </div>
                 </div>
                 
                 <p id="resultMessage">继续加油！</p>
+                
+                <!-- 新增：回顾词语区域 -->
+                <div class="review-section">
+                    <div class="review-header">
+                        <h3><i class="fas fa-history"></i> 词语回顾</h3>
+                        <button class="review-toggle" id="toggleReview">
+                            <i class="fas fa-chevron-down"></i> 展开查看
+                        </button>
+                    </div>
+                    
+                    <div class="review-content" id="reviewContent">
+                        <div class="word-list" id="wordReviewList">
+                            <!-- 回顾词语将在这里动态生成 -->
+                        </div>
+                        
+                        <div class="review-stats">
+                            <div class="review-stat correct">
+                                <i class="fas fa-check-circle"></i>
+                                <span>猜对: <span id="reviewCorrectCount">0</span>个</span>
+                            </div>
+                            <div class="review-stat skipped">
+                                <i class="fas fa-forward"></i>
+                                <span>跳过: <span id="reviewSkippedCount">0</span>个</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="game-controls">
                 <button class="btn btn-primary" id="playAgainBtn">
-                    <i class="fas fa-redo"></i> 再玩一次
+                    <i class="fas fa-redo"></i>再玩一次
+                </button>
+                <button class="btn btn-info" id="showReviewBtn">
+                    <i class="fas fa-history"></i>查看回顾
                 </button>
                 <button class="btn btn-secondary" id="backToThemeBtn">
-                    <i class="fas fa-palette"></i> 选择其他主题
+                    <i class="fas fa-palette"></i>选择其他主题
                 </button>
             </div>
         </section>
@@ -631,7 +796,9 @@
             totalWordsShown: 0,
             wordsForGame: [],
             lastGestureTime: 0,     // 上次手势时间戳
-            lastAcceleration: { x: 0, y: 0, z: 0 } // 上次加速度值
+            lastAcceleration: { x: 0, y: 0, z: 0 }, // 上次加速度值
+            // 新增：记录每个词语的状态
+            wordHistory: [] // 格式: { word: "词语", status: "correct"|"skipped", timestamp: 时间戳 }
         };
 
         // ==================== DOM元素 ====================
@@ -644,13 +811,18 @@
             timerMs: document.getElementById('timerMs'),
             correctCount: document.getElementById('correctCount'),
             skippedCount: document.getElementById('skippedCount'),
-            // totalCount: document.getElementById('totalCount'),
             finalScore: document.getElementById('finalScore'),
             finalCorrect: document.getElementById('finalCorrect'),
             finalSkipped: document.getElementById('finalSkipped'),
-            finalTotal: document.getElementById('finalTotal'),
             resultMessage: document.getElementById('resultMessage'),
-            loader: document.getElementById('loader')
+            loader: document.getElementById('loader'),
+            // 新增：回顾相关元素
+            reviewContent: document.getElementById('reviewContent'),
+            wordReviewList: document.getElementById('wordReviewList'),
+            reviewCorrectCount: document.getElementById('reviewCorrectCount'),
+            reviewSkippedCount: document.getElementById('reviewSkippedCount'),
+            toggleReview: document.getElementById('toggleReview'),
+            showReviewBtn: document.getElementById('showReviewBtn')
         };
 
         // ==================== 核心功能 ====================
@@ -777,6 +949,7 @@
             gameState.totalWordsShown = 0;
             gameState.timeLeft = gameState.selectedTime * 60;
             gameState.timeLeftMs = 0;
+            gameState.wordHistory = []; // 清空历史记录
             resetBaselineAngle(); // 重置基准角度
 
             // 准备词语
@@ -821,7 +994,7 @@
             }, 16);
         }
 
-            // 修改updateTimerDisplay函数
+        // 修改updateTimerDisplay函数
         function updateTimerDisplay() {
             const minutes = Math.floor(gameState.timeLeft / 60);
             const seconds = gameState.timeLeft % 60;
@@ -855,7 +1028,6 @@
         function updateGameStats() {
             elements.correctCount.textContent = gameState.correctCount;
             elements.skippedCount.textContent = gameState.skippedCount;
-            // elements.totalCount.textContent = gameState.totalWordsShown;
         }
 
         // 7. 添加popIn动画
@@ -882,8 +1054,16 @@
             document.head.appendChild(style);
         }
 
-        // 8. 增强markCorrect和skipWord的反馈
+        // 8. 增强markCorrect和skipWord的反馈 - 修改为记录历史
         function markCorrect() {
+            const currentWord = elements.currentWord.textContent;
+            // 记录到历史
+            gameState.wordHistory.push({
+                word: currentWord,
+                status: 'correct',
+                timestamp: Date.now()
+            });
+            
             gameState.correctCount++;
             showNextWord();
             
@@ -895,6 +1075,14 @@
         }
 
         function skipWord() {
+            const currentWord = elements.currentWord.textContent;
+            // 记录到历史
+            gameState.wordHistory.push({
+                word: currentWord,
+                status: 'skipped',
+                timestamp: Date.now()
+            });
+            
             gameState.skippedCount++;
             showNextWord();
             
@@ -904,6 +1092,7 @@
                 elements.currentWord.style.animation = 'shake 0.5s ease';
             }, 10);
         }
+        
         // 9. 添加shake动画
         if (!document.querySelector('#shake-animation-style')) {
             const style = document.createElement('style');
@@ -923,7 +1112,7 @@
             document.head.appendChild(style);
         }
 
-                // 11. 添加重置基准角度的功能
+        // 11. 添加重置基准角度的功能
         function resetBaselineAngle() {
             console.log('重置基准角度');
             baselineAlpha = null;
@@ -953,16 +1142,9 @@
                 showCalibrationHint();
             }
         }
+        
         function showCalibrationHint() {
             const hint = document.createElement('div');
-            // hint.innerHTML = `
-            //     <div style="text-align: center; padding: 15px;">
-            //         <div style="font-size: 2rem; margin-bottom: 10px;">📱</div>
-            //         <div>请保持手机竖直不动</div>
-            //         <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">正在校准方向传感器...</div>
-            //     </div>
-            // `;
-            
             hint.style.cssText = `
                 position: fixed;
                 top: 50%;
@@ -986,7 +1168,7 @@
             }, 3000);
         }
 
-            // 2. 简化的手势检测函数
+        // 2. 简化的手势检测函数
         function startGestureListening() {
             let rotationHistory = []; // 存储角度历史
             let lastValidTime = 0;
@@ -1041,7 +1223,8 @@
                 }
             });
         }
-                // 3. 简化的旋转检测
+        
+        // 3. 简化的旋转检测
         function detectSimpleRotation(history) {
             const now = Date.now();
             
@@ -1096,51 +1279,7 @@
                 }
             }
         }
-        // 3. 改进的旋转检测算法
-        function detectRotationGesture(history) {
-            const currentTime = Date.now();
-            
-            // 冷却时间检查
-            if (currentTime - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) {
-                return;
-            }
-            
-            // 分析旋转模式
-            const recentData = history.slice(-5); // 取最近5个数据点
-            const angles = recentData.map(d => d.angle);
-            const speeds = recentData.map(d => d.speed);
-            
-            // 检查是否有明显的旋转动作
-            const maxSpeed = Math.max(...speeds.map(Math.abs));
-            if (maxSpeed < CONFIG.GESTURE.ROTATION_SPEED_THRESHOLD) {
-                return; // 旋转速度不够
-            }
-            
-            // 计算角度变化范围
-            const minAngle = Math.min(...angles);
-            const maxAngle = Math.max(...angles);
-            const angleRange = maxAngle - minAngle;
-            
-            if (angleRange < CONFIG.GESTURE.ROTATION_THRESHOLD) {
-                return; // 旋转角度不够
-            }
-            
-            // 检查是否是"旋转后恢复"模式
-            const isReturningToBaseline = checkReturnPattern(angles);
-            
-            if (isReturningToBaseline) {
-                // 确定旋转方向
-                const rotationPattern = analyzeRotationDirection(history);
-                
-                if (rotationPattern === 'clockwise') {
-                    console.log('检测到顺时针旋转并恢复');
-                    triggerGesture('clockwise');
-                } else if (rotationPattern === 'counterclockwise') {
-                    console.log('检测到逆时针旋转并恢复');
-                    triggerGesture('counterclockwise');
-                }
-            }
-        }
+        
         // 4. 检查方向一致性
         function checkDirectionConsistency(points) {
             if (points.length < 3) return true;
@@ -1162,57 +1301,6 @@
             
             // 至少70%的数据点方向一致
             return consistentCount >= Math.floor((points.length - 1) * 0.7);
-        }
-        // 4. 检查是否返回到基准位置
-        function checkReturnPattern(angles) {
-            if (angles.length < 3) return false;
-            
-            const recentAngle = angles[angles.length - 1];
-            const middleAngle = angles[Math.floor(angles.length / 2)];
-            
-            // 检查是否从极端位置返回到接近0的位置
-            const middleDeviation = Math.abs(middleAngle);
-            const recentDeviation = Math.abs(recentAngle);
-            
-            // 条件：中间角度有较大偏移，最近角度接近0
-            return middleDeviation > CONFIG.GESTURE.ROTATION_THRESHOLD / 2 &&
-                recentDeviation < CONFIG.GESTURE.STABILITY_THRESHOLD;
-        }
-
-        // 5. 分析旋转方向
-        function analyzeRotationDirection(history) {
-            // 找到旋转峰值时刻
-            const peakIndex = findPeakIndex(history);
-            if (peakIndex === -1) return null;
-            
-            const peakAngle = history[peakIndex].angle;
-            
-            // 根据峰值角度判断方向
-            if (peakAngle > 0) {
-                // 正角度 = 逆时针旋转
-                return 'counterclockwise';
-            } else if (peakAngle < 0) {
-                // 负角度 = 顺时针旋转
-                return 'clockwise';
-            }
-            
-            return null;
-        }
-
-        // 6. 找到旋转峰值
-        function findPeakIndex(history) {
-            let maxDeviation = 0;
-            let peakIndex = -1;
-            
-            for (let i = 0; i < history.length; i++) {
-                const deviation = Math.abs(history[i].angle);
-                if (deviation > maxDeviation) {
-                    maxDeviation = deviation;
-                    peakIndex = i;
-                }
-            }
-            
-            return peakIndex;
         }
 
         // 6. 优化triggerGesture函数
@@ -1262,117 +1350,7 @@
             }, 300);
         }
 
-        // 8. 添加旋转动画反馈
-        function showRotationAnimation(direction) {
-            const feedback = document.createElement('div');
-            feedback.className = 'rotation-feedback';
-            
-            const emoji = direction === 'clockwise' ? '🔄' : '↪️';
-            const text = direction === 'clockwise' ? '顺时针旋转 - 猜对' : '逆时针旋转 - 跳过';
-            const color = direction === 'clockwise' ? '#2ed573' : '#ff9f43';
-            
-            feedback.innerHTML = `
-                <div style="font-size: 3.5rem; animation: ${direction === 'clockwise' ? 'rotateClockwise' : 'rotateCounterclockwise'} 0.6s ease">
-                    ${emoji}
-                </div>
-                <div style="font-size: 1.1rem; margin-top: 8px; font-weight: bold; color: ${color}">
-                    ${text}
-                </div>
-            `;
-            
-            feedback.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                z-index: 9999;
-                background: rgba(255, 255, 255, 0.95);
-                padding: 20px 30px;
-                border-radius: 20px;
-                text-align: center;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-                pointer-events: none;
-            `;
-            
-            document.body.appendChild(feedback);
-            
-            setTimeout(() => {
-                feedback.style.opacity = '0';
-                feedback.style.transition = 'opacity 0.3s ease';
-                
-                setTimeout(() => {
-                    feedback.remove();
-                }, 300);
-            }, 800);
-        }
-
-        // 9. 添加CSS动画
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes rotateClockwise {
-                0% { transform: rotate(0deg) scale(0.8); opacity: 0.5; }
-                50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
-                100% { transform: rotate(360deg) scale(1); opacity: 0; }
-            }
-            
-            @keyframes rotateCounterclockwise {
-                0% { transform: rotate(0deg) scale(0.8); opacity: 0.5; }
-                50% { transform: rotate(-180deg) scale(1.2); opacity: 1; }
-                100% { transform: rotate(-360deg) scale(1); opacity: 0; }
-            }
-            
-            .rotation-feedback {
-                animation: fadeInOut 0.8s ease;
-            }
-            
-            @keyframes fadeInOut {
-                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-                20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-                80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-                100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        function handleGesture(direction) {
-            const now = Date.now();
-            if (now - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) return;
-            
-            gameState.lastGestureTime = now;
-            
-            if (direction === 'clockwise') {
-                console.log('顺时针手势 - 猜对');
-                markCorrect();
-            } else if (direction === 'counterclockwise') {
-                console.log('逆时针手势 - 跳过');
-                skipWord();
-            }
-        }
-
-        function showGestureFeedback(emoji, color) {
-            const feedback = document.createElement('div');
-            feedback.className = 'gesture-feedback';
-            feedback.innerHTML = `
-                <div style="font-size: 4rem;">${emoji}</div>
-                <div style="font-size: 1.2rem; margin-top: 10px; font-weight: bold;">
-                    ${emoji === '✅' ? '顺时针旋转 - 猜对' : '🔄 逆时针旋转 - 跳过'}
-                </div>
-            `;
-            feedback.style.color = color;
-            feedback.style.textAlign = 'center';
-            feedback.style.background = 'rgba(255, 255, 255, 0.95)';
-            feedback.style.padding = '20px';
-            feedback.style.borderRadius = '20px';
-            feedback.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)';
-            
-            document.body.appendChild(feedback);
-            
-            setTimeout(() => {
-                feedback.remove();
-            }, 800);
-        }
-
-        // 8. 游戏结束
+        // 8. 游戏结束 - 修改为包含回顾功能
         function endGame() {
             clearInterval(gameState.timer);
             
@@ -1380,7 +1358,6 @@
             elements.finalScore.textContent = score;
             elements.finalCorrect.textContent = gameState.correctCount;
             elements.finalSkipped.textContent = gameState.skippedCount;
-            elements.finalTotal.textContent = gameState.totalWordsShown;
             
             let message = '';
             if (score >= 80) message = '太厉害了！你是猜词大师！';
@@ -1389,7 +1366,76 @@
             else message = '多玩几次，熟能生巧！';
             
             elements.resultMessage.textContent = message;
+            
+            // 初始化回顾内容
+            initWordReview();
+            
             showSection('result');
+        }
+
+        // ==================== 新增：词语回顾功能 ====================
+        
+        function initWordReview() {
+            // 清空之前的回顾内容
+            elements.wordReviewList.innerHTML = '';
+            
+            // 更新统计数字
+            elements.reviewCorrectCount.textContent = gameState.correctCount;
+            elements.reviewSkippedCount.textContent = gameState.skippedCount;
+            
+            // 如果没有历史记录，显示提示
+            if (gameState.wordHistory.length === 0) {
+                elements.wordReviewList.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #666;">
+                        <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>暂无词语回顾记录</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 显示所有历史词语
+            gameState.wordHistory.forEach((item, index) => {
+                const wordItem = document.createElement('div');
+                wordItem.className = `word-item ${item.status}`;
+                wordItem.innerHTML = `
+                    <div>${item.word}</div>
+                    <div class="word-status">${item.status === 'correct' ? '✓' : '→'}</div>
+                `;
+                elements.wordReviewList.appendChild(wordItem);
+            });
+            
+            // 默认展开回顾区域
+            setTimeout(() => {
+                toggleReview(true);
+            }, 300);
+        }
+        
+        function toggleReview(forceExpand = false) {
+            const isExpanded = elements.reviewContent.classList.contains('expanded') || forceExpand;
+            
+            if (!isExpanded) {
+                elements.reviewContent.classList.add('expanded');
+                elements.toggleReview.innerHTML = '<i class="fas fa-chevron-up"></i> 收起列表';
+                elements.toggleReview.style.background = '#2575fc';
+                elements.toggleReview.style.color = 'white';
+            } else {
+                elements.reviewContent.classList.remove('expanded');
+                elements.toggleReview.innerHTML = '<i class="fas fa-chevron-down"></i> 展开查看';
+                elements.toggleReview.style.background = '#f0f7ff';
+                elements.toggleReview.style.color = '#2575fc';
+            }
+        }
+        
+        function showReview() {
+            // 确保回顾区域展开
+            toggleReview(true);
+            
+            // 滚动到回顾区域
+            elements.reviewContent.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
         }
 
         // ==================== 工具函数 ====================
@@ -1453,6 +1499,10 @@
         document.getElementById('endGameBtn').addEventListener('click', endGame);
         document.getElementById('playAgainBtn').addEventListener('click', () => showSection('theme'));
         document.getElementById('backToThemeBtn').addEventListener('click', () => showSection('theme'));
+        
+        // 新增：回顾相关事件
+        elements.toggleReview.addEventListener('click', () => toggleReview());
+        elements.showReviewBtn.addEventListener('click', showReview);
 
         // ==================== 初始化 ====================
         window.addEventListener('DOMContentLoaded', () => {
