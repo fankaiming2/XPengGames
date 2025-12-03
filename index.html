@@ -1408,8 +1408,13 @@
                 elements.wordReviewList.appendChild(wordItem);
             });
             
-            // 默认展开回顾区域
-            toggleReview(true);
+            // 直接操作DOM，不依赖 toggleReview 函数
+            setTimeout(() => {
+                elements.reviewContent.classList.add('expanded');
+                elements.toggleReview.innerHTML = '<i class="fas fa-chevron-up"></i> 收起列表';
+                elements.toggleReview.style.background = '#2575fc';
+                elements.toggleReview.style.color = 'white';
+            }, 10); // 微小延迟确保DOM已更新
         }
         
         function toggleReview(forceExpand = false) {
