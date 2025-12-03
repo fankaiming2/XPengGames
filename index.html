@@ -167,14 +167,14 @@
         .timer {
             font-size: 3.5rem;
             font-weight: 800;
-            color: #ff4757;
+            color: #294dde;
             margin: 20px 0;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
         
         .timer-ms {
             font-size: 1.8rem;
-            color: #ff4757;
+            color: #2c48d7;
             margin-top: -10px;
         }
         
@@ -238,18 +238,38 @@
             padding: 15px;
             margin-top: 20px;
             display: flex;
-            align-items: center;
+            align-items: center; /* 确保垂直居中 */
             justify-content: center;
-            gap: 12px;
+            gap: 15px; /* 增加间距 */
             color: #666;
             font-size: 1rem;
             border: 2px dashed #2575fc;
+            min-height: 80px; /* 设置最小高度 */
         }
-        
+        .shake-hint > div {
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .shake-hint p {
+            margin: 2px 0;
+        }
+        /* 游戏界面的手势提示部分 */
+        #gameSection .shake-hint {
+            align-items: center;
+            justify-content: flex-start;
+            padding: 15px 20px;
+        }
+
+        #gameSection .shake-hint .shake-icon {
+            font-size: 2.2rem;
+            margin-right: 15px;
+        }
         .shake-icon {
             color: #2575fc;
-            font-size: 1.5rem;
+            font-size: 2rem; /* 稍微增大图标 */
             animation: shake 2s infinite;
+            flex-shrink: 0; /* 防止图标被压缩 */
         }
         
         @keyframes shake {
@@ -377,6 +397,41 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .timer-area {
+            margin: 20px 0;
+        }
+
+        .timer {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #2575fc;
+            margin: 0;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+        }
+
+        .timer-ms {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        /* 计时器紧张状态样式调整 */
+        .timer.timer-low {
+            color: #293ed9;
+            animation: pulse 1s infinite;
+        }
+
+        .timer.timer-low .timer-ms {
+            color: #6c47ff;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
     </style>
 </head>
 <body>
@@ -415,11 +470,11 @@
                     词语加载中...
                 </div>
                 
-                <div class="timer" id="timer">
-                    03:00
-                </div>
-                <div class="timer-ms" id="timerMs">
-                    .000
+                <div class="timer-area">
+                    <div class="timer" id="timer">
+                        03:00
+                        <span class="timer-ms" id="timerMs">.000</span>
+                    </div>
                 </div>
                 
                 <div class="result-stats">
@@ -535,8 +590,8 @@
             
             // 重力感应配置
             GESTURE: {
-                UP_THRESHOLD: 15,    // 向上晃动的灵敏度阈值
-                DOWN_THRESHOLD: 15,  // 向下晃动的灵敏度阈值
+                UP_THRESHOLD: 9,    // 向上晃动的灵敏度阈值
+                DOWN_THRESHOLD: 9,  // 向下晃动的灵敏度阈值
                 COOLDOWN: 500,       // 手势冷却时间（毫秒）
                 DEAD_ZONE: 5         // 忽略微小晃动
             },
@@ -722,10 +777,13 @@
             }, 800);
         }
 
-        // 5. 计时器功能（含毫秒）
+        // 修改计时器HTML结构
         function startTimer() {
             clearInterval(gameState.timer);
-            updateTimerDisplay();
+            
+            // 设置初始显示
+            elements.timer.innerHTML = `03:00<span class="timer-ms" id="timerMs">.000</span>`;
+            elements.timer.classList.remove('timer-low');
             
             const startTime = Date.now();
             const totalMs = gameState.timeLeft * 1000;
@@ -742,21 +800,23 @@
                 if (remaining <= 0) {
                     endGame();
                 }
-            }, 16); // 约60fps
+            }, 16);
         }
 
+            // 修改updateTimerDisplay函数
         function updateTimerDisplay() {
             const minutes = Math.floor(gameState.timeLeft / 60);
             const seconds = gameState.timeLeft % 60;
-            elements.timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            elements.timerMs.textContent = `.${gameState.timeLeftMs.toString().padStart(3, '0')}`;
             
+            // 更新主计时器
+            const timerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            elements.timer.innerHTML = `${timerText}<span class="timer-ms" id="timerMs">.${gameState.timeLeftMs.toString().padStart(3, '0')}</span>`;
+            
+            // 低时间提醒
             if (gameState.timeLeft < 10) {
-                elements.timer.style.color = '#ff4757';
-                elements.timerMs.style.color = '#ff4757';
+                elements.timer.classList.add('timer-low');
             } else {
-                elements.timer.style.color = '#2575fc';
-                elements.timerMs.style.color = '#2575fc';
+                elements.timer.classList.remove('timer-low');
             }
         }
 
