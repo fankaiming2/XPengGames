@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>晃动猜词 - 你描述我猜</title>
+    <title>你说我猜</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -68,7 +68,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* 主题选择样式 */
         .theme-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -111,7 +110,6 @@
             color: #333;
         }
         
-        /* 时间选择样式 */
         .time-options {
             display: flex;
             justify-content: center;
@@ -144,7 +142,6 @@
             box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
         }
         
-        /* 游戏区域样式 */
         .game-area {
             margin: 30px 0;
             position: relative;
@@ -173,6 +170,12 @@
             color: #ff4757;
             margin: 20px 0;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timer-ms {
+            font-size: 1.8rem;
+            color: #ff4757;
+            margin-top: -10px;
         }
         
         .game-controls {
@@ -229,7 +232,6 @@
             transform: translateY(-3px);
         }
         
-        /* 重力感应提示 */
         .shake-hint {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
@@ -256,7 +258,6 @@
             75% { transform: rotate(10deg); }
         }
         
-        /* 结果页面 */
         .result-card {
             background: white;
             border-radius: 20px;
@@ -298,7 +299,24 @@
             margin-top: 5px;
         }
         
-        /* 响应式调整 */
+        /* 新增：重力感应反馈样式 */
+        .gesture-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            font-size: 4rem;
+            animation: gestureFeedback 0.5s ease;
+            pointer-events: none;
+        }
+        
+        @keyframes gestureFeedback {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            70% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
+        
         @media (max-width: 500px) {
             .container {
                 padding: 20px;
@@ -324,6 +342,10 @@
                 font-size: 2.8rem;
             }
             
+            .timer-ms {
+                font-size: 1.4rem;
+            }
+            
             .game-controls {
                 flex-direction: column;
                 align-items: center;
@@ -335,7 +357,6 @@
             }
         }
         
-        /* 加载动画 */
         .loader {
             display: none;
             text-align: center;
@@ -361,11 +382,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-gamepad"></i> 晃动猜词</h1>
-            <p class="subtitle">你描述，我猜词 · 晃动手机切换词语</p>
+            <h1><i class="fas fa-gamepad"></i> 你说我猜</h1>
+            <p class="subtitle">向上晃动跳过 · 向下晃动猜对</p>
         </div>
         
-        <!-- 主题选择页面 -->
         <section id="themeSection" class="game-section active-section">
             <h2>选择猜词主题</h2>
             <div class="theme-grid" id="themeGrid">
@@ -384,11 +404,10 @@
             
             <div class="shake-hint">
                 <i class="fas fa-mobile-alt shake-icon"></i>
-                <span>游戏开始后，向下晃动手机可以跳过当前词语</span>
+                <span>向上晃动跳过 · 向下晃动猜对</span>
             </div>
         </section>
         
-        <!-- 游戏进行页面 -->
         <section id="gameSection" class="game-section">
             <div class="game-area">
                 <h2 id="currentTheme">成语猜猜猜</h2>
@@ -398,6 +417,9 @@
                 
                 <div class="timer" id="timer">
                     03:00
+                </div>
+                <div class="timer-ms" id="timerMs">
+                    .000
                 </div>
                 
                 <div class="result-stats">
@@ -430,11 +452,14 @@
             
             <div class="shake-hint">
                 <i class="fas fa-mobile-alt shake-icon"></i>
-                <span>向下晃动手机可以跳过当前词语</span>
+                <div>
+                    <p>📱 手势控制：</p>
+                    <p>↑ 快速上移 = 跳过</p>
+                    <p>↓ 快速下移 = 猜对</p>
+                </div>
             </div>
         </section>
         
-        <!-- 结果页面 -->
         <section id="resultSection" class="game-section">
             <div class="result-card">
                 <h2>游戏结束！</h2>
@@ -469,7 +494,6 @@
             </div>
         </section>
         
-        <!-- 加载动画 -->
         <div class="loader" id="loader">
             <div class="spinner"></div>
             <p>游戏加载中...</p>
@@ -477,60 +501,140 @@
     </div>
 
     <script>
-        // 游戏数据
-        const gameData = {
-            themes: [
-                { id: 'idiom', name: '成语', icon: 'fas fa-book-open', color: '#2575fc', 
-                  words: ['画龙点睛', '卧虎藏龙', '一石二鸟', '锦上添花', '守株待兔', '对牛弹琴', '掩耳盗铃', '指鹿为马', '亡羊补牢', '画蛇添足'] },
-                { id: 'star', name: '明星', icon: 'fas fa-star', color: '#ff9f43',
-                  words: ['周杰伦', '刘德华', '泰勒·斯威夫特', '莱昂纳多·迪卡普里奥', '成龙', '玛丽莲·梦露', '迈克尔·杰克逊', '艾玛·沃特森', '汤姆·克鲁斯', '碧昂丝'] },
-                { id: 'food', name: '美食', icon: 'fas fa-utensils', color: '#ee5a24',
-                  words: ['火锅', '披萨', '寿司', '汉堡', '北京烤鸭', '麻辣烫', '冰淇淋', '牛排', '拉面', '饺子'] },
-                { id: 'sport', name: '运动', icon: 'fas fa-running', color: '#2ed573',
-                  words: ['篮球', '足球', '游泳', '乒乓球', '羽毛球', '网球', '滑雪', '瑜伽', '拳击', '田径'] },
-                { id: 'movie', name: '电影', icon: 'fas fa-film', color: '#6c5ce7',
-                  words: ['肖申克的救赎', '阿甘正传', '泰坦尼克号', '复仇者联盟', '哈利波特', '教父', '盗梦空间', '星际穿越', '霸王别姬', '疯狂动物城'] },
-                { id: 'animal', name: '动物', icon: 'fas fa-paw', color: '#00d2d3',
-                  words: ['熊猫', '狮子', '大象', '长颈鹿', '企鹅', '海豚', '老虎', '猴子', '斑马', '袋鼠'] }
-            ],
-            timeOptions: [1, 2, 3],
+        // ==================== 配置区域 ====================
+        const CONFIG = {
+            // 主题配置文件映射（文件名 -> 显示名称）
+            themeFiles: {
+                'idiom.txt': '成语',
+                'star.txt': '明星',
+                'food.txt': '美食',
+                'sport.txt': '运动',
+                'movie.txt': '电影',
+                'animal.txt': '动物'
+            },
+            
+            // 主题图标映射
+            themeIcons: {
+                '成语': 'fas fa-book-open',
+                '明星': 'fas fa-star',
+                '美食': 'fas fa-utensils',
+                '运动': 'fas fa-running',
+                '电影': 'fas fa-film',
+                '动物': 'fas fa-paw'
+            },
+            
+            // 主题颜色映射
+            themeColors: {
+                '成语': '#2575fc',
+                '明星': '#ff9f43',
+                '美食': '#ee5a24',
+                '运动': '#2ed573',
+                '电影': '#6c5ce7',
+                '动物': '#00d2d3'
+            },
+            
+            // 重力感应配置
+            GESTURE: {
+                UP_THRESHOLD: 15,    // 向上晃动的灵敏度阈值
+                DOWN_THRESHOLD: 15,  // 向下晃动的灵敏度阈值
+                COOLDOWN: 500,       // 手势冷却时间（毫秒）
+                DEAD_ZONE: 5         // 忽略微小晃动
+            },
+            
+            // 时间选项
+            timeOptions: [1, 2, 3]
+        };
+
+        // ==================== 游戏状态 ====================
+        const gameState = {
+            themes: [],              // 从文件加载的主题数据
             currentTheme: null,
             selectedTime: 2,
-            gameState: 'theme', // theme, playing, result
             timer: null,
-            timeLeft: 0,
+            timeLeft: 0,            // 总秒数
+            timeLeftMs: 0,          // 毫秒部分
             currentWordIndex: 0,
             correctCount: 0,
             skippedCount: 0,
             totalWordsShown: 0,
-            usedWords: [],
-            wordsForGame: []
+            wordsForGame: [],
+            lastGestureTime: 0,     // 上次手势时间戳
+            lastAcceleration: { x: 0, y: 0, z: 0 } // 上次加速度值
         };
-        
-        // DOM元素
-        const themeSection = document.getElementById('themeSection');
-        const gameSection = document.getElementById('gameSection');
-        const resultSection = document.getElementById('resultSection');
-        const themeGrid = document.getElementById('themeGrid');
-        const timeOptions = document.getElementById('timeOptions');
-        const currentTheme = document.getElementById('currentTheme');
-        const currentWord = document.getElementById('currentWord');
-        const timer = document.getElementById('timer');
-        const correctCount = document.getElementById('correctCount');
-        const skippedCount = document.getElementById('skippedCount');
-        const totalCount = document.getElementById('totalCount');
-        const finalScore = document.getElementById('finalScore');
-        const finalCorrect = document.getElementById('finalCorrect');
-        const finalSkipped = document.getElementById('finalSkipped');
-        const finalTotal = document.getElementById('finalTotal');
-        const resultMessage = document.getElementById('resultMessage');
-        const loader = document.getElementById('loader');
-        
-        // 初始化主题选择
+
+        // ==================== DOM元素 ====================
+        const elements = {
+            themeGrid: document.getElementById('themeGrid'),
+            timeOptions: document.getElementById('timeOptions'),
+            currentTheme: document.getElementById('currentTheme'),
+            currentWord: document.getElementById('currentWord'),
+            timer: document.getElementById('timer'),
+            timerMs: document.getElementById('timerMs'),
+            correctCount: document.getElementById('correctCount'),
+            skippedCount: document.getElementById('skippedCount'),
+            totalCount: document.getElementById('totalCount'),
+            finalScore: document.getElementById('finalScore'),
+            finalCorrect: document.getElementById('finalCorrect'),
+            finalSkipped: document.getElementById('finalSkipped'),
+            finalTotal: document.getElementById('finalTotal'),
+            resultMessage: document.getElementById('resultMessage'),
+            loader: document.getElementById('loader')
+        };
+
+        // ==================== 核心功能 ====================
+
+        // 1. 从TXT文件加载词语库
+        async function loadWordFile(filename) {
+            try {
+                const response = await fetch(`words/${filename}`);
+                if (!response.ok) throw new Error(`无法加载文件: ${filename}`);
+                
+                const text = await response.text();
+                const words = text.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line && !line.startsWith('#') && !line.startsWith('//'));
+                
+                console.log(`加载主题 ${filename}: ${words.length} 个词语`);
+                return words;
+            } catch (error) {
+                console.error('加载词语文件失败:', error);
+                return getDefaultWords(filename);
+            }
+        }
+
+        // 2. 初始化所有主题
+        async function initAllThemes() {
+            showLoader(true);
+            gameState.themes = [];
+            
+            for (const [filename, themeName] of Object.entries(CONFIG.themeFiles)) {
+                const words = await loadWordFile(filename);
+                if (words.length > 0) {
+                    gameState.themes.push({
+                        id: filename.replace('.txt', ''),
+                        name: themeName,
+                        icon: CONFIG.themeIcons[themeName] || 'fas fa-question-circle',
+                        color: CONFIG.themeColors[themeName] || '#888',
+                        words: words
+                    });
+                }
+            }
+            
+            // 如果没加载到任何主题，使用默认数据
+            if (gameState.themes.length === 0) {
+                console.log('使用默认主题数据');
+                gameState.themes = getDefaultThemes();
+            }
+            
+            initThemeSelection();
+            showLoader(false);
+            console.log(`成功加载 ${gameState.themes.length} 个主题`);
+        }
+
+        // 3. 初始化主题选择界面
         function initThemeSelection() {
-            // 创建主题卡片
-            themeGrid.innerHTML = '';
-            gameData.themes.forEach(theme => {
+            elements.themeGrid.innerHTML = '';
+            gameState.themes.forEach(theme => {
                 const themeCard = document.createElement('div');
                 themeCard.className = 'theme-card';
                 themeCard.dataset.id = theme.id;
@@ -539,337 +643,261 @@
                     <div class="theme-name">${theme.name}</div>
                 `;
                 themeCard.addEventListener('click', () => selectTheme(theme.id));
-                themeGrid.appendChild(themeCard);
+                elements.themeGrid.appendChild(themeCard);
             });
             
-            // 创建时间选项
-            timeOptions.innerHTML = '';
-            gameData.timeOptions.forEach(time => {
+            // 初始化时间选项
+            initTimeOptions();
+            
+            // 默认选择第一个主题
+            if (gameState.themes.length > 0) {
+                selectTheme(gameState.themes[0].id);
+            }
+        }
+
+        function initTimeOptions() {
+            elements.timeOptions.innerHTML = '';
+            CONFIG.timeOptions.forEach(time => {
                 const timeOption = document.createElement('div');
                 timeOption.className = `time-option ${time === 2 ? 'selected' : ''}`;
                 timeOption.textContent = `${time}分钟`;
                 timeOption.dataset.time = time;
                 timeOption.addEventListener('click', () => selectTime(time));
-                timeOptions.appendChild(timeOption);
+                elements.timeOptions.appendChild(timeOption);
             });
         }
-        
-        // 选择主题
+
         function selectTheme(themeId) {
-            // 移除之前选中的主题
             document.querySelectorAll('.theme-card').forEach(card => {
                 card.classList.remove('selected');
             });
             
-            // 选中当前主题
             const selectedCard = document.querySelector(`.theme-card[data-id="${themeId}"]`);
-            selectedCard.classList.add('selected');
+            if (selectedCard) selectedCard.classList.add('selected');
             
-            // 更新当前主题
-            const theme = gameData.themes.find(t => t.id === themeId);
-            gameData.currentTheme = theme;
+            gameState.currentTheme = gameState.themes.find(t => t.id === themeId);
         }
-        
-        // 选择时间
+
         function selectTime(time) {
-            // 移除之前选中的时间
             document.querySelectorAll('.time-option').forEach(option => {
                 option.classList.remove('selected');
             });
             
-            // 选中当前时间
             const selectedOption = document.querySelector(`.time-option[data-time="${time}"]`);
-            selectedOption.classList.add('selected');
+            if (selectedOption) selectedOption.classList.add('selected');
             
-            // 更新选择的时间
-            gameData.selectedTime = time;
+            gameState.selectedTime = time;
         }
-        
-        // 开始游戏
+
+        // 4. 开始游戏
         function startGame() {
-            if (!gameData.currentTheme) {
+            if (!gameState.currentTheme) {
                 alert('请先选择一个主题！');
                 return;
             }
             
-            // 显示加载动画
-            loader.style.display = 'block';
+            showLoader(true);
             
-            // 准备游戏数据
-            gameData.currentWordIndex = 0;
-            gameData.correctCount = 0;
-            gameData.skippedCount = 0;
-            gameData.totalWordsShown = 0;
-            gameData.usedWords = [];
-            gameData.timeLeft = gameData.selectedTime * 60; // 转换为秒
+            // 重置游戏状态
+            gameState.currentWordIndex = 0;
+            gameState.correctCount = 0;
+            gameState.skippedCount = 0;
+            gameState.totalWordsShown = 0;
+            gameState.timeLeft = gameState.selectedTime * 60;
+            gameState.timeLeftMs = 0;
             
-            // 从当前主题中随机选择词语（避免重复）
-            gameData.wordsForGame = [...gameData.currentTheme.words];
-            shuffleArray(gameData.wordsForGame);
+            // 准备词语
+            gameState.wordsForGame = [...gameState.currentTheme.words];
+            shuffleArray(gameState.wordsForGame);
             
             // 更新UI
-            currentTheme.textContent = gameData.currentTheme.name + '猜猜猜';
+            elements.currentTheme.textContent = gameState.currentTheme.name + '猜猜猜';
             
-            // 隐藏加载动画并切换到游戏界面
             setTimeout(() => {
-                loader.style.display = 'none';
+                showLoader(false);
                 showSection('game');
-                
-                // 开始游戏计时器
                 startTimer();
-                
-                // 显示第一个词语
                 showNextWord();
-                
-                // 初始化重力感应
-                initShakeDetection();
+                initGestureDetection();
             }, 800);
         }
-        
-        // 显示下一个词语
-        function showNextWord() {
-            if (gameData.currentWordIndex >= gameData.wordsForGame.length) {
-                // 如果已经用完所有词语，重新洗牌
-                shuffleArray(gameData.wordsForGame);
-                gameData.currentWordIndex = 0;
-            }
-            
-            const word = gameData.wordsForGame[gameData.currentWordIndex];
-            currentWord.textContent = word;
-            gameData.totalWordsShown++;
-            updateGameStats();
-            
-            gameData.currentWordIndex++;
-        }
-        
-        // 开始计时器
+
+        // 5. 计时器功能（含毫秒）
         function startTimer() {
-            clearInterval(gameData.timer);
+            clearInterval(gameState.timer);
             updateTimerDisplay();
             
-            gameData.timer = setInterval(() => {
-                gameData.timeLeft--;
+            const startTime = Date.now();
+            const totalMs = gameState.timeLeft * 1000;
+            
+            gameState.timer = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, totalMs - elapsed);
+                
+                gameState.timeLeft = Math.floor(remaining / 1000);
+                gameState.timeLeftMs = remaining % 1000;
+                
                 updateTimerDisplay();
                 
-                if (gameData.timeLeft <= 0) {
+                if (remaining <= 0) {
                     endGame();
                 }
-            }, 1000);
+            }, 16); // 约60fps
         }
-        
-        // 更新计时器显示
+
         function updateTimerDisplay() {
-            const minutes = Math.floor(gameData.timeLeft / 60);
-            const seconds = gameData.timeLeft % 60;
-            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            const minutes = Math.floor(gameState.timeLeft / 60);
+            const seconds = gameState.timeLeft % 60;
+            elements.timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            elements.timerMs.textContent = `.${gameState.timeLeftMs.toString().padStart(3, '0')}`;
             
-            // 时间少于30秒时改变颜色
-            if (gameData.timeLeft < 30) {
-                timer.style.color = '#ff4757';
-                timer.style.animation = 'pulse 1s infinite';
+            if (gameState.timeLeft < 10) {
+                elements.timer.style.color = '#ff4757';
+                elements.timerMs.style.color = '#ff4757';
             } else {
-                timer.style.color = '#2575fc';
-                timer.style.animation = 'none';
+                elements.timer.style.color = '#2575fc';
+                elements.timerMs.style.color = '#2575fc';
             }
         }
-        
-        // 更新游戏统计
+
+        // 6. 游戏控制功能
+        function showNextWord() {
+            if (gameState.currentWordIndex >= gameState.wordsForGame.length) {
+                shuffleArray(gameState.wordsForGame);
+                gameState.currentWordIndex = 0;
+            }
+            
+            const word = gameState.wordsForGame[gameState.currentWordIndex];
+            elements.currentWord.textContent = word;
+            gameState.totalWordsShown++;
+            updateGameStats();
+            gameState.currentWordIndex++;
+        }
+
         function updateGameStats() {
-            correctCount.textContent = gameData.correctCount;
-            skippedCount.textContent = gameData.skippedCount;
-            totalCount.textContent = gameData.totalWordsShown;
+            elements.correctCount.textContent = gameState.correctCount;
+            elements.skippedCount.textContent = gameState.skippedCount;
+            elements.totalCount.textContent = gameState.totalWordsShown;
         }
-        
-        // 猜对了
+
         function markCorrect() {
-            gameData.correctCount++;
+            gameState.correctCount++;
             showNextWord();
+            showGestureFeedback('✅', '#2ed573');
         }
-        
-        // 跳过当前词语
+
         function skipWord() {
-            gameData.skippedCount++;
+            gameState.skippedCount++;
             showNextWord();
+            showGestureFeedback('⏭️', '#ff9f43');
         }
-        
-        // 结束游戏
-        function endGame() {
-            clearInterval(gameData.timer);
-            
-            // 计算得分
-            const score = gameData.correctCount * 10;
-            
-            // 更新结果页面
-            finalScore.textContent = score;
-            finalCorrect.textContent = gameData.correctCount;
-            finalSkipped.textContent = gameData.skippedCount;
-            finalTotal.textContent = gameData.totalWordsShown;
-            
-            // 根据得分显示不同消息
-            let message = '';
-            if (score >= 80) {
-                message = '太厉害了！你是猜词大师！';
-            } else if (score >= 50) {
-                message = '不错哦！继续努力！';
-            } else if (score >= 30) {
-                message = '继续加油，下次会更好！';
-            } else {
-                message = '多玩几次，熟能生巧！';
-            }
-            resultMessage.textContent = message;
-            
-            // 切换到结果页面
-            showSection('result');
-        }
-        
-        // 显示指定部分
-        function showSection(section) {
-            themeSection.classList.remove('active-section');
-            gameSection.classList.remove('active-section');
-            resultSection.classList.remove('active-section');
-            
-            if (section === 'theme') {
-                themeSection.classList.add('active-section');
-            } else if (section === 'game') {
-                gameSection.classList.add('active-section');
-            } else if (section === 'result') {
-                resultSection.classList.add('active-section');
-            }
-        }
-        
-        function initShakeDetection() {
-    console.log('初始化重力感应检测...');
-    
-    let lastShakeTime = 0;
-    const SHAKE_THRESHOLD = 12; // 降低阈值，更灵敏
-    const SHAKE_COOLDOWN = 800; // 缩短冷却时间
-    
-    // 调试信息
-    let shakeCount = 0;
-    const debugShakeInfo = document.createElement('div');
-    debugShakeInfo.style.cssText = 'position:fixed; bottom:10px; left:10px; background:rgba(0,0,0,0.7); color:lime; padding:8px; z-index:9999; font-size:11px; border-radius:5px; display:none;';
-    document.body.appendChild(debugShakeInfo);
-    
-    // 添加摇动提示
-    const gameSection = document.getElementById('gameSection');
-    if (gameSection) {
-        const observer = new MutationObserver(function() {
-            if (gameSection.classList.contains('active-section')) {
-                debugShakeInfo.style.display = 'block';
-            }
-        });
-        observer.observe(gameSection, { attributes: true, attributeFilter: ['class'] });
-    }
-    
-    if (window.DeviceMotionEvent) {
-        console.log('设备支持DeviceMotionEvent API');
-        
-        // 监听设备运动事件
-        window.addEventListener('devicemotion', function(event) {
-            const acceleration = event.accelerationIncludingGravity;
-            
-            if (!acceleration) {
-                console.log('未获取到加速度数据');
+
+        // 7. 重力感应/手势检测
+        function initGestureDetection() {
+            if (!window.DeviceMotionEvent) {
+                console.log('设备不支持重力感应');
                 return;
             }
             
-            // 计算晃动强度 - 简化公式，更易触发
-            const x = Math.abs(acceleration.x || 0);
-            const y = Math.abs(acceleration.y || 0);
-            const z = Math.abs(acceleration.z || 0);
-            
-            const shakeStrength = x + y + z - 9.8; // 减去重力
-            
-            // 更新调试信息
-            debugShakeInfo.innerHTML = `
-                晃动强度: ${shakeStrength.toFixed(2)}<br>
-                加速度: X=${x.toFixed(2)}, Y=${y.toFixed(2)}<br>
-                已触发: ${shakeCount}次
-            `;
-            
-            // 检测向下晃动（Y轴负方向为主）
-            // 降低触发门槛，更易响应
-            if (acceleration.y < -SHAKE_THRESHOLD || shakeStrength > SHAKE_THRESHOLD) {
-                const currentTime = new Date().getTime();
-                
-                if (currentTime - lastShakeTime > SHAKE_COOLDOWN) {
-                    lastShakeTime = currentTime;
-                    shakeCount++;
-                    
-                    console.log(`晃动检测 #${shakeCount}:`, {
-                        x: acceleration.x,
-                        y: acceleration.y,
-                        z: acceleration.z,
-                        strength: shakeStrength
-                    });
-                    
-                    // 视觉反馈
-                    document.body.style.backgroundColor = '#ff6b81';
-                    setTimeout(() => {
-                        document.body.style.backgroundColor = '';
-                    }, 200);
-                    
-                    // 执行跳过词语操作
-                    if (typeof skipWord === 'function') {
-                        skipWord();
-                    }
-                }
-            }
-        });
-        
-        // 添加点击模拟晃动（测试用）
-        const testShakeBtn = document.createElement('button');
-        testShakeBtn.textContent = '测试跳过（无重力感应时使用）';
-        testShakeBtn.style.cssText = 'position:fixed; bottom:10px; right:10px; background:#2ed573; color:white; border:none; padding:10px; border-radius:5px; z-index:9999; font-size:12px;';
-        testShakeBtn.onclick = function() {
-            if (typeof skipWord === 'function') {
-                skipWord();
-                alert('模拟晃动成功！跳过一个词语。');
-            }
-        };
-        document.body.appendChild(testShakeBtn);
-        
-    } else {
-        console.log('设备不支持DeviceMotionEvent API');
-        debugShakeInfo.innerHTML = '设备不支持重力感应<br>请使用测试按钮';
-        debugShakeInfo.style.display = 'block';
-    }
-}
-            let lastShakeTime = 0;
-            const SHAKE_THRESHOLD = 15; // 晃动阈值
-            const SHAKE_COOLDOWN = 1000; // 防抖时间（毫秒）
-            
-            // 检查设备是否支持陀螺仪
-            if (window.DeviceMotionEvent) {
-                window.addEventListener('devicemotion', function(event) {
-                    const acceleration = event.accelerationIncludingGravity;
-                    
-                    // 计算晃动强度
-                    const shakeStrength = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
-                    
-                    // 检查是否是向下晃动（y轴负方向）
-                    if (acceleration.y < -SHAKE_THRESHOLD && shakeStrength > SHAKE_THRESHOLD * 2) {
-                        const currentTime = new Date().getTime();
-                        
-                        // 防止过于频繁触发
-                        if (currentTime - lastShakeTime > SHAKE_COOLDOWN) {
-                            lastShakeTime = currentTime;
-                            skipWord();
-                            
-                            // 添加视觉反馈
-                            document.body.style.backgroundColor = '#ff6b81';
-                            setTimeout(() => {
-                                document.body.style.backgroundColor = '';
-                            }, 300);
+            // iOS权限请求
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission()
+                    .then(permission => {
+                        if (permission === 'granted') {
+                            startGestureListening();
                         }
-                    }
-                });
+                    })
+                    .catch(console.error);
             } else {
-                console.log('您的设备不支持重力感应');
+                startGestureListening();
             }
-        
-        
-        // 工具函数：洗牌算法
+        }
+
+        function startGestureListening() {
+            let lastAcceleration = { x: 0, y: 0, z: 0 };
+            
+            window.addEventListener('devicemotion', (event) => {
+                const acc = event.accelerationIncludingGravity;
+                if (!acc) return;
+                
+                // 计算Y轴加速度变化（垂直方向）
+                const deltaY = acc.y - lastAcceleration.y;
+                
+                // 检测向上快速移动（跳过）
+                if (deltaY > CONFIG.GESTURE.UP_THRESHOLD && Math.abs(deltaY) > CONFIG.GESTURE.DEAD_ZONE) {
+                    handleGesture('up');
+                }
+                // 检测向下快速移动（猜对）
+                else if (deltaY < -CONFIG.GESTURE.DOWN_THRESHOLD && Math.abs(deltaY) > CONFIG.GESTURE.DEAD_ZONE) {
+                    handleGesture('down');
+                }
+                
+                lastAcceleration = { x: acc.x, y: acc.y, z: acc.z };
+            });
+        }
+
+        function handleGesture(direction) {
+            const now = Date.now();
+            if (now - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) return;
+            
+            gameState.lastGestureTime = now;
+            
+            if (direction === 'up') {
+                console.log('检测到向上手势 - 跳过');
+                skipWord();
+            } else if (direction === 'down') {
+                console.log('检测到向下手势 - 猜对');
+                markCorrect();
+            }
+        }
+
+        function showGestureFeedback(emoji, color) {
+            const feedback = document.createElement('div');
+            feedback.className = 'gesture-feedback';
+            feedback.textContent = emoji;
+            feedback.style.color = color;
+            
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                feedback.remove();
+            }, 500);
+        }
+
+        // 8. 游戏结束
+        function endGame() {
+            clearInterval(gameState.timer);
+            
+            const score = gameState.correctCount * 10;
+            elements.finalScore.textContent = score;
+            elements.finalCorrect.textContent = gameState.correctCount;
+            elements.finalSkipped.textContent = gameState.skippedCount;
+            elements.finalTotal.textContent = gameState.totalWordsShown;
+            
+            let message = '';
+            if (score >= 80) message = '太厉害了！你是猜词大师！';
+            else if (score >= 50) message = '不错哦！继续努力！';
+            else if (score >= 30) message = '继续加油，下次会更好！';
+            else message = '多玩几次，熟能生巧！';
+            
+            elements.resultMessage.textContent = message;
+            showSection('result');
+        }
+
+        // ==================== 工具函数 ====================
+        function showSection(section) {
+            document.querySelectorAll('.game-section').forEach(el => {
+                el.classList.remove('active-section');
+            });
+            
+            const target = document.getElementById(section + 'Section');
+            if (target) target.classList.add('active-section');
+        }
+
+        function showLoader(show) {
+            elements.loader.style.display = show ? 'block' : 'none';
+        }
+
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -877,25 +905,50 @@
             }
             return array;
         }
-        
-        // 事件监听器
+
+        // 默认词语数据（备用）
+        function getDefaultWords(filename) {
+            const defaults = {
+                'idiom.txt': [],
+                'star.txt': [],
+                'food.txt': [],
+                'sport.txt': [],
+                'movie.txt': [],
+                'animal.txt': []
+            };
+            return defaults[filename] || [];
+        }
+
+        function getDefaultThemes() {
+            return [
+                {
+                    id: 'idiom',
+                    name: '成语',
+                    icon: 'fas fa-book-open',
+                    color: '#2575fc',
+                    words: getDefaultWords('idiom.txt')
+                },
+                {
+                    id: 'star',
+                    name: '明星',
+                    icon: 'fas fa-star',
+                    color: '#ff9f43',
+                    words: getDefaultWords('star.txt')
+                }
+            ];
+        }
+
+        // ==================== 事件监听 ====================
         document.getElementById('startGameBtn').addEventListener('click', startGame);
         document.getElementById('correctBtn').addEventListener('click', markCorrect);
         document.getElementById('skipBtn').addEventListener('click', skipWord);
         document.getElementById('endGameBtn').addEventListener('click', endGame);
-        document.getElementById('playAgainBtn').addEventListener('click', () => {
-            // 重新开始游戏
-            showSection('theme');
-        });
-        document.getElementById('backToThemeBtn').addEventListener('click', () => {
-            showSection('theme');
-        });
-        
-        // 页面加载时初始化
+        document.getElementById('playAgainBtn').addEventListener('click', () => showSection('theme'));
+        document.getElementById('backToThemeBtn').addEventListener('click', () => showSection('theme'));
+
+        // ==================== 初始化 ====================
         window.addEventListener('DOMContentLoaded', () => {
-            initThemeSelection();
-            // 默认选择第一个主题
-            selectTheme(gameData.themes[0].id);
+            initAllThemes();
             
             // 添加CSS动画
             const style = document.createElement('style');
@@ -907,59 +960,6 @@
             `;
             document.head.appendChild(style);
         });
-        
-        // 防止页面滚动
-        document.addEventListener('touchmove', function(e) {
-            if (gameData.gameState === 'playing') {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        // 在现有代码的开头添加设备检测
-window.addEventListener('DOMContentLoaded', function() {
-    // 检测设备运动支持
-    const motionSupport = window.DeviceMotionEvent ? '支持' : '不支持';
-    const orientationSupport = window.DeviceOrientationEvent ? '支持' : '不支持';
-    
-    console.log('设备运动API支持: ' + motionSupport);
-    console.log('设备方向API支持: ' + orientationSupport);
-    
-    // 在页面显示检测结果（调试用）
-    const debugInfo = document.createElement('div');
-    debugInfo.style.cssText = 'position:fixed; top:10px; left:10px; background:rgba(0,0,0,0.7); color:white; padding:10px; z-index:9999; font-size:12px; border-radius:5px;';
-    debugInfo.innerHTML = `
-        运动API: ${motionSupport}<br>
-        方向API: ${orientationSupport}<br>
-        HTTPS: ${window.location.protocol === 'https:' ? '是' : '否'}
-    `;
-    document.body.appendChild(debugInfo);
-    
-    // 尝试请求权限（iOS需要）
-    if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        console.log('iOS设备，需要请求权限');
-        const permissionBtn = document.createElement('button');
-        permissionBtn.textContent = '点击授权重力感应';
-        permissionBtn.style.cssText = 'position:fixed; top:80px; left:10px; background:#2575fc; color:white; border:none; padding:10px; border-radius:5px; z-index:9999;';
-        permissionBtn.onclick = requestMotionPermission;
-        document.body.appendChild(permissionBtn);
-    }
-});
-
-// iOS权限请求函数
-async function requestMotionPermission() {
-    try {
-        const response = await DeviceMotionEvent.requestPermission();
-        if (response === 'granted') {
-            alert('重力感应已授权！请重新开始游戏。');
-            window.location.reload();
-        } else {
-            alert('重力感应权限被拒绝。');
-        }
-    } catch (error) {
-        console.error('权限请求错误:', error);
-    }
-}
     </script>
-
-    
 </body>
 </html>
