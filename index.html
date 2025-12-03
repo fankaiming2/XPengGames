@@ -737,8 +737,104 @@
             }
         }
         
-        // 初始化重力感应
         function initShakeDetection() {
+    console.log('初始化重力感应检测...');
+    
+    let lastShakeTime = 0;
+    const SHAKE_THRESHOLD = 12; // 降低阈值，更灵敏
+    const SHAKE_COOLDOWN = 800; // 缩短冷却时间
+    
+    // 调试信息
+    let shakeCount = 0;
+    const debugShakeInfo = document.createElement('div');
+    debugShakeInfo.style.cssText = 'position:fixed; bottom:10px; left:10px; background:rgba(0,0,0,0.7); color:lime; padding:8px; z-index:9999; font-size:11px; border-radius:5px; display:none;';
+    document.body.appendChild(debugShakeInfo);
+    
+    // 添加摇动提示
+    const gameSection = document.getElementById('gameSection');
+    if (gameSection) {
+        const observer = new MutationObserver(function() {
+            if (gameSection.classList.contains('active-section')) {
+                debugShakeInfo.style.display = 'block';
+            }
+        });
+        observer.observe(gameSection, { attributes: true, attributeFilter: ['class'] });
+    }
+    
+    if (window.DeviceMotionEvent) {
+        console.log('设备支持DeviceMotionEvent API');
+        
+        // 监听设备运动事件
+        window.addEventListener('devicemotion', function(event) {
+            const acceleration = event.accelerationIncludingGravity;
+            
+            if (!acceleration) {
+                console.log('未获取到加速度数据');
+                return;
+            }
+            
+            // 计算晃动强度 - 简化公式，更易触发
+            const x = Math.abs(acceleration.x || 0);
+            const y = Math.abs(acceleration.y || 0);
+            const z = Math.abs(acceleration.z || 0);
+            
+            const shakeStrength = x + y + z - 9.8; // 减去重力
+            
+            // 更新调试信息
+            debugShakeInfo.innerHTML = `
+                晃动强度: ${shakeStrength.toFixed(2)}<br>
+                加速度: X=${x.toFixed(2)}, Y=${y.toFixed(2)}<br>
+                已触发: ${shakeCount}次
+            `;
+            
+            // 检测向下晃动（Y轴负方向为主）
+            // 降低触发门槛，更易响应
+            if (acceleration.y < -SHAKE_THRESHOLD || shakeStrength > SHAKE_THRESHOLD) {
+                const currentTime = new Date().getTime();
+                
+                if (currentTime - lastShakeTime > SHAKE_COOLDOWN) {
+                    lastShakeTime = currentTime;
+                    shakeCount++;
+                    
+                    console.log(`晃动检测 #${shakeCount}:`, {
+                        x: acceleration.x,
+                        y: acceleration.y,
+                        z: acceleration.z,
+                        strength: shakeStrength
+                    });
+                    
+                    // 视觉反馈
+                    document.body.style.backgroundColor = '#ff6b81';
+                    setTimeout(() => {
+                        document.body.style.backgroundColor = '';
+                    }, 200);
+                    
+                    // 执行跳过词语操作
+                    if (typeof skipWord === 'function') {
+                        skipWord();
+                    }
+                }
+            }
+        });
+        
+        // 添加点击模拟晃动（测试用）
+        const testShakeBtn = document.createElement('button');
+        testShakeBtn.textContent = '测试跳过（无重力感应时使用）';
+        testShakeBtn.style.cssText = 'position:fixed; bottom:10px; right:10px; background:#2ed573; color:white; border:none; padding:10px; border-radius:5px; z-index:9999; font-size:12px;';
+        testShakeBtn.onclick = function() {
+            if (typeof skipWord === 'function') {
+                skipWord();
+                alert('模拟晃动成功！跳过一个词语。');
+            }
+        };
+        document.body.appendChild(testShakeBtn);
+        
+    } else {
+        console.log('设备不支持DeviceMotionEvent API');
+        debugShakeInfo.innerHTML = '设备不支持重力感应<br>请使用测试按钮';
+        debugShakeInfo.style.display = 'block';
+    }
+}
             let lastShakeTime = 0;
             const SHAKE_THRESHOLD = 15; // 晃动阈值
             const SHAKE_COOLDOWN = 1000; // 防抖时间（毫秒）
@@ -771,7 +867,7 @@
             } else {
                 console.log('您的设备不支持重力感应');
             }
-        }
+        
         
         // 工具函数：洗牌算法
         function shuffleArray(array) {
@@ -818,6 +914,52 @@
                 e.preventDefault();
             }
         }, { passive: false });
+        // 在现有代码的开头添加设备检测
+window.addEventListener('DOMContentLoaded', function() {
+    // 检测设备运动支持
+    const motionSupport = window.DeviceMotionEvent ? '支持' : '不支持';
+    const orientationSupport = window.DeviceOrientationEvent ? '支持' : '不支持';
+    
+    console.log('设备运动API支持: ' + motionSupport);
+    console.log('设备方向API支持: ' + orientationSupport);
+    
+    // 在页面显示检测结果（调试用）
+    const debugInfo = document.createElement('div');
+    debugInfo.style.cssText = 'position:fixed; top:10px; left:10px; background:rgba(0,0,0,0.7); color:white; padding:10px; z-index:9999; font-size:12px; border-radius:5px;';
+    debugInfo.innerHTML = `
+        运动API: ${motionSupport}<br>
+        方向API: ${orientationSupport}<br>
+        HTTPS: ${window.location.protocol === 'https:' ? '是' : '否'}
+    `;
+    document.body.appendChild(debugInfo);
+    
+    // 尝试请求权限（iOS需要）
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        console.log('iOS设备，需要请求权限');
+        const permissionBtn = document.createElement('button');
+        permissionBtn.textContent = '点击授权重力感应';
+        permissionBtn.style.cssText = 'position:fixed; top:80px; left:10px; background:#2575fc; color:white; border:none; padding:10px; border-radius:5px; z-index:9999;';
+        permissionBtn.onclick = requestMotionPermission;
+        document.body.appendChild(permissionBtn);
+    }
+});
+
+// iOS权限请求函数
+async function requestMotionPermission() {
+    try {
+        const response = await DeviceMotionEvent.requestPermission();
+        if (response === 'granted') {
+            alert('重力感应已授权！请重新开始游戏。');
+            window.location.reload();
+        } else {
+            alert('重力感应权限被拒绝。');
+        }
+    } catch (error) {
+        console.error('权限请求错误:', error);
+    }
+}
     </script>
+
+    
 </body>
 </html>
