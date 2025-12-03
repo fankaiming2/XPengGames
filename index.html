@@ -432,13 +432,29 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
         }
+        @keyframes rotateClockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotateCounterclockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        .rotate-clockwise {
+            animation: rotateClockwise 0.5s ease;
+        }
+
+        .rotate-counterclockwise {
+            animation: rotateCounterclockwise 0.5s ease;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-gamepad"></i> 你说我猜</h1>
-            <p class="subtitle">向上晃动跳过 · 向下晃动猜对</p>
         </div>
         
         <section id="themeSection" class="game-section active-section">
@@ -459,7 +475,7 @@
             
             <div class="shake-hint">
                 <i class="fas fa-mobile-alt shake-icon"></i>
-                <span>向上晃动跳过 · 向下晃动猜对</span>
+                <span>顺时针晃动猜对 · 逆时针晃动跳过</span>
             </div>
         </section>
         
@@ -509,8 +525,8 @@
                 <i class="fas fa-mobile-alt shake-icon"></i>
                 <div>
                     <p>📱 手势控制：</p>
-                    <p>↑ 快速上移 = 跳过</p>
-                    <p>↓ 快速下移 = 猜对</p>
+                    <p>顺时针旋转 = 猜对</p>
+                    <p>逆时针旋转 = 跳过</p>
                 </div>
             </div>
         </section>
@@ -588,14 +604,13 @@
                 '动物': '#00d2d3'
             },
             
-            // 重力感应配置
+            // 重力感应配置 - 修改为旋转检测
             GESTURE: {
-                UP_THRESHOLD: 9,    // 向上晃动的灵敏度阈值
-                DOWN_THRESHOLD: 9,  // 向下晃动的灵敏度阈值
-                COOLDOWN: 500,       // 手势冷却时间（毫秒）
-                DEAD_ZONE: 5         // 忽略微小晃动
+                CLOCKWISE_THRESHOLD: 1.5,     // 顺时针旋转阈值（弧度/秒）
+                COUNTERCLOCKWISE_THRESHOLD: -1.5, // 逆时针旋转阈值（弧度/秒）
+                COOLDOWN: 800,                // 手势冷却时间（毫秒）- 稍长一点，因为旋转需要时间
+                MIN_ROTATION_ANGLE: 0.5       // 最小旋转角度（弧度）
             },
-            
             // 时间选项
             timeOptions: [1, 2, 3]
         };
@@ -845,11 +860,10 @@
             showNextWord();
             showGestureFeedback('✅', '#2ed573');
         }
-
         function skipWord() {
             gameState.skippedCount++;
             showNextWord();
-            showGestureFeedback('⏭️', '#ff9f43');
+            showGestureFeedback('🔄', '#ff9f43');
         }
 
         // 7. 重力感应/手势检测
@@ -874,61 +888,122 @@
         }
 
         function startGestureListening() {
-            let lastAcceleration = { x: 0, y: 0, z: 0 };
+            let lastRotation = { alpha: 0, beta: 0, gamma: 0 }; // 欧拉角
+            let lastRotationRate = { alpha: 0, beta: 0, gamma: 0 }; // 角速度
+            let rotationStartTime = 0;
+            let rotationStartAngle = 0;
+            let isRotating = false;
+            
+            window.addEventListener('deviceorientation', (event) => {
+                // 获取设备方向（欧拉角）
+                const { alpha, beta, gamma } = event;
+                
+                // 保存当前角度
+                lastRotation = { alpha, beta, gamma };
+            });
             
             window.addEventListener('devicemotion', (event) => {
-                const acc = event.accelerationIncludingGravity;
-                if (!acc) return;
-                
-                // 计算Y轴加速度变化（垂直方向）
-                const deltaY = acc.y - lastAcceleration.y;
-                
-                // 检测向上快速移动（跳过）
-                if (deltaY > CONFIG.GESTURE.UP_THRESHOLD && Math.abs(deltaY) > CONFIG.GESTURE.DEAD_ZONE) {
-                    handleGesture('up');
-                }
-                // 检测向下快速移动（猜对）
-                else if (deltaY < -CONFIG.GESTURE.DOWN_THRESHOLD && Math.abs(deltaY) > CONFIG.GESTURE.DEAD_ZONE) {
-                    handleGesture('down');
+                const rotationRate = event.rotationRate;
+                if (!rotationRate) {
+                    console.log('设备不支持陀螺仪');
+                    return;
                 }
                 
-                lastAcceleration = { x: acc.x, y: acc.y, z: acc.z };
+                // 获取角速度（单位：度/秒）
+                const { alpha, beta, gamma } = rotationRate;
+                
+                // 主要检测Z轴旋转（alpha角速度，对应手机平面内的旋转）
+                // alpha: 绕Z轴的旋转（手机在桌面上旋转）
+                // 正值 = 逆时针旋转，负值 = 顺时针旋转
+                
+                const currentTime = Date.now();
+                
+                // 检测旋转开始
+                if (!isRotating && Math.abs(alpha) > Math.abs(CONFIG.GESTURE.CLOCKWISE_THRESHOLD) * 57.3) {
+                    // 57.3 = 弧度转度数的转换因子 (180/π)
+                    isRotating = true;
+                    rotationStartTime = currentTime;
+                    rotationStartAngle = lastRotation.alpha || 0;
+                    console.log('旋转开始，初始角度:', rotationStartAngle);
+                }
+                
+                // 检测旋转结束并计算总旋转角度
+                if (isRotating && Math.abs(alpha) < 0.5) { // 角速度小于0.5度/秒认为停止
+                    const rotationDuration = currentTime - rotationStartTime;
+                    
+                    if (rotationDuration > 200 && rotationDuration < 1500) { // 有效旋转时间范围
+                        const currentAngle = lastRotation.alpha || 0;
+                        const totalRotation = currentAngle - rotationStartAngle;
+                        
+                        // 规范化角度到 [-180, 180] 范围
+                        let normalizedRotation = totalRotation % 360;
+                        if (normalizedRotation > 180) normalizedRotation -= 360;
+                        if (normalizedRotation < -180) normalizedRotation += 360;
+                        
+                        console.log('旋转结束，总角度:', normalizedRotation, '持续时间:', rotationDuration);
+                        
+                        // 判断旋转方向
+                        if (normalizedRotation > CONFIG.GESTURE.MIN_ROTATION_ANGLE * 57.3) {
+                            // 顺时针旋转（负角度）-> 猜对
+                            console.log('顺时针旋转 - 猜对');
+                            handleGesture('clockwise');
+                        } else if (normalizedRotation < -CONFIG.GESTURE.MIN_ROTATION_ANGLE * 57.3) {
+                            // 逆时针旋转（正角度）-> 跳过
+                            console.log('逆时针旋转 - 跳过');
+                            handleGesture('counterclockwise');
+                        }
+                    }
+                    
+                    isRotating = false;
+                }
+                
+                // 保存角速度用于下次比较
+                lastRotationRate = { alpha, beta, gamma };
             });
         }
-
         function handleGesture(direction) {
             const now = Date.now();
             if (now - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) return;
             
             gameState.lastGestureTime = now;
             
-            if (direction === 'up') {
-                console.log('检测到向上手势 - 跳过');
-                skipWord();
-            } else if (direction === 'down') {
-                console.log('检测到向下手势 - 猜对');
+            if (direction === 'clockwise') {
+                console.log('顺时针手势 - 猜对');
                 markCorrect();
+            } else if (direction === 'counterclockwise') {
+                console.log('逆时针手势 - 跳过');
+                skipWord();
             }
         }
 
         function showGestureFeedback(emoji, color) {
             const feedback = document.createElement('div');
             feedback.className = 'gesture-feedback';
-            feedback.textContent = emoji;
+            feedback.innerHTML = `
+                <div style="font-size: 4rem;">${emoji}</div>
+                <div style="font-size: 1.2rem; margin-top: 10px; font-weight: bold;">
+                    ${emoji === '✅' ? '顺时针旋转 - 猜对' : '🔄 逆时针旋转 - 跳过'}
+                </div>
+            `;
             feedback.style.color = color;
+            feedback.style.textAlign = 'center';
+            feedback.style.background = 'rgba(255, 255, 255, 0.95)';
+            feedback.style.padding = '20px';
+            feedback.style.borderRadius = '20px';
+            feedback.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)';
             
             document.body.appendChild(feedback);
             
             setTimeout(() => {
                 feedback.remove();
-            }, 500);
+            }, 800);
         }
 
         // 8. 游戏结束
         function endGame() {
             clearInterval(gameState.timer);
             
-            const score = gameState.correctCount * 10;
+            const score = gameState.correctCount * 1;
             elements.finalScore.textContent = score;
             elements.finalCorrect.textContent = gameState.correctCount;
             elements.finalSkipped.textContent = gameState.skippedCount;
