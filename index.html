@@ -786,15 +786,10 @@
             
             <div class="shake-hint">
                 <i class="fas fa-mobile-alt shake-icon"></i>
-                <div class="gesture-instructions">
-                    <div class="gesture-item">
-                        <i class="fas fa-check-circle gesture-icon correct-icon"></i>
-                        <span>顺时针晃动 = 猜对</span>
-                    </div>
-                    <div class="gesture-item">
-                        <i class="fas fa-forward gesture-icon skip-icon"></i>
-                        <span>逆时针晃动 = 跳过</span>
-                    </div>
+                <div>
+                    <p>📱 手势控制：</p>
+                    <p>顺时针晃动 = 猜对</p>
+                    <p>逆时针晃动 = 跳过</p>
                 </div>
             </div>
         </section>
@@ -802,7 +797,7 @@
         <!-- 新增：准备界面 -->
         <section id="readySection" class="game-section">
             <div class="ready-section">
-                <h2 class="ready-title">准备开始！</h2>
+                <h2 class="ready-title">准备开始!</h2>
                 <p style="font-size: 1.2rem; color: #666; margin-bottom: 30px;">
                     主题: <span id="readyTheme">成语</span> · 时间: <span id="readyTime">2</span>分钟
                 </p>
@@ -879,7 +874,7 @@
         <section id="resultSection" class="game-section">
             <div class="result-card">
                 <div class="result-header">
-                    <h2>游戏结束！</h2>
+                    <h2>游戏结束!</h2>
                     <p class="result-subtitle">你的最终得分</p>
                 </div>
                 <div class="score" id="finalScore">0</div>
@@ -1414,9 +1409,7 @@
             });
             
             // 默认展开回顾区域
-            setTimeout(() => {
-                toggleReview(true);
-            }, 300);
+            toggleReview(true);
         }
         
         function toggleReview(forceExpand = false) {
