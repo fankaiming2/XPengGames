@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>晃动猜词 - 你描述我猜</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 25px;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        h1 {
+            color: #2575fc;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        
+        .game-section {
+            display: none;
+            text-align: center;
+        }
+        
+        .active-section {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 主题选择样式 */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .theme-card {
+            background: white;
+            border-radius: 18px;
+            padding: 25px 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .theme-card:hover, .theme-card:active {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .theme-card.selected {
+            border-color: #2575fc;
+            background-color: #f0f7ff;
+        }
+        
+        .theme-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+        
+        .theme-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        /* 时间选择样式 */
+        .time-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .time-option {
+            padding: 15px 25px;
+            background: #f0f7ff;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2575fc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+            border: 2px solid transparent;
+        }
+        
+        .time-option:hover, .time-option:active {
+            background: #2575fc;
+            color: white;
+        }
+        
+        .time-option.selected {
+            background: #2575fc;
+            color: white;
+            border-color: #1c5dc1;
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
+        }
+        
+        /* 游戏区域样式 */
+        .game-area {
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .word-card {
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 20px;
+            font-size: 2.8rem;
+            font-weight: 700;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(37, 117, 252, 0.3);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            word-break: break-word;
+        }
+        
+        .timer {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #ff4757;
+            margin: 20px 0;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 18px 35px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 160px;
+        }
+        
+        .btn-primary {
+            background: #2575fc;
+            color: white;
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.3);
+        }
+        
+        .btn-primary:hover, .btn-primary:active {
+            background: #1c5dc1;
+            transform: translateY(-3px);
+        }
+        
+        .btn-secondary {
+            background: #f1f2f6;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+        
+        .btn-secondary:hover, .btn-secondary:active {
+            background: #e0e2e9;
+        }
+        
+        .btn-success {
+            background: #2ed573;
+            color: white;
+            box-shadow: 0 8px 20px rgba(46, 213, 115, 0.3);
+        }
+        
+        .btn-success:hover, .btn-success:active {
+            background: #25b562;
+            transform: translateY(-3px);
+        }
+        
+        /* 重力感应提示 */
+        .shake-hint {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #666;
+            font-size: 1rem;
+            border: 2px dashed #2575fc;
+        }
+        
+        .shake-icon {
+            color: #2575fc;
+            font-size: 1.5rem;
+            animation: shake 2s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+        
+        /* 结果页面 */
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .score {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #2575fc;
+            margin: 15px 0;
+        }
+        
+        .result-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ff4757;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+                border-radius: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .theme-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .word-card {
+                font-size: 2.2rem;
+                min-height: 160px;
+                padding: 30px 15px;
+            }
+            
+            .timer {
+                font-size: 2.8rem;
+            }
+            
+            .game-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        /* 加载动画 */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            border: 5px solid rgba(37, 117, 252, 0.2);
+            border-top: 5px solid #2575fc;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-gamepad"></i> 晃动猜词</h1>
+            <p class="subtitle">你描述，我猜词 · 晃动手机切换词语</p>
+        </div>
+        
+        <!-- 主题选择页面 -->
+        <section id="themeSection" class="game-section active-section">
+            <h2>选择猜词主题</h2>
+            <div class="theme-grid" id="themeGrid">
+                <!-- 主题卡片将通过JS动态生成 -->
+            </div>
+            
+            <div class="time-options" id="timeOptions">
+                <!-- 时间选项将通过JS动态生成 -->
+            </div>
+            
+            <div class="game-controls">
+                <button class="btn btn-primary" id="startGameBtn">
+                    <i class="fas fa-play-circle"></i> 开始游戏
+                </button>
+            </div>
+            
+            <div class="shake-hint">
+                <i class="fas fa-mobile-alt shake-icon"></i>
+                <span>游戏开始后，向下晃动手机可以跳过当前词语</span>
+            </div>
+        </section>
+        
+        <!-- 游戏进行页面 -->
+        <section id="gameSection" class="game-section">
+            <div class="game-area">
+                <h2 id="currentTheme">成语猜猜猜</h2>
+                <div class="word-card" id="currentWord">
+                    词语加载中...
+                </div>
+                
+                <div class="timer" id="timer">
+                    03:00
+                </div>
+                
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="correctCount">0</div>
+                        <div class="stat-label">猜对</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="skippedCount">0</div>
+                        <div class="stat-label">跳过</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalCount">0</div>
+                        <div class="stat-label">总数</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="btn btn-success" id="correctBtn">
+                    <i class="fas fa-check-circle"></i> 猜对了
+                </button>
+                <button class="btn btn-secondary" id="skipBtn">
+                    <i class="fas fa-forward"></i> 跳过
+                </button>
+                <button class="btn btn-secondary" id="endGameBtn">
+                    <i class="fas fa-stop-circle"></i> 结束游戏
+                </button>
+            </div>
+            
+            <div class="shake-hint">
+                <i class="fas fa-mobile-alt shake-icon"></i>
+                <span>向下晃动手机可以跳过当前词语</span>
+            </div>
+        </section>
+        
+        <!-- 结果页面 -->
+        <section id="resultSection" class="game-section">
+            <div class="result-card">
+                <h2>游戏结束！</h2>
+                <p>你的最终得分</p>
+                <div class="score" id="finalScore">0</div>
+                
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="finalCorrect">0</div>
+                        <div class="stat-label">猜对</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="finalSkipped">0</div>
+                        <div class="stat-label">跳过</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="finalTotal">0</div>
+                        <div class="stat-label">总数</div>
+                    </div>
+                </div>
+                
+                <p id="resultMessage">继续加油！</p>
+            </div>
+            
+            <div class="game-controls">
+                <button class="btn btn-primary" id="playAgainBtn">
+                    <i class="fas fa-redo"></i> 再玩一次
+                </button>
+                <button class="btn btn-secondary" id="backToThemeBtn">
+                    <i class="fas fa-palette"></i> 选择其他主题
+                </button>
+            </div>
+        </section>
+        
+        <!-- 加载动画 -->
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p>游戏加载中...</p>
+        </div>
+    </div>
+
+    <script>
+        // 游戏数据
+        const gameData = {
+            themes: [
+                { id: 'idiom', name: '成语', icon: 'fas fa-book-open', color: '#2575fc', 
+                  words: ['画龙点睛', '卧虎藏龙', '一石二鸟', '锦上添花', '守株待兔', '对牛弹琴', '掩耳盗铃', '指鹿为马', '亡羊补牢', '画蛇添足'] },
+                { id: 'star', name: '明星', icon: 'fas fa-star', color: '#ff9f43',
+                  words: ['周杰伦', '刘德华', '泰勒·斯威夫特', '莱昂纳多·迪卡普里奥', '成龙', '玛丽莲·梦露', '迈克尔·杰克逊', '艾玛·沃特森', '汤姆·克鲁斯', '碧昂丝'] },
+                { id: 'food', name: '美食', icon: 'fas fa-utensils', color: '#ee5a24',
+                  words: ['火锅', '披萨', '寿司', '汉堡', '北京烤鸭', '麻辣烫', '冰淇淋', '牛排', '拉面', '饺子'] },
+                { id: 'sport', name: '运动', icon: 'fas fa-running', color: '#2ed573',
+                  words: ['篮球', '足球', '游泳', '乒乓球', '羽毛球', '网球', '滑雪', '瑜伽', '拳击', '田径'] },
+                { id: 'movie', name: '电影', icon: 'fas fa-film', color: '#6c5ce7',
+                  words: ['肖申克的救赎', '阿甘正传', '泰坦尼克号', '复仇者联盟', '哈利波特', '教父', '盗梦空间', '星际穿越', '霸王别姬', '疯狂动物城'] },
+                { id: 'animal', name: '动物', icon: 'fas fa-paw', color: '#00d2d3',
+                  words: ['熊猫', '狮子', '大象', '长颈鹿', '企鹅', '海豚', '老虎', '猴子', '斑马', '袋鼠'] }
+            ],
+            timeOptions: [1, 2, 3],
+            currentTheme: null,
+            selectedTime: 2,
+            gameState: 'theme', // theme, playing, result
+            timer: null,
+            timeLeft: 0,
+            currentWordIndex: 0,
+            correctCount: 0,
+            skippedCount: 0,
+            totalWordsShown: 0,
+            usedWords: [],
+            wordsForGame: []
+        };
+        
+        // DOM元素
+        const themeSection = document.getElementById('themeSection');
+        const gameSection = document.getElementById('gameSection');
+        const resultSection = document.getElementById('resultSection');
+        const themeGrid = document.getElementById('themeGrid');
+        const timeOptions = document.getElementById('timeOptions');
+        const currentTheme = document.getElementById('currentTheme');
+        const currentWord = document.getElementById('currentWord');
+        const timer = document.getElementById('timer');
+        const correctCount = document.getElementById('correctCount');
+        const skippedCount = document.getElementById('skippedCount');
+        const totalCount = document.getElementById('totalCount');
+        const finalScore = document.getElementById('finalScore');
+        const finalCorrect = document.getElementById('finalCorrect');
+        const finalSkipped = document.getElementById('finalSkipped');
+        const finalTotal = document.getElementById('finalTotal');
+        const resultMessage = document.getElementById('resultMessage');
+        const loader = document.getElementById('loader');
+        
+        // 初始化主题选择
+        function initThemeSelection() {
+            // 创建主题卡片
+            themeGrid.innerHTML = '';
+            gameData.themes.forEach(theme => {
+                const themeCard = document.createElement('div');
+                themeCard.className = 'theme-card';
+                themeCard.dataset.id = theme.id;
+                themeCard.innerHTML = `
+                    <i class="${theme.icon} theme-icon" style="color:${theme.color}"></i>
+                    <div class="theme-name">${theme.name}</div>
+                `;
+                themeCard.addEventListener('click', () => selectTheme(theme.id));
+                themeGrid.appendChild(themeCard);
+            });
+            
+            // 创建时间选项
+            timeOptions.innerHTML = '';
+            gameData.timeOptions.forEach(time => {
+                const timeOption = document.createElement('div');
+                timeOption.className = `time-option ${time === 2 ? 'selected' : ''}`;
+                timeOption.textContent = `${time}分钟`;
+                timeOption.dataset.time = time;
+                timeOption.addEventListener('click', () => selectTime(time));
+                timeOptions.appendChild(timeOption);
+            });
+        }
+        
+        // 选择主题
+        function selectTheme(themeId) {
+            // 移除之前选中的主题
+            document.querySelectorAll('.theme-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // 选中当前主题
+            const selectedCard = document.querySelector(`.theme-card[data-id="${themeId}"]`);
+            selectedCard.classList.add('selected');
+            
+            // 更新当前主题
+            const theme = gameData.themes.find(t => t.id === themeId);
+            gameData.currentTheme = theme;
+        }
+        
+        // 选择时间
+        function selectTime(time) {
+            // 移除之前选中的时间
+            document.querySelectorAll('.time-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 选中当前时间
+            const selectedOption = document.querySelector(`.time-option[data-time="${time}"]`);
+            selectedOption.classList.add('selected');
+            
+            // 更新选择的时间
+            gameData.selectedTime = time;
+        }
+        
+        // 开始游戏
+        function startGame() {
+            if (!gameData.currentTheme) {
+                alert('请先选择一个主题！');
+                return;
+            }
+            
+            // 显示加载动画
+            loader.style.display = 'block';
+            
+            // 准备游戏数据
+            gameData.currentWordIndex = 0;
+            gameData.correctCount = 0;
+            gameData.skippedCount = 0;
+            gameData.totalWordsShown = 0;
+            gameData.usedWords = [];
+            gameData.timeLeft = gameData.selectedTime * 60; // 转换为秒
+            
+            // 从当前主题中随机选择词语（避免重复）
+            gameData.wordsForGame = [...gameData.currentTheme.words];
+            shuffleArray(gameData.wordsForGame);
+            
+            // 更新UI
+            currentTheme.textContent = gameData.currentTheme.name + '猜猜猜';
+            
+            // 隐藏加载动画并切换到游戏界面
+            setTimeout(() => {
+                loader.style.display = 'none';
+                showSection('game');
+                
+                // 开始游戏计时器
+                startTimer();
+                
+                // 显示第一个词语
+                showNextWord();
+                
+                // 初始化重力感应
+                initShakeDetection();
+            }, 800);
+        }
+        
+        // 显示下一个词语
+        function showNextWord() {
+            if (gameData.currentWordIndex >= gameData.wordsForGame.length) {
+                // 如果已经用完所有词语，重新洗牌
+                shuffleArray(gameData.wordsForGame);
+                gameData.currentWordIndex = 0;
+            }
+            
+            const word = gameData.wordsForGame[gameData.currentWordIndex];
+            currentWord.textContent = word;
+            gameData.totalWordsShown++;
+            updateGameStats();
+            
+            gameData.currentWordIndex++;
+        }
+        
+        // 开始计时器
+        function startTimer() {
+            clearInterval(gameData.timer);
+            updateTimerDisplay();
+            
+            gameData.timer = setInterval(() => {
+                gameData.timeLeft--;
+                updateTimerDisplay();
+                
+                if (gameData.timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+        
+        // 更新计时器显示
+        function updateTimerDisplay() {
+            const minutes = Math.floor(gameData.timeLeft / 60);
+            const seconds = gameData.timeLeft % 60;
+            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // 时间少于30秒时改变颜色
+            if (gameData.timeLeft < 30) {
+                timer.style.color = '#ff4757';
+                timer.style.animation = 'pulse 1s infinite';
+            } else {
+                timer.style.color = '#2575fc';
+                timer.style.animation = 'none';
+            }
+        }
+        
+        // 更新游戏统计
+        function updateGameStats() {
+            correctCount.textContent = gameData.correctCount;
+            skippedCount.textContent = gameData.skippedCount;
+            totalCount.textContent = gameData.totalWordsShown;
+        }
+        
+        // 猜对了
+        function markCorrect() {
+            gameData.correctCount++;
+            showNextWord();
+        }
+        
+        // 跳过当前词语
+        function skipWord() {
+            gameData.skippedCount++;
+            showNextWord();
+        }
+        
+        // 结束游戏
+        function endGame() {
+            clearInterval(gameData.timer);
+            
+            // 计算得分
+            const score = gameData.correctCount * 10;
+            
+            // 更新结果页面
+            finalScore.textContent = score;
+            finalCorrect.textContent = gameData.correctCount;
+            finalSkipped.textContent = gameData.skippedCount;
+            finalTotal.textContent = gameData.totalWordsShown;
+            
+            // 根据得分显示不同消息
+            let message = '';
+            if (score >= 80) {
+                message = '太厉害了！你是猜词大师！';
+            } else if (score >= 50) {
+                message = '不错哦！继续努力！';
+            } else if (score >= 30) {
+                message = '继续加油，下次会更好！';
+            } else {
+                message = '多玩几次，熟能生巧！';
+            }
+            resultMessage.textContent = message;
+            
+            // 切换到结果页面
+            showSection('result');
+        }
+        
+        // 显示指定部分
+        function showSection(section) {
+            themeSection.classList.remove('active-section');
+            gameSection.classList.remove('active-section');
+            resultSection.classList.remove('active-section');
+            
+            if (section === 'theme') {
+                themeSection.classList.add('active-section');
+            } else if (section === 'game') {
+                gameSection.classList.add('active-section');
+            } else if (section === 'result') {
+                resultSection.classList.add('active-section');
+            }
+        }
+        
+        // 初始化重力感应
+        function initShakeDetection() {
+            let lastShakeTime = 0;
+            const SHAKE_THRESHOLD = 15; // 晃动阈值
+            const SHAKE_COOLDOWN = 1000; // 防抖时间（毫秒）
+            
+            // 检查设备是否支持陀螺仪
+            if (window.DeviceMotionEvent) {
+                window.addEventListener('devicemotion', function(event) {
+                    const acceleration = event.accelerationIncludingGravity;
+                    
+                    // 计算晃动强度
+                    const shakeStrength = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
+                    
+                    // 检查是否是向下晃动（y轴负方向）
+                    if (acceleration.y < -SHAKE_THRESHOLD && shakeStrength > SHAKE_THRESHOLD * 2) {
+                        const currentTime = new Date().getTime();
+                        
+                        // 防止过于频繁触发
+                        if (currentTime - lastShakeTime > SHAKE_COOLDOWN) {
+                            lastShakeTime = currentTime;
+                            skipWord();
+                            
+                            // 添加视觉反馈
+                            document.body.style.backgroundColor = '#ff6b81';
+                            setTimeout(() => {
+                                document.body.style.backgroundColor = '';
+                            }, 300);
+                        }
+                    }
+                });
+            } else {
+                console.log('您的设备不支持重力感应');
+            }
+        }
+        
+        // 工具函数：洗牌算法
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // 事件监听器
+        document.getElementById('startGameBtn').addEventListener('click', startGame);
+        document.getElementById('correctBtn').addEventListener('click', markCorrect);
+        document.getElementById('skipBtn').addEventListener('click', skipWord);
+        document.getElementById('endGameBtn').addEventListener('click', endGame);
+        document.getElementById('playAgainBtn').addEventListener('click', () => {
+            // 重新开始游戏
+            showSection('theme');
+        });
+        document.getElementById('backToThemeBtn').addEventListener('click', () => {
+            showSection('theme');
+        });
+        
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            initThemeSelection();
+            // 默认选择第一个主题
+            selectTheme(gameData.themes[0].id);
+            
+            // 添加CSS动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.7; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+        
+        // 防止页面滚动
+        document.addEventListener('touchmove', function(e) {
+            if (gameData.gameState === 'playing') {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>
