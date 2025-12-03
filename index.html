@@ -1123,9 +1123,6 @@
             elements.countdownNumber.textContent = gameState.countdownValue;
             elements.countdownOverlay.style.display = 'flex';
             
-            // 倒计时动画
-            const countdownAudio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ'); // 静音音频占位符
-            
             gameState.countdownTimer = setInterval(() => {
                 gameState.countdownValue--;
                 
@@ -1136,24 +1133,13 @@
                     if (navigator.vibrate) {
                         navigator.vibrate(100);
                     }
-                    
-                    // 可以在这里添加倒计时的声音效果
                 } else {
-                    elements.countdownNumber.textContent = "开始!";
-                    elements.countdownText.textContent = "游戏开始！";
-                    
-                    // 最后震动
-                    if (navigator.vibrate) {
-                        navigator.vibrate([100, 50, 100]);
-                    }
-                    
+                    // 倒计时结束时直接隐藏覆盖层并开始游戏
                     clearInterval(gameState.countdownTimer);
+                    elements.countdownOverlay.style.display = 'none';
                     
-                    // 倒计时结束后开始游戏
-                    setTimeout(() => {
-                        elements.countdownOverlay.style.display = 'none';
-                        startActualGame();
-                    }, 1000);
+                    // 直接开始游戏，没有额外延迟
+                    startActualGame();
                 }
             }, 1000);
         }
