@@ -12,7 +12,7 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-        
+
         body {
             font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
@@ -21,7 +21,7 @@
             padding: 20px;
             overflow-x: hidden;
         }
-        
+
         .container {
             max-width: 500px;
             margin: 0 auto;
@@ -32,49 +32,49 @@
             padding: 25px;
             position: relative;
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 2px solid #f0f0f0;
         }
-        
+
         h1 {
             color: #2575fc;
             font-size: 2.2rem;
             margin-bottom: 8px;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
         }
-        
+
         .subtitle {
             color: #666;
             font-size: 1rem;
             font-weight: 400;
         }
-        
+
         .game-section {
             display: none;
             text-align: center;
         }
-        
+
         .active-section {
             display: block;
             animation: fadeIn 0.5s ease;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .theme-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin: 25px 0;
         }
-        
+
         .theme-card {
             background: white;
             border-radius: 18px;
@@ -88,35 +88,35 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .theme-card:hover, .theme-card:active {
             transform: translateY(-5px);
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
         }
-        
+
         .theme-card.selected {
             border-color: #2575fc;
             background-color: #f0f7ff;
         }
-        
+
         .theme-icon {
             font-size: 2.5rem;
             margin-bottom: 12px;
         }
-        
+
         .theme-name {
             font-size: 1.2rem;
             font-weight: 600;
             color: #333;
         }
-        
+
         .time-options {
             display: flex;
             justify-content: center;
             gap: 15px;
             margin: 25px 0;
         }
-        
+
         .time-option {
             padding: 15px 25px;
             background: #f0f7ff;
@@ -129,24 +129,24 @@
             min-width: 80px;
             border: 2px solid transparent;
         }
-        
+
         .time-option:hover, .time-option:active {
             background: #2575fc;
             color: white;
         }
-        
+
         .time-option.selected {
             background: #2575fc;
             color: white;
             border-color: #1c5dc1;
             box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
         }
-        
+
         .game-area {
             margin: 30px 0;
             position: relative;
         }
-        
+
         .word-card {
             background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
             color: white;
@@ -163,7 +163,7 @@
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
             word-break: break-word;
         }
-        
+
         .timer {
             font-size: 3.5rem;
             font-weight: 800;
@@ -171,20 +171,20 @@
             margin: 20px 0;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
-        
+
         .timer-ms {
             font-size: 1.8rem;
             color: #2c48d7;
             margin-top: -10px;
         }
-        
+
         .game-controls {
             display: flex;
             justify-content: center;
             gap: 20px;
             margin-top: 30px;
         }
-        
+
         .btn {
             padding: 18px 35px;
             border-radius: 15px;
@@ -199,50 +199,50 @@
             gap: 10px;
             min-width: 160px;
         }
-        
+
         .btn-primary {
             background: #2575fc;
             color: white;
             box-shadow: 0 8px 20px rgba(37, 117, 252, 0.3);
         }
-        
+
         .btn-primary:hover, .btn-primary:active {
             background: #1c5dc1;
             transform: translateY(-3px);
         }
-        
+
         .btn-secondary {
             background: #f1f2f6;
             color: #333;
             border: 2px solid #ddd;
         }
-        
+
         .btn-secondary:hover, .btn-secondary:active {
             background: #e0e2e9;
         }
-        
+
         .btn-success {
             background: #2ed573;
             color: white;
             box-shadow: 0 8px 20px rgba(46, 213, 115, 0.3);
         }
-        
+
         .btn-success:hover, .btn-success:active {
             background: #25b562;
             transform: translateY(-3px);
         }
-        
+
         .btn-info {
             background: #2dd1db;
             color: white;
             box-shadow: 0 8px 20px rgba(45, 209, 219, 0.3);
         }
-        
+
         .btn-info:hover, .btn-info:active {
             background: #25a4ac;
             transform: translateY(-3px);
         }
-        
+
         .shake-hint {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
@@ -282,13 +282,13 @@
             animation: shake 2s infinite;
             flex-shrink: 0; /* 防止图标被压缩 */
         }
-        
+
         @keyframes shake {
             0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(-10deg); }
             75% { transform: rotate(10deg); }
         }
-        
+
         .result-card {
             background: white;
             border-radius: 20px;
@@ -297,39 +297,39 @@
             margin: 25px 0;
             text-align: center;
         }
-        
+
         .score {
             font-size: 4rem;
             font-weight: 800;
             color: #2575fc;
             margin: 15px 0;
         }
-        
+
         .result-stats {
             display: flex;
             justify-content: center;
             gap: 30px;
             margin: 25px 0;
         }
-        
+
         .stat-item {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        
+
         .stat-value {
             font-size: 2.5rem;
             font-weight: 700;
             color: #ff4757;
         }
-        
+
         .stat-label {
             color: #666;
             font-size: 0.9rem;
             margin-top: 5px;
         }
-        
+
         /* 新增：重力感应反馈样式 */
         .gesture-feedback {
             position: fixed;
@@ -341,13 +341,63 @@
             animation: gestureFeedback 0.5s ease;
             pointer-events: none;
         }
-        
+                /* 重力感应状态样式 */
+        .motion-status {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px dashed #ddd;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 80px;
+        }
+
+        .motion-status.enabled {
+            border-color: #2ed573;
+            background: rgba(46, 213, 115, 0.1);
+        }
+
+        .motion-status.disabled {
+            border-color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        .motion-status i {
+            font-size: 2rem;
+        }
+
+        .motion-status .status-text {
+            flex: 1;
+        }
+
+        .motion-status .status-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .motion-status .status-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* 按钮禁用状态 */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn:disabled:hover {
+            transform: none !important;
+        }
+
         @keyframes gestureFeedback {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
             70% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
         }
-        
+
         /* 新增：倒计时样式 */
         .countdown-overlay {
             position: fixed;
@@ -362,7 +412,7 @@
             justify-content: center;
             flex-direction: column;
         }
-        
+
         .countdown-number {
             font-size: 12rem;
             font-weight: 900;
@@ -371,38 +421,38 @@
             margin-bottom: 20px;
             animation: countdownPulse 1s ease infinite;
         }
-        
+
         .countdown-text {
             font-size: 2rem;
             color: white;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
             animation: fadeInOut 1s ease infinite;
         }
-        
+
         @keyframes countdownPulse {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.2); opacity: 0.8; }
             100% { transform: scale(1); opacity: 1; }
         }
-        
+
         @keyframes fadeInOut {
             0%, 100% { opacity: 0.7; }
             50% { opacity: 1; }
         }
-        
+
         /* 新增：准备界面样式 */
         .ready-section {
             text-align: center;
             padding: 40px 20px;
         }
-        
+
         .ready-title {
             font-size: 2.5rem;
             color: #2575fc;
             margin-bottom: 20px;
             animation: readyPulse 2s ease infinite;
         }
-        
+
         .ready-hint {
             background: rgba(37, 117, 252, 0.1);
             border-radius: 15px;
@@ -410,41 +460,41 @@
             margin: 30px 0;
             border: 2px dashed #2575fc;
         }
-        
+
         .ready-hint h3 {
             color: #2575fc;
             margin-bottom: 15px;
             font-size: 1.3rem;
         }
-        
+
         .ready-hint ul {
             text-align: left;
             list-style: none;
             padding: 0;
         }
-        
+
         .ready-hint li {
             padding: 8px 0;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         .ready-hint li i {
             color: #2575fc;
         }
-        
+
         @keyframes readyPulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
-        
+
         /* 新增：回顾词语列表样式 */
         .review-section {
             margin-top: 25px;
             text-align: left;
         }
-        
+
         .review-header {
             display: flex;
             justify-content: space-between;
@@ -453,12 +503,12 @@
             padding-bottom: 10px;
             border-bottom: 2px solid #f0f0f0;
         }
-        
+
         .review-header h3 {
             color: #2575fc;
             font-size: 1.5rem;
         }
-        
+
         .review-toggle {
             background: #f0f7ff;
             border: 2px solid #2575fc;
@@ -470,30 +520,30 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .review-toggle:hover {
             background: #2575fc;
             color: white;
         }
-        
+
         .review-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease;
         }
-        
+
         .review-content.expanded {
             max-height: 400px;
             overflow-y: auto;
         }
-        
+
         .word-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 12px;
             padding: 10px 5px;
         }
-        
+
         .word-item {
             background: white;
             border-radius: 12px;
@@ -506,19 +556,19 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .word-item.correct {
             background: linear-gradient(135deg, #2ed573 0%, #25b562 100%);
             color: white;
             border: 2px solid #25b562;
         }
-        
+
         .word-item.skipped {
             background: linear-gradient(135deg, #ff6b81 0%, #ff4757 100%);
             color: white;
             border: 2px solid #ff4757;
         }
-        
+
         .word-item .word-status {
             position: absolute;
             top: 5px;
@@ -526,15 +576,15 @@
             font-size: 0.7rem;
             opacity: 0.9;
         }
-        
+
         .word-item.correct .word-status {
             content: "✓";
         }
-        
+
         .word-item.skipped .word-status {
             content: "→";
         }
-        
+
         .review-stats {
             display: flex;
             justify-content: space-between;
@@ -544,89 +594,89 @@
             border-radius: 10px;
             font-size: 0.9rem;
         }
-        
+
         .review-stat {
             display: flex;
             align-items: center;
             gap: 5px;
         }
-        
+
         .review-stat.correct {
             color: #2ed573;
         }
-        
+
         .review-stat.skipped {
             color: #ff4757;
         }
-        
+
         @media (max-width: 500px) {
             .container {
                 padding: 20px;
                 border-radius: 20px;
             }
-            
+
             h1 {
                 font-size: 1.8rem;
             }
-            
+
             .theme-grid {
                 grid-template-columns: 1fr;
                 gap: 12px;
             }
-            
+
             .word-card {
                 font-size: 2.2rem;
                 min-height: 160px;
                 padding: 30px 15px;
             }
-            
+
             .timer {
                 font-size: 2.8rem;
             }
-            
+
             .timer-ms {
                 font-size: 1.4rem;
             }
-            
+
             .countdown-number {
                 font-size: 8rem;
             }
-            
+
             .countdown-text {
                 font-size: 1.5rem;
             }
-            
+
             .ready-title {
                 font-size: 2rem;
             }
-            
+
             .game-controls {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .btn {
                 width: 100%;
                 max-width: 300px;
             }
-            
+
             .word-list {
                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
                 gap: 10px;
             }
-            
+
             .word-item {
                 padding: 12px 6px;
                 font-size: 1rem;
             }
         }
-        
+
         .loader {
             display: none;
             text-align: center;
             padding: 40px;
         }
-        
+
         .spinner {
             border: 5px solid rgba(37, 117, 252, 0.2);
             border-top: 5px solid #2575fc;
@@ -636,7 +686,7 @@
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -757,1022 +807,1046 @@
     </style>
 </head>
 <body>
-    <!-- 倒计时覆盖层 -->
-    <div class="countdown-overlay" id="countdownOverlay">
-        <div class="countdown-number" id="countdownNumber">5</div>
-        <div class="countdown-text">准备开始</div>
+<!-- 倒计时覆盖层 -->
+<div class="countdown-overlay" id="countdownOverlay">
+    <div class="countdown-number" id="countdownNumber">5</div>
+    <div class="countdown-text">准备开始</div>
+</div>
+
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-gamepad"></i>你说我猜</h1>
     </div>
-    
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-gamepad"></i>你说我猜</h1>
-        </div>
-        
-        <section id="themeSection" class="game-section active-section">
-            <h2>选择猜词主题</h2>
-            <div class="theme-grid" id="themeGrid">
-                <!-- 主题卡片将通过JS动态生成 -->
-            </div>
-            
-            <div class="time-options" id="timeOptions">
-                <!-- 时间选项将通过JS动态生成 -->
-            </div>
-            
-            <div class="game-controls">
-                <button class="btn btn-primary" id="startGameBtn">
-                    <i class="fas fa-play-circle"></i>进入游戏
-                </button>
-            </div>
-            
-            <div class="shake-hint">
-                <i class="fas fa-mobile-alt shake-icon"></i>
-                <div>
-                    <p>📱 手势控制：</p>
-                    <p>顺时针晃动 = 猜对</p>
-                    <p>逆时针晃动 = 跳过</p>
-                </div>
-            </div>
-        </section>
-        
-        <!-- 新增：准备界面 -->
-        <section id="readySection" class="game-section">
-            <div class="ready-section">
-                <h2 class="ready-title">准备开始!</h2>
-                <p style="font-size: 1.2rem; color: #666; margin-bottom: 30px;">
-                    主题: <span id="readyTheme">成语</span> · 时间: <span id="readyTime">2</span>分钟
-                </p>
-                
-                <div class="ready-hint">
-                    <h3><i class="fas fa-lightbulb"></i> 游戏提示</h3>
-                    <ul>
-                        <li><i class="fas fa-check-circle"></i> 顺时针旋转手机 = 猜对</li>
-                        <li><i class="fas fa-forward"></i> 逆时针旋转手机 = 跳过</li>
-                        <li><i class="fas fa-mobile-alt"></i> 保持手机竖直以获得最佳体验</li>
-                        <li><i class="fas fa-bolt"></i> 动作要快速果断，旋转约15度即可</li>
-                    </ul>
-                </div>
-                
-                <div class="game-controls">
-                    <button class="btn btn-success" id="startNowBtn">
-                        <i class="fas fa-rocket"></i> 立即开始
-                    </button>
-                    <button class="btn btn-secondary" id="cancelStartBtn">
-                        <i class="fas fa-times"></i> 返回
-                    </button>
-                </div>
-            </div>
-        </section>
-        
-        <section id="gameSection" class="game-section">
-            <div class="game-area">
-                <h2 id="currentTheme">成语猜猜猜</h2>
-                <div class="word-card" id="currentWord">
-                    词语加载中...
-                </div>
-                
-                <div class="timer-area">
-                    <div class="timer" id="timer">
-                        03:00
-                        <span class="timer-ms" id="timerMs">.000</span>
-                    </div>
-                </div>
-                
-                <div class="result-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="correctCount">0</div>
-                        <div class="stat-label">猜对</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="skippedCount">0</div>
-                        <div class="stat-label">跳过</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="game-controls">
-                <button class="btn btn-success" id="correctBtn">
-                    <i class="fas fa-check-circle"></i> 猜对了
-                </button>
-                <button class="btn btn-secondary" id="skipBtn">
-                    <i class="fas fa-forward"></i> 跳过
-                </button>
-                <button class="btn btn-secondary" id="endGameBtn">
-                    <i class="fas fa-stop-circle"></i> 结束游戏
-                </button>
-            </div>
-            
-            <div class="shake-hint">
-                <i class="fas fa-mobile-alt shake-icon"></i>
-                <div>
-                    <p>📱 手势控制：</p>
-                    <p>顺时针晃动 = 猜对</p>
-                    <p>逆时针晃动 = 跳过</p>
-                </div>
-            </div>
-        </section>
-        
-        <section id="resultSection" class="game-section">
-            <div class="result-card">
-                <div class="result-header">
-                    <h2>游戏结束!</h2>
-                    <p class="result-subtitle">你的最终得分</p>
-                </div>
-                <div class="score" id="finalScore">0</div>
-                
-                <div class="result-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="finalCorrect">0</div>
-                        <div class="stat-label">猜对</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="finalSkipped">0</div>
-                        <div class="stat-label">跳过</div>
-                    </div>
-                </div>
-                
-                <p id="resultMessage">继续加油！</p>
-                
-                <!-- 新增：回顾词语区域 -->
-                <div class="review-section">
-                    <div class="review-header">
-                        <h3><i class="fas fa-history"></i> 词语回顾</h3>
-                        <button class="review-toggle" id="toggleReview">
-                            <i class="fas fa-chevron-down"></i> 展开查看
-                        </button>
-                    </div>
-                    
-                    <div class="review-content" id="reviewContent">
-                        <div class="word-list" id="wordReviewList">
-                            <!-- 回顾词语将在这里动态生成 -->
-                        </div>
-                        
-                        <div class="review-stats">
-                            <div class="review-stat correct">
-                                <i class="fas fa-check-circle"></i>
-                                <span>猜对: <span id="reviewCorrectCount">0</span>个</span>
-                            </div>
-                            <div class="review-stat skipped">
-                                <i class="fas fa-forward"></i>
-                                <span>跳过: <span id="reviewSkippedCount">0</span>个</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="game-controls">
-                <button class="btn btn-primary" id="playAgainBtn">
-                    <i class="fas fa-redo"></i>再玩一次
-                </button>
-                <!-- <button class="btn btn-info" id="showReviewBtn">
-                    <i class="fas fa-history"></i>查看回顾
-                </button> -->
-                <button class="btn btn-secondary" id="backToThemeBtn">
-                    <i class="fas fa-palette"></i>选择其他主题
-                </button>
-            </div>
-        </section>
-        
-        <div class="loader" id="loader">
-            <div class="spinner"></div>
-            <p>游戏加载中...</p>
-        </div>
+    <!-- 在themeSection的游戏控制区域上方添加 -->
+    <div class="game-controls" style="margin-top: 15px;">
+        <button class="btn btn-info" id="requestMotionBtn">
+            <i class="fas fa-mobile-alt"></i> 启用重力感应
+        </button>
     </div>
 
-    <script>
-        // ==================== 配置区域 ====================
-        const CONFIG = {
-            // 主题配置文件映射（文件名 -> 显示名称）
-            themeFiles: {
-                'idiom.txt': '成语',
-                'star.txt': '明星',
-                'food.txt': '美食',
-                'sport.txt': '运动',
-                'movie.txt': '电影',
-                'animal.txt': '动物'
-            },
-            
-            // 主题图标映射
-            themeIcons: {
-                '成语': 'fas fa-book-open',
-                '明星': 'fas fa-star',
-                '美食': 'fas fa-utensils',
-                '运动': 'fas fa-running',
-                '电影': 'fas fa-film',
-                '动物': 'fas fa-paw'
-            },
-            
-            // 主题颜色映射
-            themeColors: {
-                '成语': '#2575fc',
-                '明星': '#ff9f43',
-                '美食': '#ee5a24',
-                '运动': '#2ed573',
-                '电影': '#6c5ce7',
-                '动物': '#00d2d3'
-            },
-            
-            // 重力感应配置 - 修改为旋转检测
-            GESTURE: {
-                MIN_ROTATION_ANGLE: 15,      // 最小旋转角度（度）- 更灵敏
-                MAX_ROTATION_ANGLE: 90,       // 最大旋转角度（度）- 避免过度旋转
-                ROTATION_SPEED_THRESHOLD: 45, // 最小旋转速度（度/秒）- 降低要求
-                COOLDOWN: 600,                // 手势冷却时间（毫秒）- 缩短
-                DEBOUNCE_TIME: 200,           // 防抖时间（毫秒）
-                HISTORY_SIZE: 8               // 历史记录大小
-            },
-            // 时间选项
-            timeOptions: [1, 2, 3]
-        };
+    <!-- 在shake-hint上方添加状态显示 -->
+    <div id="motionStatus" class="shake-hint" style="margin-top: 15px; background: #f8f9fa; display: none;">
+        <i class="fas fa-check-circle" style="color: #2ed573;"></i>
+        <div>
+            <p style="font-weight: bold; color: #2ed573;">✓ 重力感应已启用</p>
+            <p style="font-size: 0.9rem;">现在可以使用手机旋转来控制游戏</p>
+        </div>
+    </div>
+    <section id="themeSection" class="game-section active-section">
+        <h2>选择猜词主题</h2>
+        <div class="theme-grid" id="themeGrid">
+            <!-- 主题卡片将通过JS动态生成 -->
+        </div>
 
-        // ==================== 游戏状态 ====================
-        const gameState = {
-            themes: [],              // 从文件加载的主题数据
-            currentTheme: null,
-            selectedTime: 2,
-            timer: null,
-            timeLeft: 0,            // 总秒数
-            timeLeftMs: 0,          // 毫秒部分
-            currentWordIndex: 0,
-            correctCount: 0,
-            skippedCount: 0,
-            totalWordsShown: 0,
-            wordsForGame: [],
-            lastGestureTime: 0,     // 上次手势时间戳
-            lastAcceleration: { x: 0, y: 0, z: 0 }, // 上次加速度值
-            // 新增：记录每个词语的状态
-            wordHistory: [], // 格式: { word: "词语", status: "correct"|"skipped", timestamp: 时间戳 }
-            // 新增：倒计时相关
-            countdownTimer: null,
-            countdownValue: 5
-        };
+        <div class="time-options" id="timeOptions">
+            <!-- 时间选项将通过JS动态生成 -->
+        </div>
 
-        // ==================== DOM元素 ====================
-        const elements = {
-            themeGrid: document.getElementById('themeGrid'),
-            timeOptions: document.getElementById('timeOptions'),
-            currentTheme: document.getElementById('currentTheme'),
-            currentWord: document.getElementById('currentWord'),
-            timer: document.getElementById('timer'),
-            timerMs: document.getElementById('timerMs'),
-            correctCount: document.getElementById('correctCount'),
-            skippedCount: document.getElementById('skippedCount'),
-            finalScore: document.getElementById('finalScore'),
-            finalCorrect: document.getElementById('finalCorrect'),
-            finalSkipped: document.getElementById('finalSkipped'),
-            resultMessage: document.getElementById('resultMessage'),
-            loader: document.getElementById('loader'),
-            // 新增：回顾相关元素
-            reviewContent: document.getElementById('reviewContent'),
-            wordReviewList: document.getElementById('wordReviewList'),
-            reviewCorrectCount: document.getElementById('reviewCorrectCount'),
-            reviewSkippedCount: document.getElementById('reviewSkippedCount'),
-            toggleReview: document.getElementById('toggleReview'),
-            // showReviewBtn: document.getElementById('showReviewBtn'),
-            // 新增：倒计时元素
-            countdownOverlay: document.getElementById('countdownOverlay'),
-            countdownNumber: document.getElementById('countdownNumber'),
-            // 新增：准备界面元素
-            readySection: document.getElementById('readySection'),
-            readyTheme: document.getElementById('readyTheme'),
-            readyTime: document.getElementById('readyTime'),
-            startNowBtn: document.getElementById('startNowBtn'),
-            cancelStartBtn: document.getElementById('cancelStartBtn')
-        };
+        <div class="game-controls">
+            <button class="btn btn-primary" id="startGameBtn">
+                <i class="fas fa-play-circle"></i>进入游戏
+            </button>
+        </div>
 
-        // ==================== 核心功能 ====================
+        <div class="shake-hint">
+            <i class="fas fa-mobile-alt shake-icon"></i>
+            <div>
+                <p>📱 手势控制：</p>
+                <p>顺时针晃动 = 猜对</p>
+                <p>逆时针晃动 = 跳过</p>
+            </div>
+        </div>
+    </section>
 
-        // 1. 从TXT文件加载词语库
-        async function loadWordFile(filename) {
-            try {
-                const response = await fetch(`words/${filename}`);
-                if (!response.ok) throw new Error(`无法加载文件: ${filename}`);
-                
-                const text = await response.text();
-                const words = text.split('\n')
-                    .map(line => line.trim())
-                    .filter(line => line && !line.startsWith('#') && !line.startsWith('//'));
-                
-                console.log(`加载主题 ${filename}: ${words.length} 个词语`);
-                return words;
-            } catch (error) {
-                console.error('加载词语文件失败:', error);
-                return getDefaultWords(filename);
-            }
-        }
+    <!-- 新增：准备界面 -->
+    <section id="readySection" class="game-section">
+        <div class="ready-section">
+            <h2 class="ready-title">准备开始!</h2>
+            <p style="font-size: 1.2rem; color: #666; margin-bottom: 30px;">
+                主题: <span id="readyTheme">成语</span> · 时间: <span id="readyTime">2</span>分钟
+            </p>
 
-        // 2. 初始化所有主题
-        async function initAllThemes() {
-            showLoader(true);
-            gameState.themes = [];
-            
-            for (const [filename, themeName] of Object.entries(CONFIG.themeFiles)) {
-                const words = await loadWordFile(filename);
-                if (words.length > 0) {
-                    gameState.themes.push({
-                        id: filename.replace('.txt', ''),
-                        name: themeName,
-                        icon: CONFIG.themeIcons[themeName] || 'fas fa-question-circle',
-                        color: CONFIG.themeColors[themeName] || '#888',
-                        words: words
-                    });
-                }
-            }
-            
-            // 如果没加载到任何主题，使用默认数据
-            if (gameState.themes.length === 0) {
-                console.log('使用默认主题数据');
-                gameState.themes = getDefaultThemes();
-            }
-            
-            initThemeSelection();
-            showLoader(false);
-            console.log(`成功加载 ${gameState.themes.length} 个主题`);
-        }
+            <div class="ready-hint">
+                <h3><i class="fas fa-lightbulb"></i> 游戏提示</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> 顺时针旋转手机 = 猜对</li>
+                    <li><i class="fas fa-forward"></i> 逆时针旋转手机 = 跳过</li>
+                    <li><i class="fas fa-mobile-alt"></i> 保持手机竖直以获得最佳体验</li>
+                    <li><i class="fas fa-bolt"></i> 动作要快速果断，旋转约15度即可</li>
+                </ul>
+            </div>
 
-        // 3. 初始化主题选择界面
-        function initThemeSelection() {
-            elements.themeGrid.innerHTML = '';
-            gameState.themes.forEach(theme => {
-                const themeCard = document.createElement('div');
-                themeCard.className = 'theme-card';
-                themeCard.dataset.id = theme.id;
-                themeCard.innerHTML = `
-                    <i class="${theme.icon} theme-icon" style="color:${theme.color}"></i>
-                    <div class="theme-name">${theme.name}</div>
-                `;
-                themeCard.addEventListener('click', () => selectTheme(theme.id));
-                elements.themeGrid.appendChild(themeCard);
-            });
-            
-            // 初始化时间选项
-            initTimeOptions();
-            
-            // 默认选择第一个主题
-            if (gameState.themes.length > 0) {
-                selectTheme(gameState.themes[0].id);
-            }
-        }
+            <div class="game-controls">
+                <button class="btn btn-success" id="startNowBtn">
+                    <i class="fas fa-rocket"></i> 立即开始
+                </button>
+                <button class="btn btn-secondary" id="cancelStartBtn">
+                    <i class="fas fa-times"></i> 返回
+                </button>
+            </div>
+        </div>
+    </section>
 
-        function initTimeOptions() {
-            elements.timeOptions.innerHTML = '';
-            CONFIG.timeOptions.forEach(time => {
-                const timeOption = document.createElement('div');
-                timeOption.className = `time-option ${time === 2 ? 'selected' : ''}`;
-                timeOption.textContent = `${time}分钟`;
-                timeOption.dataset.time = time;
-                timeOption.addEventListener('click', () => selectTime(time));
-                elements.timeOptions.appendChild(timeOption);
-            });
-        }
+    <section id="gameSection" class="game-section">
+        <div class="game-area">
+            <h2 id="currentTheme">成语猜猜猜</h2>
+            <div class="word-card" id="currentWord">
+                词语加载中...
+            </div>
 
-        function selectTheme(themeId) {
-            document.querySelectorAll('.theme-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            
-            const selectedCard = document.querySelector(`.theme-card[data-id="${themeId}"]`);
-            if (selectedCard) selectedCard.classList.add('selected');
-            
-            gameState.currentTheme = gameState.themes.find(t => t.id === themeId);
-        }
+            <div class="timer-area">
+                <div class="timer" id="timer">
+                    03:00
+                    <span class="timer-ms" id="timerMs">.000</span>
+                </div>
+            </div>
 
-        function selectTime(time) {
-            document.querySelectorAll('.time-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            const selectedOption = document.querySelector(`.time-option[data-time="${time}"]`);
-            if (selectedOption) selectedOption.classList.add('selected');
-            
-            gameState.selectedTime = time;
-        }
+            <div class="result-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="correctCount">0</div>
+                    <div class="stat-label">猜对</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="skippedCount">0</div>
+                    <div class="stat-label">跳过</div>
+                </div>
+            </div>
+        </div>
 
-        // 4. 开始游戏 - 修改为进入准备界面
-        function startGame() {
-            if (!gameState.currentTheme) {
-                alert('请先选择一个主题！');
-                return;
-            }
-            
-            // 更新准备界面信息
-            elements.readyTheme.textContent = gameState.currentTheme.name;
-            elements.readyTime.textContent = gameState.selectedTime;
-            
-            // 滚动到页面顶部
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // 显示准备界面
-            showSection('ready');
-        }
+        <div class="game-controls">
+            <button class="btn btn-success" id="correctBtn">
+                <i class="fas fa-check-circle"></i> 猜对了
+            </button>
+            <button class="btn btn-secondary" id="skipBtn">
+                <i class="fas fa-forward"></i> 跳过
+            </button>
+            <button class="btn btn-secondary" id="endGameBtn">
+                <i class="fas fa-stop-circle"></i> 结束游戏
+            </button>
+        </div>
 
-        // 5. 立即开始游戏（从准备界面）
-        function startGameNow() {
-            // 重置游戏状态
-            resetGameState();
-            
-            // 准备词语
-            gameState.wordsForGame = [...gameState.currentTheme.words];
-            shuffleArray(gameState.wordsForGame);
-            
-            // 更新UI
-            elements.currentTheme.textContent = gameState.currentTheme.name + '猜猜猜';
-            
-            // 开始倒计时
-            startCountdown();
-        }
+        <div class="shake-hint">
+            <i class="fas fa-mobile-alt shake-icon"></i>
+            <div>
+                <p>📱 手势控制：</p>
+                <p>顺时针晃动 = 猜对</p>
+                <p>逆时针晃动 = 跳过</p>
+            </div>
+        </div>
+    </section>
 
-        // 6. 开始倒计时
-        function startCountdown() {
-            // 重置倒计时值
-            gameState.countdownValue = 5;
-            elements.countdownNumber.textContent = gameState.countdownValue;
-            elements.countdownOverlay.style.display = 'flex';
-            
-            gameState.countdownTimer = setInterval(() => {
-                gameState.countdownValue--;
-                
-                if (gameState.countdownValue > 0) {
-                    elements.countdownNumber.textContent = gameState.countdownValue;
-                    
-                    // 添加震动反馈（如果支持）
-                    if (navigator.vibrate) {
-                        navigator.vibrate(100);
-                    }
-                } else {
-                    // 倒计时结束时直接隐藏覆盖层并开始游戏
-                    clearInterval(gameState.countdownTimer);
-                    elements.countdownOverlay.style.display = 'none';
-                    
-                    // 直接开始游戏，没有额外延迟
-                    startActualGame();
-                }
-            }, 1000);
-        }
+    <section id="resultSection" class="game-section">
+        <div class="result-card">
+            <div class="result-header">
+                <h2>游戏结束!</h2>
+                <p class="result-subtitle">你的最终得分</p>
+            </div>
+            <div class="score" id="finalScore">0</div>
 
-        // 7. 实际开始游戏逻辑
-        function startActualGame() {
-            // 滚动到页面顶部
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // 显示游戏界面
-            showSection('game');
-            
-            // 开始计时器
-            startTimer();
-            
-            // 显示第一个词语
-            showNextWord();
-            
-            // 初始化手势检测
-            initGestureDetection();
-        }
+            <div class="result-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="finalCorrect">0</div>
+                    <div class="stat-label">猜对</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="finalSkipped">0</div>
+                    <div class="stat-label">跳过</div>
+                </div>
+            </div>
 
-        // 8. 重置游戏状态
-        function resetGameState() {
-            gameState.currentWordIndex = 0;
-            gameState.correctCount = 0;
-            gameState.skippedCount = 0;
-            gameState.totalWordsShown = 0;
-            gameState.timeLeft = gameState.selectedTime * 60;
-            gameState.timeLeftMs = 0;
-            gameState.wordHistory = []; // 清空历史记录
-            gameState.lastGestureTime = 0; // 重置手势时间
-            
-            // 重置UI
-            elements.correctCount.textContent = '0';
-            elements.skippedCount.textContent = '0';
-            elements.timer.classList.remove('timer-low');
-            
-            resetBaselineAngle(); // 重置基准角度
-        }
+            <p id="resultMessage">继续加油！</p>
 
-        // 修改计时器HTML结构
-        function startTimer() {
-            clearInterval(gameState.timer);
-            
-            // 设置初始显示
-            const minutes = Math.floor(gameState.timeLeft / 60);
-            const seconds = gameState.timeLeft % 60;
-            const timerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            elements.timer.innerHTML = `${timerText}<span class="timer-ms" id="timerMs">.000</span>`;
-            
-            const startTime = Date.now();
-            const totalMs = gameState.timeLeft * 1000;
-            
-            gameState.timer = setInterval(() => {
-                const elapsed = Date.now() - startTime;
-                const remaining = Math.max(0, totalMs - elapsed);
-                
-                gameState.timeLeft = Math.floor(remaining / 1000);
-                gameState.timeLeftMs = remaining % 1000;
-                
-                updateTimerDisplay();
-                
-                if (remaining <= 0) {
-                    endGame();
-                }
-            }, 16);
-        }
+            <!-- 新增：回顾词语区域 -->
+            <div class="review-section">
+                <div class="review-header">
+                    <h3><i class="fas fa-history"></i> 词语回顾</h3>
+                    <button class="review-toggle" id="toggleReview">
+                        <i class="fas fa-chevron-down"></i> 展开查看
+                    </button>
+                </div>
 
-        // 修改updateTimerDisplay函数
-        function updateTimerDisplay() {
-            const minutes = Math.floor(gameState.timeLeft / 60);
-            const seconds = gameState.timeLeft % 60;
-            
-            // 更新主计时器
-            const timerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            elements.timer.innerHTML = `${timerText}<span class="timer-ms" id="timerMs">.${gameState.timeLeftMs.toString().padStart(3, '0')}</span>`;
-            
-            // 低时间提醒
-            if (gameState.timeLeft < 10) {
-                elements.timer.classList.add('timer-low');
-            } else {
-                elements.timer.classList.remove('timer-low');
-            }
-        }
-
-        // 9. 游戏控制功能
-        function showNextWord() {
-            if (gameState.currentWordIndex >= gameState.wordsForGame.length) {
-                shuffleArray(gameState.wordsForGame);
-                gameState.currentWordIndex = 0;
-            }
-            
-            const word = gameState.wordsForGame[gameState.currentWordIndex];
-            elements.currentWord.textContent = word;
-            gameState.totalWordsShown++;
-            updateGameStats();
-            gameState.currentWordIndex++;
-        }
-
-        function updateGameStats() {
-            elements.correctCount.textContent = gameState.correctCount;
-            elements.skippedCount.textContent = gameState.skippedCount;
-        }
-
-        // 10. 增强markCorrect和skipWord的反馈 - 修改为记录历史
-        function markCorrect() {
-            const currentWord = elements.currentWord.textContent;
-            // 记录到历史
-            gameState.wordHistory.push({
-                word: currentWord,
-                status: 'correct',
-                timestamp: Date.now()
-            });
-            
-            gameState.correctCount++;
-            showNextWord();
-            
-            // 添加额外反馈
-            elements.currentWord.style.animation = 'none';
-            setTimeout(() => {
-                elements.currentWord.style.animation = 'pulse 0.5s ease';
-            }, 10);
-        }
-
-        function skipWord() {
-            const currentWord = elements.currentWord.textContent;
-            // 记录到历史
-            gameState.wordHistory.push({
-                word: currentWord,
-                status: 'skipped',
-                timestamp: Date.now()
-            });
-            
-            gameState.skippedCount++;
-            showNextWord();
-            
-            // 添加额外反馈
-            elements.currentWord.style.animation = 'none';
-            setTimeout(() => {
-                elements.currentWord.style.animation = 'shake 0.5s ease';
-            }, 10);
-        }
-        
-        // 11. 游戏结束 - 修改为包含回顾功能
-        function endGame() {
-            clearInterval(gameState.timer);
-            
-            const score = gameState.correctCount * 1;
-            elements.finalScore.textContent = score;
-            elements.finalCorrect.textContent = gameState.correctCount;
-            elements.finalSkipped.textContent = gameState.skippedCount;
-            
-            let message = '';
-            if (score >= 80) message = '太厉害了！你是猜词大师！';
-            else if (score >= 50) message = '不错哦！继续努力！';
-            else if (score >= 30) message = '继续加油，下次会更好！';
-            else message = '多玩几次，熟能生巧！';
-            
-            elements.resultMessage.textContent = message;
-            
-            // 初始化回顾内容
-            initWordReview();
-            
-            // 滚动到页面顶部
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            showSection('result');
-        }
-
-        // ==================== 新增：词语回顾功能 ====================
-        
-        function initWordReview() {
-            // 清空之前的回顾内容
-            elements.wordReviewList.innerHTML = '';
-            
-            // 更新统计数字
-            elements.reviewCorrectCount.textContent = gameState.correctCount;
-            elements.reviewSkippedCount.textContent = gameState.skippedCount;
-            
-            // 如果没有历史记录，显示提示
-            if (gameState.wordHistory.length === 0) {
-                elements.wordReviewList.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #666;">
-                        <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 10px;"></i>
-                        <p>暂无词语回顾记录</p>
+                <div class="review-content" id="reviewContent">
+                    <div class="word-list" id="wordReviewList">
+                        <!-- 回顾词语将在这里动态生成 -->
                     </div>
-                `;
-                return;
-            }
-            
-            // 显示所有历史词语
-            gameState.wordHistory.forEach((item, index) => {
-                const wordItem = document.createElement('div');
-                wordItem.className = `word-item ${item.status}`;
-                wordItem.innerHTML = `
-                    <div>${item.word}</div>
-                    <div class="word-status">${item.status === 'correct' ? '✓' : '→'}</div>
-                `;
-                elements.wordReviewList.appendChild(wordItem);
-            });
-            
-            // 直接操作DOM，不依赖 toggleReview 函数
-            setTimeout(() => {
-                elements.reviewContent.classList.add('expanded');
-                elements.toggleReview.innerHTML = '<i class="fas fa-chevron-up"></i> 收起列表';
-                elements.toggleReview.style.background = '#2575fc';
-                elements.toggleReview.style.color = 'white';
-            }, 10); // 微小延迟确保DOM已更新
-        }
-        
-        function toggleReview(forceExpand = false) {
-            const isExpanded = elements.reviewContent.classList.contains('expanded') || forceExpand;
-            
-            if (!isExpanded) {
-                elements.reviewContent.classList.add('expanded');
-                elements.toggleReview.innerHTML = '<i class="fas fa-chevron-up"></i> 收起列表';
-                elements.toggleReview.style.background = '#2575fc';
-                elements.toggleReview.style.color = 'white';
-            } else {
-                elements.reviewContent.classList.remove('expanded');
-                elements.toggleReview.innerHTML = '<i class="fas fa-chevron-down"></i> 展开查看';
-                elements.toggleReview.style.background = '#f0f7ff';
-                elements.toggleReview.style.color = '#2575fc';
-            }
-        }
-        
-        function showReview() {
-            // 确保回顾区域展开
-            toggleReview(true);
-            
-            // 滚动到回顾区域
-            elements.reviewContent.scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
 
-        // ==================== 手势检测相关功能 ====================
-        
-        // 12. 添加重置基准角度的功能
-        function resetBaselineAngle() {
-            console.log('重置基准角度');
-            baselineAlpha = null;
-        }
+                    <div class="review-stats">
+                        <div class="review-stat correct">
+                            <i class="fas fa-check-circle"></i>
+                            <span>猜对: <span id="reviewCorrectCount">0</span>个</span>
+                        </div>
+                        <div class="review-stat skipped">
+                            <i class="fas fa-forward"></i>
+                            <span>跳过: <span id="reviewSkippedCount">0</span>个</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        // 13. 初始化时提供校准提示
-        function initGestureDetection() {
-            if (!window.DeviceOrientationEvent) {
-                console.log('设备不支持方向传感器');
-                return;
-            }
-            
-            // iOS权限请求
-            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission()
-                    .then(permission => {
-                        if (permission === 'granted') {
-                            startGestureListening();
-                            showCalibrationHint();
-                        } else {
-                            console.log('用户拒绝了方向传感器权限');
-                        }
-                    })
-                    .catch(console.error);
-            } else {
-                startGestureListening();
-                showCalibrationHint();
-            }
-        }
-        
-        function showCalibrationHint() {
-            const hint = document.createElement('div');
-            hint.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                border-radius: 15px;
-                padding: 5px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-                z-index: 9998;
-                animation: fadeIn 0.3s ease;
-            `;
-            
-            document.body.appendChild(hint);
-            
-            // 3秒后自动消失
-            setTimeout(() => {
-                hint.style.opacity = '0';
-                hint.style.transition = 'opacity 0.3s ease';
-                setTimeout(() => hint.remove(), 300);
-            }, 3000);
-        }
+        <div class="game-controls">
+            <button class="btn btn-primary" id="playAgainBtn">
+                <i class="fas fa-redo"></i>再玩一次
+            </button>
+            <!-- <button class="btn btn-info" id="showReviewBtn">
+                <i class="fas fa-history"></i>查看回顾
+            </button> -->
+            <button class="btn btn-secondary" id="backToThemeBtn">
+                <i class="fas fa-palette"></i>选择其他主题
+            </button>
+        </div>
+    </section>
 
-        // 手势检测函数
-        function startGestureListening() {
-            let rotationHistory = []; // 存储角度历史
-            let lastValidTime = 0;
-            let baselineAlpha = null; // 基准角度
-            let isCalibrated = false;
-            let calibrationSamples = [];
-            
-            window.addEventListener('deviceorientation', (event) => {
-                const currentTime = Date.now();
-                const currentAlpha = event.alpha; // Z轴旋转角度
-                
-                // 1. 校准阶段 - 收集初始角度
-                if (!isCalibrated) {
-                    calibrationSamples.push(currentAlpha);
-                    
-                    if (calibrationSamples.length >= 20) { // 收集20个样本
-                        // 计算平均值作为基准
-                        const sum = calibrationSamples.reduce((a, b) => a + b, 0);
-                        baselineAlpha = sum / calibrationSamples.length;
-                        isCalibrated = true;
-                        console.log('校准完成，基准角度:', baselineAlpha);
-                    }
-                    return;
-                }
-                
-                // 2. 防抖处理
-                if (currentTime - lastValidTime < CONFIG.GESTURE.DEBUNCE_TIME) {
-                    return;
-                }
-                
-                // 3. 计算相对于基准的角度
-                let relativeAngle = currentAlpha - baselineAlpha;
-                
-                // 规范化到 [-180, 180] 范围
-                if (relativeAngle > 180) relativeAngle -= 360;
-                if (relativeAngle < -180) relativeAngle += 360;
-                
-                // 4. 保存到历史记录
-                rotationHistory.push({
-                    time: currentTime,
-                    angle: relativeAngle
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>游戏加载中...</p>
+    </div>
+</div>
+
+<script>
+    // ==================== 配置区域 ====================
+    const CONFIG = {
+        // 主题配置文件映射（文件名 -> 显示名称）
+        themeFiles: {
+            'idiom.txt': '成语',
+            'star.txt': '明星',
+            'food.txt': '美食',
+            'sport.txt': '运动',
+            'movie.txt': '电影',
+            'animal.txt': '动物'
+        },
+
+        // 主题图标映射
+        themeIcons: {
+            '成语': 'fas fa-book-open',
+            '明星': 'fas fa-star',
+            '美食': 'fas fa-utensils',
+            '运动': 'fas fa-running',
+            '电影': 'fas fa-film',
+            '动物': 'fas fa-paw'
+        },
+
+        // 主题颜色映射
+        themeColors: {
+            '成语': '#2575fc',
+            '明星': '#ff9f43',
+            '美食': '#ee5a24',
+            '运动': '#2ed573',
+            '电影': '#6c5ce7',
+            '动物': '#00d2d3'
+        },
+
+        // 重力感应配置 - 修改为旋转检测
+        GESTURE: {
+            MIN_ROTATION_ANGLE: 15,      // 最小旋转角度（度）- 更灵敏
+            MAX_ROTATION_ANGLE: 90,       // 最大旋转角度（度）- 避免过度旋转
+            ROTATION_SPEED_THRESHOLD: 45, // 最小旋转速度（度/秒）- 降低要求
+            COOLDOWN: 600,                // 手势冷却时间（毫秒）- 缩短
+            DEBOUNCE_TIME: 200,           // 防抖时间（毫秒）
+            HISTORY_SIZE: 8               // 历史记录大小
+        },
+        // 时间选项
+        timeOptions: [1, 2, 3]
+    };
+
+    // ==================== 游戏状态 ====================
+    const gameState = {
+        themes: [],              // 从文件加载的主题数据
+        currentTheme: null,
+        selectedTime: 2,
+        timer: null,
+        timeLeft: 0,            // 总秒数
+        timeLeftMs: 0,          // 毫秒部分
+        currentWordIndex: 0,
+        correctCount: 0,
+        skippedCount: 0,
+        totalWordsShown: 0,
+        wordsForGame: [],
+        lastGestureTime: 0,     // 上次手势时间戳
+        lastAcceleration: { x: 0, y: 0, z: 0 }, // 上次加速度值
+        // 新增：记录每个词语的状态
+        wordHistory: [], // 格式: { word: "词语", status: "correct"|"skipped", timestamp: 时间戳 }
+        // 新增：倒计时相关
+        countdownTimer: null,
+        countdownValue: 5
+    };
+
+    // ==================== DOM元素 ====================
+    const elements = {
+        themeGrid: document.getElementById('themeGrid'),
+        timeOptions: document.getElementById('timeOptions'),
+        currentTheme: document.getElementById('currentTheme'),
+        currentWord: document.getElementById('currentWord'),
+        timer: document.getElementById('timer'),
+        timerMs: document.getElementById('timerMs'),
+        correctCount: document.getElementById('correctCount'),
+        skippedCount: document.getElementById('skippedCount'),
+        finalScore: document.getElementById('finalScore'),
+        finalCorrect: document.getElementById('finalCorrect'),
+        finalSkipped: document.getElementById('finalSkipped'),
+        resultMessage: document.getElementById('resultMessage'),
+        loader: document.getElementById('loader'),
+        // 新增：回顾相关元素
+        reviewContent: document.getElementById('reviewContent'),
+        wordReviewList: document.getElementById('wordReviewList'),
+        reviewCorrectCount: document.getElementById('reviewCorrectCount'),
+        reviewSkippedCount: document.getElementById('reviewSkippedCount'),
+        toggleReview: document.getElementById('toggleReview'),
+        // showReviewBtn: document.getElementById('showReviewBtn'),
+        // 新增：倒计时元素
+        countdownOverlay: document.getElementById('countdownOverlay'),
+        countdownNumber: document.getElementById('countdownNumber'),
+        // 新增：准备界面元素
+        readySection: document.getElementById('readySection'),
+        readyTheme: document.getElementById('readyTheme'),
+        readyTime: document.getElementById('readyTime'),
+        startNowBtn: document.getElementById('startNowBtn'),
+        cancelStartBtn: document.getElementById('cancelStartBtn')
+    };
+
+    // ==================== 核心功能 ====================
+
+    // 1. 从TXT文件加载词语库
+    async function loadWordFile(filename) {
+        try {
+            const response = await fetch(`words/${filename}`);
+            if (!response.ok) throw new Error(`无法加载文件: ${filename}`);
+
+            const text = await response.text();
+            const words = text.split('\n')
+                .map(line => line.trim())
+                .filter(line => line && !line.startsWith('#') && !line.startsWith('//'));
+
+            console.log(`加载主题 ${filename}: ${words.length} 个词语`);
+            return words;
+        } catch (error) {
+            console.error('加载词语文件失败:', error);
+            return getDefaultWords(filename);
+        }
+    }
+
+    // 2. 初始化所有主题
+    async function initAllThemes() {
+        showLoader(true);
+        gameState.themes = [];
+
+        for (const [filename, themeName] of Object.entries(CONFIG.themeFiles)) {
+            const words = await loadWordFile(filename);
+            if (words.length > 0) {
+                gameState.themes.push({
+                    id: filename.replace('.txt', ''),
+                    name: themeName,
+                    icon: CONFIG.themeIcons[themeName] || 'fas fa-question-circle',
+                    color: CONFIG.themeColors[themeName] || '#888',
+                    words: words
                 });
-                
-                // 保持历史记录大小
-                if (rotationHistory.length > CONFIG.GESTURE.HISTORY_SIZE) {
-                    rotationHistory.shift();
-                }
-                
-                // 5. 检测旋转手势（需要至少3个数据点）
-                if (rotationHistory.length >= 3) {
-                    detectSimpleRotation(rotationHistory);
-                }
-            });
-        }
-        
-        // 简化的旋转检测
-        function detectSimpleRotation(history) {
-            const now = Date.now();
-            
-            // 冷却时间检查
-            if (now - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) {
-                return;
             }
-            
-            // 取最近的数据点
-            const recentPoints = history.slice(-4); // 取最近4个点
-            
-            // 计算角度变化
-            const firstAngle = recentPoints[0].angle;
-            const lastAngle = recentPoints[recentPoints.length - 1].angle;
-            const timeDiff = recentPoints[recentPoints.length - 1].time - recentPoints[0].time;
-            
-            // 计算总角度变化（考虑360度边界）
-            let totalAngleChange = lastAngle - firstAngle;
-            if (totalAngleChange > 180) totalAngleChange -= 360;
-            if (totalAngleChange < -180) totalAngleChange += 360;
-            
-            // 计算旋转速度（度/秒）
-            const rotationSpeed = timeDiff > 0 ? Math.abs(totalAngleChange) / (timeDiff / 1000) : 0;
-            
-            console.log(`角度变化: ${totalAngleChange.toFixed(1)}°, 速度: ${rotationSpeed.toFixed(1)}°/秒`);
-            
-            // 检测条件
-            const absAngleChange = Math.abs(totalAngleChange);
-            
-            // 条件1: 角度变化足够大
-            const isAngleSufficient = absAngleChange >= CONFIG.GESTURE.MIN_ROTATION_ANGLE && 
-                                    absAngleChange <= CONFIG.GESTURE.MAX_ROTATION_ANGLE;
-            
-            // 条件2: 旋转速度足够快
-            const isSpeedSufficient = rotationSpeed >= CONFIG.GESTURE.ROTATION_SPEED_THRESHOLD;
-            
-            // 条件3: 检查旋转方向是否一致
-            const isDirectionConsistent = checkDirectionConsistency(recentPoints);
-            
-            if (isAngleSufficient && isSpeedSufficient && isDirectionConsistent) {
-                // 确定旋转方向
-                if (totalAngleChange < 0) {
-                    // 负角度变化 = 顺时针旋转
-                    console.log(`检测到顺时针旋转: ${absAngleChange.toFixed(1)}°`);
-                    triggerGesture('clockwise');
-                    rotationHistory.length = 0; // 清空历史，避免重复检测
-                } else if (totalAngleChange > 0) {
-                    // 正角度变化 = 逆时针旋转
-                    console.log(`检测到逆时针旋转: ${absAngleChange.toFixed(1)}°`);
-                    triggerGesture('counterclockwise');
-                    rotationHistory.length = 0; // 清空历史
-                }
-            }
-        }
-        
-        // 检查方向一致性
-        function checkDirectionConsistency(points) {
-            if (points.length < 3) return true;
-            
-            let consistentCount = 0;
-            for (let i = 1; i < points.length; i++) {
-                const angleDiff = points[i].angle - points[i-1].angle;
-                
-                // 检查主要方向
-                if (Math.abs(angleDiff) > 2) { // 忽略微小变化
-                    const firstSign = Math.sign(points[1].angle - points[0].angle);
-                    const currentSign = Math.sign(angleDiff);
-                    
-                    if (firstSign === currentSign) {
-                        consistentCount++;
-                    }
-                }
-            }
-            
-            // 至少70%的数据点方向一致
-            return consistentCount >= Math.floor((points.length - 1) * 0.7);
         }
 
-        // 触发手势
-        function triggerGesture(direction) {
-            const now = Date.now();
-            const cooldown = gameState.lastGestureTime ? CONFIG.GESTURE.COOLDOWN : 0;
-            
-            if (now - gameState.lastGestureTime < cooldown) {
-                console.log('手势冷却中...');
-                return;
-            }
-            
-            gameState.lastGestureTime = now;
-            
-            // 提供即时视觉反馈
-            const feedback = document.createElement('div');
-            feedback.className = 'instant-feedback';
-            feedback.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 4rem;
-                z-index: 9999;
-                pointer-events: none;
-                animation: popIn 0.3s ease-out;
+        // 如果没加载到任何主题，使用默认数据
+        if (gameState.themes.length === 0) {
+            console.log('使用默认主题数据');
+            gameState.themes = getDefaultThemes();
+        }
+
+        initThemeSelection();
+        showLoader(false);
+        console.log(`成功加载 ${gameState.themes.length} 个主题`);
+    }
+
+    // 3. 初始化主题选择界面
+    function initThemeSelection() {
+        elements.themeGrid.innerHTML = '';
+        gameState.themes.forEach(theme => {
+            const themeCard = document.createElement('div');
+            themeCard.className = 'theme-card';
+            themeCard.dataset.id = theme.id;
+            themeCard.innerHTML = `
+                <i class="${theme.icon} theme-icon" style="color:${theme.color}"></i>
+                <div class="theme-name">${theme.name}</div>
             `;
-            
-            if (direction === 'clockwise') {
-                feedback.textContent = '✅';
-                feedback.style.color = '#2ed573';
-                console.log('触发：顺时针旋转 - 猜对');
-                setTimeout(() => markCorrect(), 50); // 延迟50ms执行，让用户看到反馈
-            } else {
-                feedback.textContent = '⏭️';
-                feedback.style.color = '#ff9f43';
-                console.log('触发：逆时针旋转 - 跳过');
-                setTimeout(() => skipWord(), 50);
-            }
-            
-            document.body.appendChild(feedback);
-            
-            setTimeout(() => {
-                feedback.style.opacity = '0';
-                feedback.style.transition = 'opacity 0.2s ease';
-                setTimeout(() => feedback.remove(), 200);
-            }, 300);
-        }
-
-        // ==================== 工具函数 ====================
-        function showSection(section) {
-            // 滚动到页面顶部
-            if (section !== 'theme') {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-            
-            document.querySelectorAll('.game-section').forEach(el => {
-                el.classList.remove('active-section');
-            });
-            
-            const target = document.getElementById(section + 'Section');
-            if (target) target.classList.add('active-section');
-        }
-
-        function showLoader(show) {
-            elements.loader.style.display = show ? 'block' : 'none';
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // 默认词语数据（备用）
-        function getDefaultWords(filename) {
-            const defaults = {
-                'idiom.txt': [],
-                'star.txt': [],
-                'food.txt': [],
-                'sport.txt': [],
-                'movie.txt': [],
-                'animal.txt': []
-            };
-            return defaults[filename] || [];
-        }
-
-        function getDefaultThemes() {
-            return [
-                {
-                    id: 'idiom',
-                    name: '成语',
-                    icon: 'fas fa-book-open',
-                    color: '#2575fc',
-                    words: getDefaultWords('idiom.txt')
-                },
-                {
-                    id: 'star',
-                    name: '明星',
-                    icon: 'fas fa-star',
-                    color: '#ff9f43',
-                    words: getDefaultWords('star.txt')
-                }
-            ];
-        }
-
-        // ==================== 事件监听 ====================
-        document.getElementById('startGameBtn').addEventListener('click', startGame);
-        elements.startNowBtn.addEventListener('click', startGameNow);
-        elements.cancelStartBtn.addEventListener('click', () => showSection('theme'));
-        
-        document.getElementById('correctBtn').addEventListener('click', markCorrect);
-        document.getElementById('skipBtn').addEventListener('click', skipWord);
-        document.getElementById('endGameBtn').addEventListener('click', endGame);
-        
-        document.getElementById('playAgainBtn').addEventListener('click', () => showSection('theme'));
-        document.getElementById('backToThemeBtn').addEventListener('click', () => showSection('theme'));
-        
-        // 新增：回顾相关事件
-        elements.toggleReview.addEventListener('click', () => toggleReview());
-        // elements.showReviewBtn.addEventListener('click', showReview);
-
-        // ==================== 初始化 ====================
-        window.addEventListener('DOMContentLoaded', () => {
-            initAllThemes();
-            
-            // 添加CSS动画
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes pulse {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.7; }
-                }
-            `;
-            document.head.appendChild(style);
+            themeCard.addEventListener('click', () => selectTheme(theme.id));
+            elements.themeGrid.appendChild(themeCard);
         });
-    </script>
+
+        // 初始化时间选项
+        initTimeOptions();
+
+        // 默认选择第一个主题
+        if (gameState.themes.length > 0) {
+            selectTheme(gameState.themes[0].id);
+        }
+    }
+
+    function initTimeOptions() {
+        elements.timeOptions.innerHTML = '';
+        CONFIG.timeOptions.forEach(time => {
+            const timeOption = document.createElement('div');
+            timeOption.className = `time-option ${time === 2 ? 'selected' : ''}`;
+            timeOption.textContent = `${time}分钟`;
+            timeOption.dataset.time = time;
+            timeOption.addEventListener('click', () => selectTime(time));
+            elements.timeOptions.appendChild(timeOption);
+        });
+    }
+
+    function selectTheme(themeId) {
+        document.querySelectorAll('.theme-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+
+        const selectedCard = document.querySelector(`.theme-card[data-id="${themeId}"]`);
+        if (selectedCard) selectedCard.classList.add('selected');
+
+        gameState.currentTheme = gameState.themes.find(t => t.id === themeId);
+    }
+
+    function selectTime(time) {
+        document.querySelectorAll('.time-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+
+        const selectedOption = document.querySelector(`.time-option[data-time="${time}"]`);
+        if (selectedOption) selectedOption.classList.add('selected');
+
+        gameState.selectedTime = time;
+    }
+
+    // 4. 开始游戏 - 修改为进入准备界面
+    function startGame() {
+        if (!gameState.currentTheme) {
+            alert('请先选择一个主题！');
+            return;
+        }
+
+        // 更新准备界面信息
+        elements.readyTheme.textContent = gameState.currentTheme.name;
+        elements.readyTime.textContent = gameState.selectedTime;
+
+        // 滚动到页面顶部
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // 显示准备界面
+        showSection('ready');
+    }
+
+    // 5. 立即开始游戏（从准备界面）
+    function startGameNow() {
+         if (!motionState.hasPermission && motionState.isSupported) {
+            const confirmStart = confirm('重力感应功能未启用，将只能使用按钮操作。是否继续开始游戏？\n\n您可以在主题选择界面启用重力感应。');
+            if (!confirmStart) {
+                return;
+            }
+        }
+        // 重置游戏状态
+        resetGameState();
+
+        // 准备词语
+        gameState.wordsForGame = [...gameState.currentTheme.words];
+        shuffleArray(gameState.wordsForGame);
+
+        // 更新UI
+        elements.currentTheme.textContent = gameState.currentTheme.name + '猜猜猜';
+
+        // 开始倒计时
+        startCountdown();
+    }
+
+    // 6. 开始倒计时
+    function startCountdown() {
+        // 重置倒计时值
+        gameState.countdownValue = 5;
+        elements.countdownNumber.textContent = gameState.countdownValue;
+        elements.countdownOverlay.style.display = 'flex';
+
+        gameState.countdownTimer = setInterval(() => {
+            gameState.countdownValue--;
+
+            if (gameState.countdownValue > 0) {
+                elements.countdownNumber.textContent = gameState.countdownValue;
+
+                // 添加震动反馈（如果支持）
+                if (navigator.vibrate) {
+                    navigator.vibrate(100);
+                }
+            } else {
+                // 倒计时结束时直接隐藏覆盖层并开始游戏
+                clearInterval(gameState.countdownTimer);
+                elements.countdownOverlay.style.display = 'none';
+
+                // 直接开始游戏，没有额外延迟
+                startActualGame();
+            }
+        }, 1000);
+    }
+
+    // 7. 实际开始游戏逻辑
+    function startActualGame() {
+        // 滚动到页面顶部
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // 显示游戏界面
+        showSection('game');
+
+        // 开始计时器
+        startTimer();
+
+        // 显示第一个词语
+        showNextWord();
+
+        // 初始化手势检测
+        initGestureDetection();
+    }
+
+    // 8. 重置游戏状态
+    function resetGameState() {
+        gameState.currentWordIndex = 0;
+        gameState.correctCount = 0;
+        gameState.skippedCount = 0;
+        gameState.totalWordsShown = 0;
+        gameState.timeLeft = gameState.selectedTime * 60;
+        gameState.timeLeftMs = 0;
+        gameState.wordHistory = []; // 清空历史记录
+        gameState.lastGestureTime = 0; // 重置手势时间
+
+        // 重置UI
+        elements.correctCount.textContent = '0';
+        elements.skippedCount.textContent = '0';
+        elements.timer.classList.remove('timer-low');
+
+        resetBaselineAngle(); // 重置基准角度
+    }
+
+    // 修改计时器HTML结构
+    function startTimer() {
+        clearInterval(gameState.timer);
+
+        // 设置初始显示
+        const minutes = Math.floor(gameState.timeLeft / 60);
+        const seconds = gameState.timeLeft % 60;
+        const timerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        elements.timer.innerHTML = `${timerText}<span class="timer-ms" id="timerMs">.000</span>`;
+
+        const startTime = Date.now();
+        const totalMs = gameState.timeLeft * 1000;
+
+        gameState.timer = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            const remaining = Math.max(0, totalMs - elapsed);
+
+            gameState.timeLeft = Math.floor(remaining / 1000);
+            gameState.timeLeftMs = remaining % 1000;
+
+            updateTimerDisplay();
+
+            if (remaining <= 0) {
+                endGame();
+            }
+        }, 16);
+    }
+
+    // 修改updateTimerDisplay函数
+    function updateTimerDisplay() {
+        const minutes = Math.floor(gameState.timeLeft / 60);
+        const seconds = gameState.timeLeft % 60;
+
+        // 更新主计时器
+        const timerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        elements.timer.innerHTML = `${timerText}<span class="timer-ms" id="timerMs">.${gameState.timeLeftMs.toString().padStart(3, '0')}</span>`;
+
+        // 低时间提醒
+        if (gameState.timeLeft < 10) {
+            elements.timer.classList.add('timer-low');
+        } else {
+            elements.timer.classList.remove('timer-low');
+        }
+    }
+
+    // 9. 游戏控制功能
+    function showNextWord() {
+        if (gameState.currentWordIndex >= gameState.wordsForGame.length) {
+            shuffleArray(gameState.wordsForGame);
+            gameState.currentWordIndex = 0;
+        }
+
+        const word = gameState.wordsForGame[gameState.currentWordIndex];
+        elements.currentWord.textContent = word;
+        gameState.totalWordsShown++;
+        updateGameStats();
+        gameState.currentWordIndex++;
+    }
+
+    function updateGameStats() {
+        elements.correctCount.textContent = gameState.correctCount;
+        elements.skippedCount.textContent = gameState.skippedCount;
+    }
+
+    // 10. 增强markCorrect和skipWord的反馈 - 修改为记录历史
+    function markCorrect() {
+        const currentWord = elements.currentWord.textContent;
+        // 记录到历史
+        gameState.wordHistory.push({
+            word: currentWord,
+            status: 'correct',
+            timestamp: Date.now()
+        });
+
+        gameState.correctCount++;
+        showNextWord();
+
+        // 添加额外反馈
+        elements.currentWord.style.animation = 'none';
+        setTimeout(() => {
+            elements.currentWord.style.animation = 'pulse 0.5s ease';
+        }, 10);
+    }
+
+    function skipWord() {
+        const currentWord = elements.currentWord.textContent;
+        // 记录到历史
+        gameState.wordHistory.push({
+            word: currentWord,
+            status: 'skipped',
+            timestamp: Date.now()
+        });
+
+        gameState.skippedCount++;
+        showNextWord();
+
+        // 添加额外反馈
+        elements.currentWord.style.animation = 'none';
+        setTimeout(() => {
+            elements.currentWord.style.animation = 'shake 0.5s ease';
+        }, 10);
+    }
+
+    // 11. 游戏结束 - 修改为包含回顾功能
+    function endGame() {
+        clearInterval(gameState.timer);
+
+        const score = gameState.correctCount * 1;
+        elements.finalScore.textContent = score;
+        elements.finalCorrect.textContent = gameState.correctCount;
+        elements.finalSkipped.textContent = gameState.skippedCount;
+
+        let message = '';
+        if (score >= 80) message = '太厉害了！你是猜词大师！';
+        else if (score >= 50) message = '不错哦！继续努力！';
+        else if (score >= 30) message = '继续加油，下次会更好！';
+        else message = '多玩几次，熟能生巧！';
+
+        elements.resultMessage.textContent = message;
+
+        // 初始化回顾内容
+        initWordReview();
+
+        // 滚动到页面顶部
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        showSection('result');
+    }
+
+    // ==================== 新增：词语回顾功能 ====================
+
+    function initWordReview() {
+        // 清空之前的回顾内容
+        elements.wordReviewList.innerHTML = '';
+
+        // 更新统计数字
+        elements.reviewCorrectCount.textContent = gameState.correctCount;
+        elements.reviewSkippedCount.textContent = gameState.skippedCount;
+
+        // 如果没有历史记录，显示提示
+        if (gameState.wordHistory.length === 0) {
+            elements.wordReviewList.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #666;">
+                    <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <p>暂无词语回顾记录</p>
+                </div>
+            `;
+            return;
+        }
+
+        // 显示所有历史词语
+        gameState.wordHistory.forEach((item, index) => {
+            const wordItem = document.createElement('div');
+            wordItem.className = `word-item ${item.status}`;
+            wordItem.innerHTML = `
+                <div>${item.word}</div>
+                <div class="word-status">${item.status === 'correct' ? '✓' : '→'}</div>
+            `;
+            elements.wordReviewList.appendChild(wordItem);
+        });
+
+        // 直接操作DOM，不依赖 toggleReview 函数
+        setTimeout(() => {
+            elements.reviewContent.classList.add('expanded');
+            elements.toggleReview.innerHTML = '<i class="fas fa-chevron-up"></i> 收起列表';
+            elements.toggleReview.style.background = '#2575fc';
+            elements.toggleReview.style.color = 'white';
+        }, 10); // 微小延迟确保DOM已更新
+    }
+
+    function toggleReview(forceExpand = false) {
+        const isExpanded = elements.reviewContent.classList.contains('expanded') || forceExpand;
+
+        if (!isExpanded) {
+            elements.reviewContent.classList.add('expanded');
+            elements.toggleReview.innerHTML = '<i class="fas fa-chevron-up"></i> 收起列表';
+            elements.toggleReview.style.background = '#2575fc';
+            elements.toggleReview.style.color = 'white';
+        } else {
+            elements.reviewContent.classList.remove('expanded');
+            elements.toggleReview.innerHTML = '<i class="fas fa-chevron-down"></i> 展开查看';
+            elements.toggleReview.style.background = '#f0f7ff';
+            elements.toggleReview.style.color = '#2575fc';
+        }
+    }
+
+    function showReview() {
+        // 确保回顾区域展开
+        toggleReview(true);
+
+        // 滚动到回顾区域
+        elements.reviewContent.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+
+    // ==================== 手势检测相关功能 ====================
+
+    // 12. 添加重置基准角度的功能
+    function resetBaselineAngle() {
+        console.log('重置基准角度');
+        baselineAlpha = null;
+    }
+
+    // 13. 初始化时提供校准提示
+
+    // 修改initGestureDetection函数
+    function initGestureDetection() {
+        if (!window.DeviceOrientationEvent) {
+            console.log('设备不支持方向传感器');
+            return;
+        }
+
+        if (!motionState.hasPermission) {
+            console.log('重力感应权限未授予');
+            return;
+        }
+
+        startGestureListening();
+    }
+
+
+    function showCalibrationHint() {
+        const hint = document.createElement('div');
+        hint.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            padding: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 9998;
+            animation: fadeIn 0.3s ease;
+        `;
+
+        document.body.appendChild(hint);
+
+        // 3秒后自动消失
+        setTimeout(() => {
+            hint.style.opacity = '0';
+            hint.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => hint.remove(), 300);
+        }, 3000);
+    }
+
+    // 手势检测函数
+    function startGestureListening() {
+        let rotationHistory = []; // 存储角度历史
+        let lastValidTime = 0;
+        let baselineAlpha = null; // 基准角度
+        let isCalibrated = false;
+        let calibrationSamples = [];
+
+        window.addEventListener('deviceorientation', (event) => {
+            const currentTime = Date.now();
+            const currentAlpha = event.alpha; // Z轴旋转角度
+
+            // 1. 校准阶段 - 收集初始角度
+            if (!isCalibrated) {
+                calibrationSamples.push(currentAlpha);
+
+                if (calibrationSamples.length >= 20) { // 收集20个样本
+                    // 计算平均值作为基准
+                    const sum = calibrationSamples.reduce((a, b) => a + b, 0);
+                    baselineAlpha = sum / calibrationSamples.length;
+                    isCalibrated = true;
+                    console.log('校准完成，基准角度:', baselineAlpha);
+                }
+                return;
+            }
+
+            // 2. 防抖处理
+            if (currentTime - lastValidTime < CONFIG.GESTURE.DEBUNCE_TIME) {
+                return;
+            }
+
+            // 3. 计算相对于基准的角度
+            let relativeAngle = currentAlpha - baselineAlpha;
+
+            // 规范化到 [-180, 180] 范围
+            if (relativeAngle > 180) relativeAngle -= 360;
+            if (relativeAngle < -180) relativeAngle += 360;
+
+            // 4. 保存到历史记录
+            rotationHistory.push({
+                time: currentTime,
+                angle: relativeAngle
+            });
+
+            // 保持历史记录大小
+            if (rotationHistory.length > CONFIG.GESTURE.HISTORY_SIZE) {
+                rotationHistory.shift();
+            }
+
+            // 5. 检测旋转手势（需要至少3个数据点）
+            if (rotationHistory.length >= 3) {
+                detectSimpleRotation(rotationHistory);
+            }
+        });
+    }
+
+    // 简化的旋转检测
+    function detectSimpleRotation(history) {
+        const now = Date.now();
+
+        // 冷却时间检查
+        if (now - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) {
+            return;
+        }
+
+        // 取最近的数据点
+        const recentPoints = history.slice(-4); // 取最近4个点
+
+        // 计算角度变化
+        const firstAngle = recentPoints[0].angle;
+        const lastAngle = recentPoints[recentPoints.length - 1].angle;
+        const timeDiff = recentPoints[recentPoints.length - 1].time - recentPoints[0].time;
+
+        // 计算总角度变化（考虑360度边界）
+        let totalAngleChange = lastAngle - firstAngle;
+        if (totalAngleChange > 180) totalAngleChange -= 360;
+        if (totalAngleChange < -180) totalAngleChange += 360;
+
+        // 计算旋转速度（度/秒）
+        const rotationSpeed = timeDiff > 0 ? Math.abs(totalAngleChange) / (timeDiff / 1000) : 0;
+
+        console.log(`角度变化: ${totalAngleChange.toFixed(1)}°, 速度: ${rotationSpeed.toFixed(1)}°/秒`);
+
+        // 检测条件
+        const absAngleChange = Math.abs(totalAngleChange);
+
+        // 条件1: 角度变化足够大
+        const isAngleSufficient = absAngleChange >= CONFIG.GESTURE.MIN_ROTATION_ANGLE &&
+                                absAngleChange <= CONFIG.GESTURE.MAX_ROTATION_ANGLE;
+
+        // 条件2: 旋转速度足够快
+        const isSpeedSufficient = rotationSpeed >= CONFIG.GESTURE.ROTATION_SPEED_THRESHOLD;
+
+        // 条件3: 检查旋转方向是否一致
+        const isDirectionConsistent = checkDirectionConsistency(recentPoints);
+
+        if (isAngleSufficient && isSpeedSufficient && isDirectionConsistent) {
+            // 确定旋转方向
+            if (totalAngleChange < 0) {
+                // 负角度变化 = 顺时针旋转
+                console.log(`检测到顺时针旋转: ${absAngleChange.toFixed(1)}°`);
+                triggerGesture('clockwise');
+                rotationHistory.length = 0; // 清空历史，避免重复检测
+            } else if (totalAngleChange > 0) {
+                // 正角度变化 = 逆时针旋转
+                console.log(`检测到逆时针旋转: ${absAngleChange.toFixed(1)}°`);
+                triggerGesture('counterclockwise');
+                rotationHistory.length = 0; // 清空历史
+            }
+        }
+    }
+
+    // 检查方向一致性
+    function checkDirectionConsistency(points) {
+        if (points.length < 3) return true;
+
+        let consistentCount = 0;
+        for (let i = 1; i < points.length; i++) {
+            const angleDiff = points[i].angle - points[i-1].angle;
+
+            // 检查主要方向
+            if (Math.abs(angleDiff) > 2) { // 忽略微小变化
+                const firstSign = Math.sign(points[1].angle - points[0].angle);
+                const currentSign = Math.sign(angleDiff);
+
+                if (firstSign === currentSign) {
+                    consistentCount++;
+                }
+            }
+        }
+
+        // 至少70%的数据点方向一致
+        return consistentCount >= Math.floor((points.length - 1) * 0.7);
+    }
+
+    // 触发手势
+    function triggerGesture(direction) {
+        const now = Date.now();
+        const cooldown = gameState.lastGestureTime ? CONFIG.GESTURE.COOLDOWN : 0;
+
+        if (now - gameState.lastGestureTime < cooldown) {
+            console.log('手势冷却中...');
+            return;
+        }
+
+        gameState.lastGestureTime = now;
+
+        // 提供即时视觉反馈
+        const feedback = document.createElement('div');
+        feedback.className = 'instant-feedback';
+        feedback.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            z-index: 9999;
+            pointer-events: none;
+            animation: popIn 0.3s ease-out;
+        `;
+
+        if (direction === 'clockwise') {
+            feedback.textContent = '✅';
+            feedback.style.color = '#2ed573';
+            console.log('触发：顺时针旋转 - 猜对');
+            setTimeout(() => markCorrect(), 50); // 延迟50ms执行，让用户看到反馈
+        } else {
+            feedback.textContent = '⏭️';
+            feedback.style.color = '#ff9f43';
+            console.log('触发：逆时针旋转 - 跳过');
+            setTimeout(() => skipWord(), 50);
+        }
+
+        document.body.appendChild(feedback);
+
+        setTimeout(() => {
+            feedback.style.opacity = '0';
+            feedback.style.transition = 'opacity 0.2s ease';
+            setTimeout(() => feedback.remove(), 200);
+        }, 300);
+    }
+
+    // ==================== 工具函数 ====================
+    function showSection(section) {
+        // 滚动到页面顶部
+        if (section !== 'theme') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.game-section').forEach(el => {
+            el.classList.remove('active-section');
+        });
+
+        const target = document.getElementById(section + 'Section');
+        if (target) target.classList.add('active-section');
+    }
+
+    function showLoader(show) {
+        elements.loader.style.display = show ? 'block' : 'none';
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // 默认词语数据（备用）
+    function getDefaultWords(filename) {
+        const defaults = {
+            'idiom.txt': [],
+            'star.txt': [],
+            'food.txt': [],
+            'sport.txt': [],
+            'movie.txt': [],
+            'animal.txt': []
+        };
+        return defaults[filename] || [];
+    }
+
+    function getDefaultThemes() {
+        return [
+            {
+                id: 'idiom',
+                name: '成语',
+                icon: 'fas fa-book-open',
+                color: '#2575fc',
+                words: getDefaultWords('idiom.txt')
+            },
+            {
+                id: 'star',
+                name: '明星',
+                icon: 'fas fa-star',
+                color: '#ff9f43',
+                words: getDefaultWords('star.txt')
+            }
+        ];
+    }
+
+    // ==================== 事件监听 ====================
+    document.getElementById('startGameBtn').addEventListener('click', startGame);
+    elements.startNowBtn.addEventListener('click', startGameNow);
+    elements.cancelStartBtn.addEventListener('click', () => showSection('theme'));
+
+    document.getElementById('correctBtn').addEventListener('click', markCorrect);
+    document.getElementById('skipBtn').addEventListener('click', skipWord);
+    document.getElementById('endGameBtn').addEventListener('click', endGame);
+
+    document.getElementById('playAgainBtn').addEventListener('click', () => showSection('theme'));
+    document.getElementById('backToThemeBtn').addEventListener('click', () => showSection('theme'));
+    // 在现有的事件监听部分添加
+    document.getElementById('requestMotionBtn').addEventListener('click', requestMotionPermission);
+
+    // 新增：回顾相关事件
+    elements.toggleReview.addEventListener('click', () => toggleReview());
+    // elements.showReviewBtn.addEventListener('click', showReview);
+
+    // ==================== 初始化 ====================
+    // 修改初始化函数
+    window.addEventListener('DOMContentLoaded', () => {
+        initAllThemes();
+
+        // 检查设备支持情况并更新UI
+        if (!motionState.isSupported) {
+            const requestBtn = document.getElementById('requestMotionBtn');
+            requestBtn.disabled = true;
+            requestBtn.innerHTML = '<i class="fas fa-ban"></i> 设备不支持';
+            requestBtn.style.opacity = '0.6';
+        }
+
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.7; }
+            }
+        `;
+        document.head.appendChild(style);
+    });
+</script>
 </body>
 </html>
