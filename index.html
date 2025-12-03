@@ -606,10 +606,12 @@
             
             // 重力感应配置 - 修改为旋转检测
             GESTURE: {
-                CLOCKWISE_THRESHOLD: 1.5,     // 顺时针旋转阈值（弧度/秒）
-                COUNTERCLOCKWISE_THRESHOLD: -1.5, // 逆时针旋转阈值（弧度/秒）
-                COOLDOWN: 800,                // 手势冷却时间（毫秒）- 稍长一点，因为旋转需要时间
-                MIN_ROTATION_ANGLE: 0.5       // 最小旋转角度（弧度）
+                ROTATION_THRESHOLD: 30,         // 触发手势的最小旋转角度（度）
+                ROTATION_SPEED_THRESHOLD: 30,   // 最小旋转速度（度/秒）
+                COOLDOWN: 800,                  // 手势冷却时间（毫秒）
+                RESET_DELAY: 1000,              // 检测重置延迟（毫秒）
+                STABILITY_THRESHOLD: 5,         // 角度稳定性阈值（度）
+                WINDOW_SIZE: 10                 // 滑动窗口大小
             },
             // 时间选项
             timeOptions: [1, 2, 3]
@@ -775,7 +777,8 @@
             gameState.totalWordsShown = 0;
             gameState.timeLeft = gameState.selectedTime * 60;
             gameState.timeLeftMs = 0;
-            
+            resetBaselineAngle(); // 重置基准角度
+
             // 准备词语
             gameState.wordsForGame = [...gameState.currentTheme.words];
             shuffleArray(gameState.wordsForGame);
@@ -855,15 +858,22 @@
             elements.totalCount.textContent = gameState.totalWordsShown;
         }
 
+        // 10. 修改markCorrect和skipWord函数，使用新的动画
         function markCorrect() {
             gameState.correctCount++;
             showNextWord();
-            showGestureFeedback('✅', '#2ed573');
+            // 动画已在triggerGesture中显示
         }
+
         function skipWord() {
             gameState.skippedCount++;
             showNextWord();
-            showGestureFeedback('🔄', '#ff9f43');
+            // 动画已在triggerGesture中显示
+        }
+                // 11. 添加重置基准角度的功能
+        function resetBaselineAngle() {
+            console.log('重置基准角度');
+            baselineAlpha = null;
         }
 
         // 7. 重力感应/手势检测
@@ -887,80 +897,256 @@
             }
         }
 
+        // 2. 改进的手势检测函数
         function startGestureListening() {
-            let lastRotation = { alpha: 0, beta: 0, gamma: 0 }; // 欧拉角
-            let lastRotationRate = { alpha: 0, beta: 0, gamma: 0 }; // 角速度
-            let rotationStartTime = 0;
-            let rotationStartAngle = 0;
-            let isRotating = false;
+            let rotationHistory = []; // 存储旋转角度历史
+            let velocityHistory = []; // 存储旋转速度历史
+            let lastAlpha = null;
+            let lastTime = null;
+            let isProcessingGesture = false;
+            let lastGestureTime = 0;
+            let baselineAlpha = null; // 基准角度（手机竖直状态）
             
             window.addEventListener('deviceorientation', (event) => {
-                // 获取设备方向（欧拉角）
-                const { alpha, beta, gamma } = event;
+                const currentTime = Date.now();
+                const currentAlpha = event.alpha; // Z轴旋转角度（0-360度）
                 
-                // 保存当前角度
-                lastRotation = { alpha, beta, gamma };
-            });
-            
-            window.addEventListener('devicemotion', (event) => {
-                const rotationRate = event.rotationRate;
-                if (!rotationRate) {
-                    console.log('设备不支持陀螺仪');
+                // 初始化基准角度（手机竖直状态）
+                if (baselineAlpha === null) {
+                    baselineAlpha = currentAlpha;
+                    console.log('基准角度已设置:', baselineAlpha);
                     return;
                 }
                 
-                // 获取角速度（单位：度/秒）
-                const { alpha, beta, gamma } = rotationRate;
+                // 规范化角度到 [-180, 180] 范围
+                let normalizedAlpha = currentAlpha - baselineAlpha;
+                if (normalizedAlpha > 180) normalizedAlpha -= 360;
+                if (normalizedAlpha < -180) normalizedAlpha += 360;
                 
-                // 主要检测Z轴旋转（alpha角速度，对应手机平面内的旋转）
-                // alpha: 绕Z轴的旋转（手机在桌面上旋转）
-                // 正值 = 逆时针旋转，负值 = 顺时针旋转
-                
-                const currentTime = Date.now();
-                
-                // 检测旋转开始
-                if (!isRotating && Math.abs(alpha) > Math.abs(CONFIG.GESTURE.CLOCKWISE_THRESHOLD) * 57.3) {
-                    // 57.3 = 弧度转度数的转换因子 (180/π)
-                    isRotating = true;
-                    rotationStartTime = currentTime;
-                    rotationStartAngle = lastRotation.alpha || 0;
-                    console.log('旋转开始，初始角度:', rotationStartAngle);
-                }
-                
-                // 检测旋转结束并计算总旋转角度
-                if (isRotating && Math.abs(alpha) < 0.5) { // 角速度小于0.5度/秒认为停止
-                    const rotationDuration = currentTime - rotationStartTime;
-                    
-                    if (rotationDuration > 200 && rotationDuration < 1500) { // 有效旋转时间范围
-                        const currentAngle = lastRotation.alpha || 0;
-                        const totalRotation = currentAngle - rotationStartAngle;
+                // 计算旋转速度
+                let rotationSpeed = 0;
+                if (lastAlpha !== null && lastTime !== null) {
+                    const timeDiff = currentTime - lastTime;
+                    if (timeDiff > 0) {
+                        // 计算角度差（考虑360度边界）
+                        let angleDiff = normalizedAlpha - lastAlpha;
+                        if (angleDiff > 180) angleDiff -= 360;
+                        if (angleDiff < -180) angleDiff += 360;
                         
-                        // 规范化角度到 [-180, 180] 范围
-                        let normalizedRotation = totalRotation % 360;
-                        if (normalizedRotation > 180) normalizedRotation -= 360;
-                        if (normalizedRotation < -180) normalizedRotation += 360;
-                        
-                        console.log('旋转结束，总角度:', normalizedRotation, '持续时间:', rotationDuration);
-                        
-                        // 判断旋转方向
-                        if (normalizedRotation > CONFIG.GESTURE.MIN_ROTATION_ANGLE * 57.3) {
-                            // 顺时针旋转（负角度）-> 猜对
-                            console.log('顺时针旋转 - 猜对');
-                            handleGesture('clockwise');
-                        } else if (normalizedRotation < -CONFIG.GESTURE.MIN_ROTATION_ANGLE * 57.3) {
-                            // 逆时针旋转（正角度）-> 跳过
-                            console.log('逆时针旋转 - 跳过');
-                            handleGesture('counterclockwise');
-                        }
+                        rotationSpeed = (angleDiff / timeDiff) * 1000; // 度/秒
                     }
-                    
-                    isRotating = false;
                 }
                 
-                // 保存角速度用于下次比较
-                lastRotationRate = { alpha, beta, gamma };
+                // 保存到历史记录
+                rotationHistory.push({
+                    time: currentTime,
+                    angle: normalizedAlpha,
+                    speed: rotationSpeed
+                });
+                
+                // 保持滑动窗口大小
+                if (rotationHistory.length > CONFIG.GESTURE.WINDOW_SIZE) {
+                    rotationHistory.shift();
+                }
+                
+                // 更新上次值
+                lastAlpha = normalizedAlpha;
+                lastTime = currentTime;
+                
+                // 检测手势（如果不是正在处理中）
+                if (!isProcessingGesture && rotationHistory.length >= 3) {
+                    detectRotationGesture(rotationHistory);
+                }
             });
         }
+        // 3. 改进的旋转检测算法
+        function detectRotationGesture(history) {
+            const currentTime = Date.now();
+            
+            // 冷却时间检查
+            if (currentTime - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) {
+                return;
+            }
+            
+            // 分析旋转模式
+            const recentData = history.slice(-5); // 取最近5个数据点
+            const angles = recentData.map(d => d.angle);
+            const speeds = recentData.map(d => d.speed);
+            
+            // 检查是否有明显的旋转动作
+            const maxSpeed = Math.max(...speeds.map(Math.abs));
+            if (maxSpeed < CONFIG.GESTURE.ROTATION_SPEED_THRESHOLD) {
+                return; // 旋转速度不够
+            }
+            
+            // 计算角度变化范围
+            const minAngle = Math.min(...angles);
+            const maxAngle = Math.max(...angles);
+            const angleRange = maxAngle - minAngle;
+            
+            if (angleRange < CONFIG.GESTURE.ROTATION_THRESHOLD) {
+                return; // 旋转角度不够
+            }
+            
+            // 检查是否是"旋转后恢复"模式
+            const isReturningToBaseline = checkReturnPattern(angles);
+            
+            if (isReturningToBaseline) {
+                // 确定旋转方向
+                const rotationPattern = analyzeRotationDirection(history);
+                
+                if (rotationPattern === 'clockwise') {
+                    console.log('检测到顺时针旋转并恢复');
+                    triggerGesture('clockwise');
+                } else if (rotationPattern === 'counterclockwise') {
+                    console.log('检测到逆时针旋转并恢复');
+                    triggerGesture('counterclockwise');
+                }
+            }
+        }
+
+        // 4. 检查是否返回到基准位置
+        function checkReturnPattern(angles) {
+            if (angles.length < 3) return false;
+            
+            const recentAngle = angles[angles.length - 1];
+            const middleAngle = angles[Math.floor(angles.length / 2)];
+            
+            // 检查是否从极端位置返回到接近0的位置
+            const middleDeviation = Math.abs(middleAngle);
+            const recentDeviation = Math.abs(recentAngle);
+            
+            // 条件：中间角度有较大偏移，最近角度接近0
+            return middleDeviation > CONFIG.GESTURE.ROTATION_THRESHOLD / 2 &&
+                recentDeviation < CONFIG.GESTURE.STABILITY_THRESHOLD;
+        }
+
+        // 5. 分析旋转方向
+        function analyzeRotationDirection(history) {
+            // 找到旋转峰值时刻
+            const peakIndex = findPeakIndex(history);
+            if (peakIndex === -1) return null;
+            
+            const peakAngle = history[peakIndex].angle;
+            
+            // 根据峰值角度判断方向
+            if (peakAngle > 0) {
+                // 正角度 = 逆时针旋转
+                return 'counterclockwise';
+            } else if (peakAngle < 0) {
+                // 负角度 = 顺时针旋转
+                return 'clockwise';
+            }
+            
+            return null;
+        }
+
+        // 6. 找到旋转峰值
+        function findPeakIndex(history) {
+            let maxDeviation = 0;
+            let peakIndex = -1;
+            
+            for (let i = 0; i < history.length; i++) {
+                const deviation = Math.abs(history[i].angle);
+                if (deviation > maxDeviation) {
+                    maxDeviation = deviation;
+                    peakIndex = i;
+                }
+            }
+            
+            return peakIndex;
+        }
+
+        // 7. 触发手势
+        function triggerGesture(direction) {
+            const now = Date.now();
+            if (now - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) return;
+            
+            gameState.lastGestureTime = now;
+            
+            if (direction === 'clockwise') {
+                console.log('顺时针手势触发 - 猜对');
+                markCorrect();
+                showRotationAnimation('clockwise');
+            } else if (direction === 'counterclockwise') {
+                console.log('逆时针手势触发 - 跳过');
+                skipWord();
+                showRotationAnimation('counterclockwise');
+            }
+        }
+
+        // 8. 添加旋转动画反馈
+        function showRotationAnimation(direction) {
+            const feedback = document.createElement('div');
+            feedback.className = 'rotation-feedback';
+            
+            const emoji = direction === 'clockwise' ? '🔄' : '↪️';
+            const text = direction === 'clockwise' ? '顺时针旋转 - 猜对' : '逆时针旋转 - 跳过';
+            const color = direction === 'clockwise' ? '#2ed573' : '#ff9f43';
+            
+            feedback.innerHTML = `
+                <div style="font-size: 3.5rem; animation: ${direction === 'clockwise' ? 'rotateClockwise' : 'rotateCounterclockwise'} 0.6s ease">
+                    ${emoji}
+                </div>
+                <div style="font-size: 1.1rem; margin-top: 8px; font-weight: bold; color: ${color}">
+                    ${text}
+                </div>
+            `;
+            
+            feedback.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 20px 30px;
+                border-radius: 20px;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                pointer-events: none;
+            `;
+            
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                feedback.style.opacity = '0';
+                feedback.style.transition = 'opacity 0.3s ease';
+                
+                setTimeout(() => {
+                    feedback.remove();
+                }, 300);
+            }, 800);
+        }
+
+        // 9. 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rotateClockwise {
+                0% { transform: rotate(0deg) scale(0.8); opacity: 0.5; }
+                50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+                100% { transform: rotate(360deg) scale(1); opacity: 0; }
+            }
+            
+            @keyframes rotateCounterclockwise {
+                0% { transform: rotate(0deg) scale(0.8); opacity: 0.5; }
+                50% { transform: rotate(-180deg) scale(1.2); opacity: 1; }
+                100% { transform: rotate(-360deg) scale(1); opacity: 0; }
+            }
+            
+            .rotation-feedback {
+                animation: fadeInOut 0.8s ease;
+            }
+            
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1); }
+            }
+        `;
+        document.head.appendChild(style);
+
         function handleGesture(direction) {
             const now = Date.now();
             if (now - gameState.lastGestureTime < CONFIG.GESTURE.COOLDOWN) return;
