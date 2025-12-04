@@ -1666,44 +1666,42 @@
     };
 
     // ==================== 核心功能 ====================
-    // 1. 获取目录中的txt文件列表
+    // 获取目录中的txt文件列表
     async function getThemeFiles() {
         try {
-            // 创建一个简单的文件列表请求
-            const response = await fetch('words/');
-            if (!response.ok) {
-                throw new Error('无法获取文件列表');
+            // 尝试加载索引文件
+            const response = await fetch('words/index.txt');
+            if (response.ok) {
+                const text = await response.text();
+                const files = text.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line && line.endsWith('.txt'));
+                console.log('从索引文件获取的主题:', files);
+                return files;
             }
 
-            // 注意：这个实现假设服务器支持目录列表
-            // 如果服务器不支持，可能需要创建一个服务器端接口或使用其他方法
-            const html = await response.text();
-
-            // 解析HTML获取文件列表（这是一个简化的实现）
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const links = doc.querySelectorAll('a');
-
-            const txtFiles = [];
-            links.forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && href.endsWith('.txt')) {
-                    txtFiles.push(href);
-                }
-            });
-
-            return txtFiles;
+            // 如果索引文件不存在，使用默认列表
+            console.log('索引文件不存在，使用默认列表');
+            return [
+                'idiom.txt',
+                'star.txt',
+                'food.txt',
+                'sport.txt',
+                'movie.txt',
+                'animal.txt',
+                '水果.txt'  // 添加水果
+            ];
         } catch (error) {
             console.error('获取主题文件列表失败:', error);
-
-            // 如果无法动态获取，使用默认文件列表
+            // 返回包含所有可能文件的列表
             return [
-<!--                'idiom.txt',-->
-<!--                'star.txt',-->
-<!--                'food.txt',-->
-<!--                'sport.txt',-->
-<!--                'movie.txt',-->
-                'animal.txt'
+                'idiom.txt',
+                'star.txt',
+                'food.txt',
+                'sport.txt',
+                'movie.txt',
+                'animal.txt',
+                '水果.txt'
             ];
         }
     }
