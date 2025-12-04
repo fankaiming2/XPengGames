@@ -1373,7 +1373,68 @@
         <p>游戏加载中...</p>
     </div>
 </div>
+<!-- ==================== 新增：全局底部反馈入口 ==================== -->
+<div id="globalFooter" class="global-footer">
+    <div class="footer-content">
+        <a href="#" id="feedbackTrigger" class="feedback-link">
+            <i class="fas fa-comment-alt"></i> 支持开发者 / 反馈BUG
+        </a>
+    </div>
+</div>
 
+<!-- ==================== 新增：反馈弹窗 ==================== -->
+<div id="feedbackModal" class="feedback-modal">
+    <div class="modal-content">
+        <!-- 关闭按钮 -->
+        <span class="close-modal">&times;</span>
+        
+        <!-- 开发者信息 -->
+        <div class="developer-info">
+            <div class="developer-avatar">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ming" alt="开发者头像">
+            </div>
+            <div class="developer-message">
+                <p>您可以反馈BUG或提出个性化主题词库等需求，我会尽快回复，感谢支持！</p>
+                <p class="developer-email">联系邮箱：<a href="mailto:ming@126.com">ming@126.com</a></p>
+            </div>
+        </div>
+        
+        <!-- 对话区域 -->
+        <div class="chat-area">
+            <div class="message-bubble">
+                <div class="message-avatar">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ming" alt="开发者头像">
+                </div>
+                <div class="message-content">
+                    <p>您好，有什么可以帮到您呢~</p>
+                </div>
+            </div>
+            
+            <!-- 玩家输入区域 -->
+            <div class="user-input-area">
+                <textarea 
+                    id="userMessage" 
+                    placeholder="请输入您的问题/建议（如：我想新增一个“蔬菜水果”主题的词库，谢谢~）"
+                    rows="4"
+                ></textarea>
+                <button id="sendEmailBtn" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> 发送反馈邮件
+                </button>
+            </div>
+        </div>
+        
+        <!-- 点赞支持区域 -->
+        <div class="donation-section">
+            <h4><i class="fas fa-heart"></i> 支持开发者</h4>
+            <p>如果喜欢这个游戏，dddd</p>
+            <div class="qrcode-container">
+                <!-- 这里替换成你的二维码图片路径 -->
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ming" alt="点赞支持" class="donation-qrcode">
+                <p class="qrcode-hint">感谢鼓励！</p>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
             // ==================== 新增：重力感应状态管理 ====================
         const motionState = {
@@ -2377,67 +2438,6 @@
             }
         }, { passive: false });
 </script>
-    <!-- ==================== 新增：全局底部反馈入口 ==================== -->
-    <div id="globalFooter" class="global-footer">
-        <div class="footer-content">
-            <a href="#" id="feedbackTrigger" class="feedback-link">
-                <i class="fas fa-comment-alt"></i> 支持开发者 / 反馈BUG
-            </a>
-        </div>
-    </div>
-
-    <!-- ==================== 新增：反馈弹窗 ==================== -->
-    <div id="feedbackModal" class="feedback-modal">
-        <div class="modal-content">
-            <!-- 关闭按钮 -->
-            <span class="close-modal">&times;</span>
-            
-            <!-- 开发者信息 -->
-            <div class="developer-info">
-                <div class="developer-avatar">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ming" alt="开发者头像">
-                </div>
-                <div class="developer-message">
-                    <p><strong>开发者留言：</strong>您可以反馈BUG或提出增加个性化主题词库等需求，我会尽快回复，谢谢！</p>
-                    <p class="developer-email">联系邮箱：<a href="mailto:ming@126.com">ming@126.com</a></p>
-                </div>
-            </div>
-            
-            <!-- 对话区域 -->
-            <div class="chat-area">
-                <div class="message-bubble">
-                    <div class="message-avatar">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ming" alt="开发者头像">
-                    </div>
-                    <div class="message-content">
-                        <p>您好，请问留言您的问题或需求，我会尽快回复，谢谢！</p>
-                    </div>
-                </div>
-                
-                <!-- 玩家输入区域 -->
-                <div class="user-input-area">
-                    <textarea 
-                        id="userMessage" 
-                        placeholder="请输入您的问题、建议或想要新增的主题词库..."
-                        rows="4"
-                    ></textarea>
-                    <button id="sendEmailBtn" class="btn btn-primary">
-                        <i class="fas fa-paper-plane"></i> 发送反馈邮件
-                    </button>
-                </div>
-            </div>
-            
-            <!-- 打赏区域 -->
-            <div class="donation-section">
-                <h4><i class="fas fa-heart"></i> 支持开发者</h4>
-                <p>如果喜欢这个游戏，可以扫描下方二维码支持作者（请使用微信/支付宝扫码）</p>
-                <div class="qrcode-container">
-                    <!-- 这里替换成你的二维码图片路径 -->
-                    <img src="https://via.placeholder.com/200x200.png?text=打赏二维码" alt="打赏二维码" class="donation-qrcode">
-                    <p class="qrcode-hint">扫码支持，感谢鼓励！</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </body>
 </html>
