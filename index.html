@@ -268,9 +268,9 @@
         }
         /* 游戏界面的手势提示部分 */
         #gameSection .shake-hint {
-            align-items: center;
-            justify-content: flex-start;
-            padding: 15px 20px;
+            align-items: flex-start;
+            padding: 15px;
+            align-items: center; /* 垂直居中 */
         }
 
         #gameSection .shake-hint .shake-icon {
@@ -779,6 +779,11 @@
         #themeSection .shake-hint {
             align-items: flex-start;
             padding: 15px;
+            align-items: center; /* 垂直居中 */
+        }
+        #themeSection .shake-hint .shake-icon {
+            font-size: 2.2rem;
+            margin-right: 15px;
         }
 
         #themeSection .gesture-instructions {
@@ -811,7 +816,7 @@
             white-space: nowrap; /* 防止文字换行 */
             overflow: hidden; /* 隐藏溢出内容 */
             text-overflow: ellipsis; /* 文字过长显示省略号 */
-            margin-top: -30px; /* 向上移动10px */
+            margin-top: -10px; /* 向上移动10px */
         }
 
 
@@ -1586,7 +1591,10 @@
         wordHistory: [], // 格式: { word: "词语", status: "correct"|"skipped", timestamp: 时间戳 }
         // 新增：倒计时相关
         countdownTimer: null,
-        countdownValue: 5
+        countdownValue: 5,
+        // 新增：重力感应控制标志
+        motionEnabled: false,   // 游戏过程中才启用重力感应
+        motionListener: null    // 保存事件监听器引用，便于移除
     };
 
     // ==================== DOM元素 ====================
@@ -1758,6 +1766,8 @@
         }
         // 重置游戏状态
         resetGameState();
+         // 确保重力感应是禁用状态（倒计时期间）
+        disableGameMotion();
 
         // 准备词语
         gameState.wordsForGame = [...gameState.currentTheme.words];
@@ -1772,6 +1782,8 @@
 
     // 6. 开始倒计时
     function startCountdown() {
+        // 确保重力感应是禁用状态
+        disableGameMotion();
         // 重置倒计时值
         gameState.countdownValue = 5;
         elements.countdownNumber.textContent = gameState.countdownValue;
@@ -1814,6 +1826,8 @@
 
         // 初始化手势检测
         initGestureDetection();
+        enableGameMotion(); // 新增：启用游戏过程中的重力感应
+
     }
 
     // 8. 重置游戏状态
@@ -1826,6 +1840,8 @@
         gameState.timeLeftMs = 0;
         gameState.wordHistory = []; // 清空历史记录
         gameState.lastGestureTime = 0; // 重置手势时间
+        gameState.motionEnabled = false; // 新增：重置为禁用状态
+
 
         // 重置UI
         elements.correctCount.textContent = '0';
@@ -1941,7 +1957,10 @@
     // 11. 游戏结束 - 修改为包含回顾功能
     function endGame() {
         clearInterval(gameState.timer);
-
+        // 禁用重力感应
+        disableGameMotion();
+         // 重置重力感应基准角度
+        resetBaselineAngle();
         const score = gameState.correctCount * 1;
         elements.finalScore.textContent = score;
         elements.finalCorrect.textContent = gameState.correctCount;
@@ -2084,23 +2103,45 @@
     }
 
     // 手势检测函数
+    // 手势检测函数
     function startGestureListening() {
-        let rotationHistory = []; // 存储角度历史
+        if (!window.DeviceOrientationEvent) {
+            console.log('设备不支持方向传感器');
+            return;
+        }
+
+        if (!motionState.hasPermission) {
+            console.log('重力感应权限未授予');
+            return;
+        }
+
+        // 如果已经有监听器，先移除
+        if (gameState.motionListener) {
+            window.removeEventListener('deviceorientation', gameState.motionListener);
+            gameState.motionListener = null;
+        }
+
+        let rotationHistory = [];
         let lastValidTime = 0;
-        let baselineAlpha = null; // 基准角度
+        let baselineAlpha = null;
         let isCalibrated = false;
         let calibrationSamples = [];
 
-        window.addEventListener('deviceorientation', (event) => {
-            const currentTime = Date.now();
-            const currentAlpha = event.alpha; // Z轴旋转角度
+        // 保存监听器引用，以便后续移除
+        gameState.motionListener = (event) => {
+            // 检查重力感应是否启用
+            if (!gameState.motionEnabled) {
+                return;
+            }
 
-            // 1. 校准阶段 - 收集初始角度
+            const currentTime = Date.now();
+            const currentAlpha = event.alpha;
+
+            // 1. 校准阶段
             if (!isCalibrated) {
                 calibrationSamples.push(currentAlpha);
 
-                if (calibrationSamples.length >= 20) { // 收集20个样本
-                    // 计算平均值作为基准
+                if (calibrationSamples.length >= 20) {
                     const sum = calibrationSamples.reduce((a, b) => a + b, 0);
                     baselineAlpha = sum / calibrationSamples.length;
                     isCalibrated = true;
@@ -2116,8 +2157,6 @@
 
             // 3. 计算相对于基准的角度
             let relativeAngle = currentAlpha - baselineAlpha;
-
-            // 规范化到 [-180, 180] 范围
             if (relativeAngle > 180) relativeAngle -= 360;
             if (relativeAngle < -180) relativeAngle += 360;
 
@@ -2127,20 +2166,49 @@
                 angle: relativeAngle
             });
 
-            // 保持历史记录大小
             if (rotationHistory.length > CONFIG.GESTURE.HISTORY_SIZE) {
                 rotationHistory.shift();
             }
 
-            // 5. 检测旋转手势（需要至少3个数据点）
+            // 5. 检测旋转手势
             if (rotationHistory.length >= 3) {
                 detectSimpleRotation(rotationHistory);
             }
-        });
+        };
+
+        // 添加事件监听
+        window.addEventListener('deviceorientation', gameState.motionListener);
+        console.log('重力感应监听已启动');
+    }
+
+    // 启用游戏过程中的重力感应
+    function enableGameMotion() {
+        gameState.motionEnabled = true;
+        console.log('游戏重力感应已启用');
+    }
+
+    // 禁用重力感应（游戏结束或暂停时）
+    function disableGameMotion() {
+        gameState.motionEnabled = false;
+        console.log('游戏重力感应已禁用');
+    }
+
+    // 完全停止重力感应监听
+    function stopGestureListening() {
+        if (gameState.motionListener) {
+            window.removeEventListener('deviceorientation', gameState.motionListener);
+            gameState.motionListener = null;
+            console.log('重力感应监听已停止');
+        }
+        disableGameMotion();
     }
 
     // 简化的旋转检测
     function detectSimpleRotation(history) {
+         // 检查重力感应是否启用
+        if (!gameState.motionEnabled) {
+            return;
+        }
         const now = Date.now();
 
         // 冷却时间检查
@@ -2334,8 +2402,14 @@
     document.getElementById('skipBtn').addEventListener('click', skipWord);
     document.getElementById('endGameBtn').addEventListener('click', endGame);
 
-    document.getElementById('playAgainBtn').addEventListener('click', () => showSection('theme'));
-    document.getElementById('backToThemeBtn').addEventListener('click', () => showSection('theme'));
+    document.getElementById('playAgainBtn').addEventListener('click', () =>    {
+        disableGameMotion(); // 新增：禁用重力感应
+        showSection('theme')
+    });
+    document.getElementById('backToThemeBtn').addEventListener('click', () => {
+        disableGameMotion(); // 新增：禁用重力感应
+        showSection('theme');
+    });    
     // 在现有的事件监听部分添加
     document.getElementById('requestMotionBtn').addEventListener('click', requestMotionPermission);
 
