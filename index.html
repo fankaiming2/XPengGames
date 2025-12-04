@@ -1456,7 +1456,7 @@
         // 请求重力感应权限
         function requestMotionPermission() {
             if (!motionState.isSupported) {
-                alert('您的设备不支持重力感应功能。');
+                if (typeof callback === 'function') callback(false);
                 return;
             }
 
@@ -1740,6 +1740,11 @@
             alert('请先选择一个主题！');
             return;
         }
+        // 自动请求重力感应权限（如果未启用）
+        if (!motionState.hasPermission && motionState.isSupported) {
+            console.log('自动请求重力感应权限...');
+            requestMotionPermission();
+        }
 
         // 更新准备界面信息
         elements.readyTheme.textContent = gameState.currentTheme.name;
@@ -1753,16 +1758,16 @@
     }
 
     // 5. 立即开始游戏（从准备界面）
+        // 修改后的 startGameNow 函数（从准备界面开始）
     function startGameNow() {
-         if (!motionState.hasPermission && motionState.isSupported) {
-            const confirmStart = confirm('重力感应功能未启用，将只能使用按钮操作。是否继续开始游戏？\n\n您可以在主题选择界面启用重力感应。');
-            if (!confirmStart) {
-                return;
-            }
+        // 检查重力感应状态，但不再弹出确认框
+        if (!motionState.hasPermission && motionState.isSupported) {
+            console.log('重力感应未启用，将仅使用按钮操作');
         }
+
         // 重置游戏状态
         resetGameState();
-         // 确保重力感应是禁用状态（倒计时期间）
+        // 确保重力感应是禁用状态（倒计时期间）
         disableGameMotion();
 
         // 准备词语
@@ -1813,6 +1818,10 @@
 
         // 显示游戏界面
         showSection('game');
+        // 再次检查重力感应状态
+        if (!motionState.hasPermission && motionState.isSupported) {
+            console.log('游戏开始，但重力感应未启用，仅使用按钮操作');
+        }
 
         // 开始计时器
         startTimer();
@@ -2342,6 +2351,11 @@
 
         const target = document.getElementById(section + 'Section');
         if (target) target.classList.add('active-section');
+
+        // 当离开游戏界面时，禁用重力感应
+        if (section !== 'game') {
+            disableGameMotion();
+        }
     }
 
     function showLoader(show) {
