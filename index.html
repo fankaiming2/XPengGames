@@ -2618,9 +2618,7 @@
             const subject = encodeURIComponent('【你说我猜游戏】用户反馈');
             const body = encodeURIComponent(`用户反馈内容：\n\n${message}\n\n───────────────\n${gameVersion}\n${deviceInfo}\n\n感谢您的反馈！`);
             
-            // 打开邮件客户端
-            window.location.href = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
-            
+
             // 清空输入框
             document.getElementById('userMessage').value = '';
             
@@ -2631,6 +2629,7 @@
             sendBtn.style.background = '#2ed573';
             
             // 延迟一点时间，让用户看到按钮状态变化
+            // 打开邮件客户端
             setTimeout(() => {
                 window.location.href = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
                 // 恢复按钮状态
