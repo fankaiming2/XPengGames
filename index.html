@@ -1201,13 +1201,13 @@
     </div>
 
     <!-- 在shake-hint上方添加状态显示 -->
-    <div id="motionStatus" class="shake-hint" style="margin-top: 4px; background: #f8f9fa; display: none;">
+    <!-- <div id="motionStatus" class="shake-hint" style="margin-top: 4px; background: #f8f9fa; display: none;">
         <i class="fas fa-check-circle" style="color: #2ed573;"></i>
         <div>
             <p style="font-weight: bold; color: #2ed573;">✓ 重力感应已启用</p>
             <p style="font-size: 0.9rem;">现在可以使用手机旋转来控制游戏</p>
         </div>
-    </div>
+    </div> -->
     <section id="themeSection" class="game-section active-section">
         <h2>选择猜词主题</h2>
         <div class="theme-grid" id="themeGrid">
@@ -1265,7 +1265,7 @@
 
     <section id="gameSection" class="game-section">
         <div class="game-area">
-            <h2 id="currentTheme">成语猜猜猜</h2>
+            <h2 id="currentTheme" style="transform: translateY(-9px);">成语猜猜猜</h2>
             <div class="word-card" id="currentWord">
                 词语加载中...
             </div>
@@ -1406,7 +1406,7 @@
             
             <div class="message-bubble">
                 <div class="message-avatar">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=teacher" alt="开发者头像">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=youngboy" alt="开发者头像">
                 </div>
                 <div class="message-content">
                     <p>您好，有什么可以帮到您呢~</p>
@@ -1439,7 +1439,7 @@
         <!-- 开发者信息 -->
         <div class="developer-info">
     
-            <div class="developer-message" style="margin-left: 15px; padding-left: 0;">
+            <div class="developer-message" style="margin-left: 15px; padding-left: 0; margin-top: 15px;">
                 <p class="developer-email">联系邮箱：<a href="mailto:ming95ming@126.com">ming95ming@126.com</a></p>
             </div>
         </div>
@@ -1498,15 +1498,15 @@
             const requestBtn = document.getElementById('requestMotionBtn');
 
             if (enabled) {
-                statusElement.style.display = 'flex';
-                statusElement.innerHTML = `
-                    <i class="fas fa-check-circle" style="color: #2ed573; font-size: 1.5rem;"></i>
-                    <div>
-                        <p style="font-weight: bold; color: #2ed573; margin: 0;">✓ 重力感应已启用</p>
-                        <p style="font-size: 0.9rem; margin: 5px 0 0 0; color: #666;">现在可以使用手机旋转控制游戏</p>
-                    </div>
-                `;
-                requestBtn.innerHTML = '<i class="fas fa-check"></i> 已启用';
+                // statusElement.style.display = 'flex';
+                // statusElement.innerHTML = `
+                //     <i class="fas fa-check-circle" style="color: #2ed573; font-size: 1.5rem;"></i>
+                //     // <div>
+                //     //     <p style="font-weight: bold; color: #2ed573; margin: 0;">✓ 重力感应已启用</p>
+                //     //     <p style="font-size: 0.9rem; margin: 5px 0 0 0; color: #666;">现在可以使用手机旋转控制游戏</p>
+                //     // </div>
+                // `;
+                requestBtn.innerHTML = '<i class="fas fa-check-circle"></i> 重力感应已启用';
                 requestBtn.classList.remove('btn-info');
                 requestBtn.classList.add('btn-success');
             } else {
@@ -2437,7 +2437,7 @@
         document.head.appendChild(style);
     });
     // ==================== 新增：反馈功能事件监听 ====================
-    document.getElementById('feedbackTrigger').addEventListener('click', function(e) {
+        document.getElementById('feedbackTrigger').addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('feedbackModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
