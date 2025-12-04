@@ -1561,6 +1561,9 @@
         }
     // ==================== 配置区域 ====================
     const CONFIG = {
+         // 主题图标映射 - 保留默认图标
+        defaultThemeIcon: 'fas fa-question-circle',
+        defaultThemeColor: '#888',
         // 主题配置文件映射（文件名 -> 显示名称）
         themeFiles: {
             'idiom.txt': '成语',
@@ -1663,6 +1666,47 @@
     };
 
     // ==================== 核心功能 ====================
+    // 1. 获取目录中的txt文件列表
+    async function getThemeFiles() {
+        try {
+            // 创建一个简单的文件列表请求
+            const response = await fetch('words/');
+            if (!response.ok) {
+                throw new Error('无法获取文件列表');
+            }
+
+            // 注意：这个实现假设服务器支持目录列表
+            // 如果服务器不支持，可能需要创建一个服务器端接口或使用其他方法
+            const html = await response.text();
+
+            // 解析HTML获取文件列表（这是一个简化的实现）
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const links = doc.querySelectorAll('a');
+
+            const txtFiles = [];
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && href.endsWith('.txt')) {
+                    txtFiles.push(href);
+                }
+            });
+
+            return txtFiles;
+        } catch (error) {
+            console.error('获取主题文件列表失败:', error);
+
+            // 如果无法动态获取，使用默认文件列表
+            return [
+                'idiom.txt',
+                'star.txt',
+                'food.txt',
+                'sport.txt',
+                'movie.txt',
+                'animal.txt'
+            ];
+        }
+    }
 
     // 1. 从TXT文件加载词语库
     async function loadWordFile(filename) {
@@ -1682,28 +1726,61 @@
             return getDefaultWords(filename);
         }
     }
+        // 3. 从文件名提取主题名称
+    function extractThemeName(filename) {
+        // 移除.txt扩展名
+        const nameWithoutExt = filename.replace('.txt', '');
 
-    // 2. 初始化所有主题
+        // 处理可能的下划线或连字符
+        return nameWithoutExt.replace(/[_-]/g, ' ');
+    }
+        // 4. 获取主题图标
+    function getThemeIcon(themeName) {
+        return CONFIG.themeIcons[themeName] || CONFIG.defaultThemeIcon;
+    }
+        // 5. 获取主题颜色
+    function getThemeColor(themeName) {
+        return CONFIG.themeColors[themeName] || CONFIG.defaultThemeColor;
+    }
+
+
+
+        // 6. 初始化所有主题
     async function initAllThemes() {
         showLoader(true);
         gameState.themes = [];
 
-        for (const [filename, themeName] of Object.entries(CONFIG.themeFiles)) {
-            const words = await loadWordFile(filename);
-            if (words.length > 0) {
-                gameState.themes.push({
-                    id: filename.replace('.txt', ''),
-                    name: themeName,
-                    icon: CONFIG.themeIcons[themeName] || 'fas fa-question-circle',
-                    color: CONFIG.themeColors[themeName] || '#888',
-                    words: words
-                });
-            }
-        }
+        try {
+            // 获取目录中的txt文件列表
+            const themeFiles = await getThemeFiles();
+            console.log('找到的主题文件:', themeFiles);
 
-        // 如果没加载到任何主题，使用默认数据
-        if (gameState.themes.length === 0) {
-            console.log('使用默认主题数据');
+            // 加载每个主题
+            for (const filename of themeFiles) {
+                const words = await loadWordFile(filename);
+                if (words.length > 0) {
+                    const themeName = extractThemeName(filename);
+
+                    gameState.themes.push({
+                        id: filename.replace('.txt', ''),
+                        name: themeName,
+                        icon: getThemeIcon(themeName),
+                        color: getThemeColor(themeName),
+                        words: words
+                    });
+
+                    console.log(`添加主题: ${themeName} (${words.length}个词语)`);
+                }
+            }
+
+            // 如果没加载到任何主题，使用默认数据
+            if (gameState.themes.length === 0) {
+                console.log('使用默认主题数据');
+                gameState.themes = getDefaultThemes();
+            }
+        } catch (error) {
+            console.error('初始化主题时出错:', error);
+            // 出错时使用默认主题
             gameState.themes = getDefaultThemes();
         }
 
@@ -2406,19 +2483,40 @@
         return array;
     }
 
-    // 默认词语数据（备用）
+    // 默认主题数据（备用）
+    function getDefaultThemes() {
+        return [
+            {
+                id: 'idiom',
+                name: '成语',
+                icon: 'fas fa-book-open',
+                color: '#2575fc',
+                words: ['画蛇添足', '守株待兔', '刻舟求剑', '叶公好龙', '狐假虎威']
+            },
+            {
+                id: 'star',
+                name: '明星',
+                icon: 'fas fa-star',
+                color: '#ff9f43',
+                words: ['周杰伦', '刘德华', '张学友', '王菲', '林俊杰']
+            }
+        ];
+    }
+
+    // 默认词语数据函数（现在直接在主函数中使用，不再单独调用）
     function getDefaultWords(filename) {
+        // 这是一个空函数，因为现在我们直接从文件中加载词语
+        // 只在文件加载失败时使用
         const defaults = {
-            'idiom.txt': [],
-            'star.txt': [],
-            'food.txt': [],
-            'sport.txt': [],
-            'movie.txt': [],
-            'animal.txt': []
+            'idiom.txt': ['画蛇添足', '守株待兔', '刻舟求剑', '叶公好龙', '狐假虎威'],
+            'star.txt': ['周杰伦', '刘德华', '张学友', '王菲', '林俊杰'],
+            'food.txt': ['火锅', '披萨', '汉堡', '寿司', '拉面'],
+            'sport.txt': ['篮球', '足球', '游泳', '跑步', '瑜伽'],
+            'movie.txt': ['阿凡达', '泰坦尼克号', '复仇者联盟', '教父', '星球大战'],
+            'animal.txt': ['熊猫', '老虎', '狮子', '大象', '长颈鹿']
         };
         return defaults[filename] || [];
     }
-
     function getDefaultThemes() {
         return [
             {
