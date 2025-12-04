@@ -1,0 +1,7 @@
+idiom.txt
+star.txt
+food.txt
+sport.txt
+movie.txt
+animal.txt
+水果.txt
