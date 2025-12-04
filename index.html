@@ -1078,15 +1078,18 @@
             margin-bottom: 20px;
         }
 
-        .qrcode-container {
-            margin-top: 20px;
-            display: inline-block;
-            padding: 15px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            border: 1px solid #eee;
-        }
+  .qrcode-container {
+    margin-top: 20px;
+    display: block; /* 改为 block 才能居中 */
+    text-align: center; /* 使其内容居中 */
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
+    margin: 20px auto 0 auto; /* 自动左右边距确保水平居中 */
+    width: fit-content; /* 根据内容自适应宽度 */
+}
 
         .donation-qrcode {
             width: 200px;
@@ -1433,43 +1436,42 @@
 
         </div>
         <div class="qrcode-container">
-            <div style="width: 100%; background: #f8f9fa; padding: 10px; border-radius: 8px; box-sizing: border-box;">
+            <div style="width: 100%; background: #f8f9fa; padding: 8px; border-radius: 6px; box-sizing: border-box;">
                 <div style="display: flex; flex-direction: column; width: 100%;">
                     <!-- 第一行 -->
-                    <div style="display: flex; width: 100%; height: 150px; margin-bottom: 0;">
+                    <div style="display: flex; width: 100%; height: 120px; margin-bottom: 0;">
                         <!-- 图片1 -->
                         <div style="flex: 1; overflow: hidden; margin-right: 0;">
                             <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1397.JPG"
-                                 style="width: 100%; height: 150px; object-fit: cover; display: block;"
+                                 style="width: 100%; height: 120px; object-fit: cover; display: block;"
                                  alt="游戏截图1">
                         </div>
                         <!-- 图片2 -->
                         <div style="flex: 1; overflow: hidden;">
                             <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1398.JPG"
-                                 style="width: 100%; height: 150px; object-fit: cover; display: block;"
+                                 style="width: 100%; height: 120px; object-fit: cover; display: block;"
                                  alt="游戏截图2">
                         </div>
                     </div>
 
                     <!-- 第二行 -->
-                    <div style="display: flex; width: 100%; height: 150px;">
+                    <div style="display: flex; width: 100%; height: 120px;">
                         <!-- 图片3 -->
                         <div style="flex: 1; overflow: hidden; margin-right: 0;">
                             <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1399.JPG"
-                                 style="width: 100%; height: 150px; object-fit: cover; display: block;"
+                                 style="width: 100%; height: 120px; object-fit: cover; display: block;"
                                  alt="游戏截图3">
                         </div>
                         <!-- 图片4 -->
                         <div style="flex: 1; overflow: hidden;">
                             <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1400.JPG"
-                                 style="width: 100%; height: 150px; object-fit: cover; display: block;"
+                                 style="width: 100%; height: 120px; object-fit: cover; display: block;"
                                  alt="游戏截图4">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <!-- 开发者信息 -->
         <div class="developer-info">
     
