@@ -1406,7 +1406,7 @@
             
             <div class="message-bubble">
                 <div class="message-avatar">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=youngboy" alt="开发者头像">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=teacherlaugh" alt="开发者头像">
                 </div>
                 <div class="message-content">
                     <p>您好，有什么可以帮到您呢~</p>
@@ -2473,7 +2473,9 @@
             const body = encodeURIComponent(`用户反馈内容：\n\n${message}\n\n───────────────\n${gameVersion}\n${deviceInfo}\n\n感谢您的反馈！`);
             
             // 打开邮件客户端
-            window.location.href = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
+            // 修改后：
+            const mailtoLink = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
+            window.open(mailtoLink, '_blank');
             
             // 清空输入框
             document.getElementById('userMessage').value = '';
