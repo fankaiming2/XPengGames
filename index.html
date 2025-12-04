@@ -2486,36 +2486,7 @@
             
             // 延迟一点时间，让用户看到按钮状态变化
             setTimeout(() => {
-                // 方法1：使用iframe（不离开当前页面）
-                try {
-                    const iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.src = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
-                    document.body.appendChild(iframe);
-                    
-                    // 延迟移除iframe
-                    setTimeout(() => {
-                        if (document.body.contains(iframe)) {
-                            document.body.removeChild(iframe);
-                        }
-                    }, 1000);
-                    
-                    console.log('通过iframe打开邮件客户端');
-                } catch (error) {
-                    console.log('iframe方法失败，使用备用方案', error);
-                    
-                    // 方法2：备用方案，新窗口打开
-                    try {
-                        const mailtoLink = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
-                        window.open(mailtoLink, '_blank');
-                    } catch (e) {
-                        console.log('新窗口方法也失败', e);
-                        
-                        // 方法3：最后的方法，直接在当前窗口打开
-                        window.location.href = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
-                    }
-                }
-                
+                window.location.href = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
                 // 恢复按钮状态
                 setTimeout(() => {
                     sendBtn.innerHTML = originalText;
