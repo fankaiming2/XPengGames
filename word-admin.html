@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>词库管理 - 你说我猜</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        h1 {
+            color: #2575fc;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* 控制面板 */
+        .control-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #2575fc;
+            color: white;
+        }
+
+        .btn-success {
+            background: #2ed573;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f1f2f6;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 文件列表 */
+        .file-list {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+
+        .file-header {
+            display: grid;
+            grid-template-columns: 3fr 2fr 2fr 1fr;
+            background: #2575fc;
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .file-item {
+            display: grid;
+            grid-template-columns: 3fr 2fr 2fr 1fr;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            align-items: center;
+        }
+
+        .file-item:hover {
+            background: #f8f9fa;
+        }
+
+        .file-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-icon {
+            color: #2575fc;
+            font-size: 1.2rem;
+        }
+
+        .word-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            color: #2575fc;
+        }
+
+        .delete-btn {
+            color: #ff4757;
+        }
+
+        .action-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.1);
+        }
+
+        /* 编辑器区域 */
+        .editor-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 25px;
+            display: none;
+        }
+
+        .editor-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .editor-title {
+            color: #2575fc;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2575fc;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 300px;
+            resize: vertical;
+        }
+
+        .form-hint {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        /* 状态消息 */
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-success {
+            background: rgba(46, 213, 115, 0.1);
+            border: 1px solid #2ed573;
+            color: #25b562;
+        }
+
+        .status-error {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid #ff4757;
+            color: #ff4757;
+        }
+
+        .status-warning {
+            background: rgba(255, 159, 67, 0.1);
+            border: 1px solid #ff9f43;
+            color: #ff9f43;
+        }
+
+        /* 加载动画 */
+        .loader {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(37, 117, 252, 0.2);
+            border-top: 4px solid #2575fc;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+
+        /* 回到游戏按钮 */
+        .back-to-game {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: #2ed573;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 20px rgba(46, 213, 115, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(46, 213, 115, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .file-header, .file-item {
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+                font-size: 0.9rem;
+            }
+
+            .control-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .editor-actions {
+                flex-direction: column;
+            }
+
+            .back-to-game {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .file-header, .file-item {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto auto;
+                gap: 10px;
+            }
+
+            .file-name {
+                grid-column: 1 / -1;
+            }
+
+            .file-actions {
+                justify-content: flex-start;
+            }
+
+            .header {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-database"></i> 词库管理系统</h1>
+        <p class="subtitle">管理 "你说我猜" 游戏的词库文件</p>
+    </div>
+
+    <!-- 状态消息 -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <!-- 控制面板 -->
+    <div class="control-panel">
+        <button class="btn btn-primary" id="refreshBtn">
+            <i class="fas fa-sync-alt"></i> 刷新列表
+        </button>
+        <button class="btn btn-success" id="newFileBtn">
+            <i class="fas fa-plus-circle"></i> 新建词库
+        </button>
+        <button class="btn btn-secondary" id="uploadBtn">
+            <i class="fas fa-upload"></i> 上传文件
+        </button>
+    </div>
+
+    <!-- 文件列表 -->
+    <div class="file-list">
+        <div class="file-header">
+            <div>文件名</div>
+            <div>词语数量</div>
+            <div>最后修改</div>
+            <div>操作</div>
+        </div>
+        <div id="fileListContent">
+            <!-- 文件列表将通过JS动态生成 -->
+            <div class="loader">
+                <div class="spinner"></div>
+                <p>正在加载词库文件...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑器区域 -->
+    <div id="editorSection" class="editor-section">
+        <div class="editor-header">
+            <h3 class="editor-title" id="editorTitle">编辑词库文件</h3>
+            <button class="btn btn-secondary" id="closeEditorBtn">
+                <i class="fas fa-times"></i> 关闭
+            </button>
+        </div>
+
+        <form id="fileForm">
+            <div class="form-group">
+                <label for="fileName">文件名</label>
+                <input type="text" id="fileName" class="form-control"
+                       placeholder="例如：成语.txt (必须是.txt文件)" required>
+                <div class="form-hint">
+                    注意：文件名必须以.txt结尾，不要包含特殊字符或空格
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="fileContent">词语内容</label>
+                <textarea id="fileContent" class="form-control"
+                          placeholder="每行一个词语，使用#或//开头的行会被视为注释" required></textarea>
+                <div class="form-hint">
+                    格式说明：<br>
+                    1. 每行一个词语<br>
+                    2. 以#或//开头的行会被忽略<br>
+                    3. 建议每个文件至少10个词语<br>
+                    4. 词语之间不要有空行
+                </div>
+            </div>
+
+            <div class="editor-actions">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">
+                    <i class="fas fa-times"></i> 取消
+                </button>
+                <button type="submit" class="btn btn-success" id="saveBtn">
+                    <i class="fas fa-save"></i> 保存文件
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 空状态 -->
+    <div id="emptyState" class="empty-state" style="display: none;">
+        <div class="empty-icon">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <h3>暂无词库文件</h3>
+        <p>点击上方"新建词库"按钮开始创建第一个词库文件</p>
+    </div>
+</div>
+
+<!-- 回到游戏按钮 -->
+<div class="back-to-game">
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-gamepad"></i>
+        <span>返回游戏</span>
+    </a>
+</div>
+
+<!-- 上传文件输入框（隐藏） -->
+<input type="file" id="fileUploadInput" accept=".txt" style="display: none;">
+
+<script>
+    // 状态管理
+    const state = {
+        currentFile: null,
+        files: [],
+        isEditing: false
+    };
+
+    // DOM元素
+    const elements = {
+        fileListContent: document.getElementById('fileListContent'),
+        editorSection: document.getElementById('editorSection'),
+        editorTitle: document.getElementById('editorTitle'),
+        fileName: document.getElementById('fileName'),
+        fileContent: document.getElementById('fileContent'),
+        fileForm: document.getElementById('fileForm'),
+        statusMessage: document.getElementById('statusMessage'),
+        emptyState: document.getElementById('emptyState')
+    };
+
+    // API基础URL - 根据你的实际后端修改
+    const API_BASE = '/api'; // 假设你的后端API地址
+
+    // 显示状态消息
+    function showStatus(message, type = 'success', duration = 3000) {
+        const statusEl = elements.statusMessage;
+        statusEl.textContent = message;
+        statusEl.className = `status-message status-${type}`;
+        statusEl.style.display = 'block';
+
+        if (duration > 0) {
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, duration);
+        }
+    }
+
+    // 加载文件列表
+    async function loadFileList() {
+        try {
+            elements.fileListContent.innerHTML = `
+                <div class="loader">
+                    <div class="spinner"></div>
+                    <p>正在加载词库文件...</p>
+                </div>
+            `;
+
+            // 模拟从服务器加载文件列表
+            // 在实际项目中，这里应该调用你的后端API
+            const response = await fetch(`${API_BASE}/files`);
+            if (response.ok) {
+                state.files = await response.json();
+            } else {
+                // 如果后端API不存在，使用模拟数据
+                console.warn('后端API不可用，使用模拟数据');
+                state.files = await getMockFiles();
+            }
+
+            renderFileList();
+        } catch (error) {
+            console.error('加载文件列表失败:', error);
+            showStatus('加载失败: ' + error.message, 'error');
+            // 使用模拟数据作为后备
+            state.files = await getMockFiles();
+            renderFileList();
+        }
+    }
+
+    // 模拟文件数据（开发用）
+    async function getMockFiles() {
+        // 尝试从本地存储获取
+        const savedFiles = localStorage.getItem('wordFiles');
+        if (savedFiles) {
+            return JSON.parse(savedFiles);
+        }
+
+        // 默认示例文件
+        return [
+            {
+                name: '成语.txt',
+                content: `# 成语词库\n画蛇添足\n守株待兔\n刻舟求剑\n叶公好龙\n狐假虎威`,
+                lastModified: new Date().toISOString(),
+                wordCount: 5
+            },
+            {
+                name: '名人明星.txt',
+                content: `# 名人明星词库\n周杰伦\n刘德华\n张学友\n王菲\n林俊杰`,
+                lastModified: new Date(Date.now() - 86400000).toISOString(),
+                wordCount: 5
+            }
+        ];
+    }
+
+    // 渲染文件列表
+    function renderFileList() {
+        if (state.files.length === 0) {
+            elements.fileListContent.style.display = 'none';
+            elements.emptyState.style.display = 'block';
+            return;
+        }
+
+        elements.fileListContent.style.display = 'block';
+        elements.emptyState.style.display = 'none';
+
+        let html = '';
+
+        state.files.forEach(file => {
+            const wordCount = file.wordCount || file.content.split('\n')
+                .filter(line => line.trim() && !line.trim().startsWith('#') && !line.trim().startsWith('//')).length;
+
+            const lastModified = new Date(file.lastModified).toLocaleString('zh-CN');
+
+            html += `
+                <div class="file-item" data-filename="${file.name}">
+                    <div class="file-name">
+                        <i class="fas fa-file-alt file-icon"></i>
+                        <div>
+                            <strong>${file.name}</strong>
+                            <div class="word-count">${wordCount}个词语</div>
+                        </div>
+                    </div>
+                    <div>${wordCount}</div>
+                    <div>${lastModified}</div>
+                    <div class="file-actions">
+                        <button class="action-btn edit-btn" onclick="editFile('${file.name}')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteFile('${file.name}')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        elements.fileListContent.innerHTML = html;
+    }
+
+    // 编辑文件
+    async function editFile(filename) {
+        try {
+            const file = state.files.find(f => f.name === filename);
+            if (!file) {
+                showStatus('文件不存在', 'error');
+                return;
+            }
+
+            state.currentFile = file;
+            state.isEditing = true;
+
+            elements.editorTitle.textContent = '编辑词库文件';
+            elements.fileName.value = file.name;
+            elements.fileContent.value = file.content;
+            elements.editorSection.classList.add('active');
+
+            // 滚动到编辑器
+            elements.editorSection.scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            showStatus('编辑文件失败: ' + error.message, 'error');
+        }
+    }
+
+    // 新建文件
+    function newFile() {
+        state.currentFile = null;
+        state.isEditing = false;
+
+        elements.editorTitle.textContent = '新建词库文件';
+        elements.fileName.value = '';
+        elements.fileContent.value = '';
+        elements.editorSection.classList.add('active');
+
+        // 滚动到编辑器
+        elements.editorSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 删除文件
+    async function deleteFile(filename) {
+        if (!confirm(`确定要删除 "${filename}" 吗？此操作不可恢复。`)) {
+            return;
+        }
+
+        try {
+            // 模拟删除文件
+            state.files = state.files.filter(f => f.name !== filename);
+
+            // 保存到本地存储（模拟）
+            localStorage.setItem('wordFiles', JSON.stringify(state.files));
+
+            renderFileList();
+            showStatus(`文件 "${filename}" 已删除`, 'success');
+        } catch (error) {
+            showStatus('删除失败: ' + error.message, 'error');
+        }
+    }
+
+    // 保存文件
+    async function saveFile() {
+        const filename = elements.fileName.value.trim();
+        const content = elements.fileContent.value.trim();
+
+        // 验证文件名
+        if (!filename.endsWith('.txt')) {
+            showStatus('文件名必须以.txt结尾', 'error');
+            return;
+        }
+
+        // 验证内容
+        if (!content) {
+            showStatus('请输入词语内容', 'error');
+            return;
+        }
+
+        try {
+            if (state.isEditing && state.currentFile) {
+                // 更新现有文件
+                const index = state.files.findIndex(f => f.name === state.currentFile.name);
+                if (index !== -1) {
+                    state.files[index] = {
+                        name: filename,
+                        content: content,
+                        lastModified: new Date().toISOString(),
+                        wordCount: content.split('\n')
+                            .filter(line => line.trim() && !line.trim().startsWith('#') && !line.trim().startsWith('//')).length
+                    };
+                }
+            } else {
+                // 创建新文件
+                // 检查是否已存在
+                if (state.files.some(f => f.name === filename)) {
+                    showStatus('文件已存在，请使用其他文件名', 'error');
+                    return;
+                }
+
+                state.files.push({
+                    name: filename,
+                    content: content,
+                    lastModified: new Date().toISOString(),
+                    wordCount: content.split('\n')
+                        .filter(line => line.trim() && !line.trim().startsWith('#') && !line.trim().startsWith('//')).length
+                });
+            }
+
+            // 保存到本地存储（模拟）
+            localStorage.setItem('wordFiles', JSON.stringify(state.files));
+
+            // 在实际项目中，这里应该调用后端API保存文件
+            // await saveFileToServer(filename, content);
+
+            renderFileList();
+            closeEditor();
+            showStatus('文件保存成功！', 'success');
+        } catch (error) {
+            showStatus('保存失败: ' + error.message, 'error');
+        }
+    }
+
+    // 关闭编辑器
+    function closeEditor() {
+        elements.editorSection.classList.remove('active');
+        state.currentFile = null;
+    }
+
+    // 上传文件
+    async function uploadFile() {
+        const fileInput = document.getElementById('fileUploadInput');
+        fileInput.click();
+
+        fileInput.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.name.endsWith('.txt')) {
+                showStatus('只能上传.txt文件', 'error');
+                return;
+            }
+
+            try {
+                const content = await readFileAsText(file);
+
+                // 检查是否已存在
+                if (state.files.some(f => f.name === file.name)) {
+                    if (!confirm(`文件 "${file.name}" 已存在，是否覆盖？`)) {
+                        return;
+                    }
+                }
+
+                // 添加或替换文件
+                const existingIndex = state.files.findIndex(f => f.name === file.name);
+                if (existingIndex !== -1) {
+                    state.files[existingIndex] = {
+                        name: file.name,
+                        content: content,
+                        lastModified: new Date().toISOString(),
+                        wordCount: content.split('\n')
+                            .filter(line => line.trim() && !line.trim().startsWith('#') && !line.trim().startsWith('//')).length
+                    };
+                } else {
+                    state.files.push({
+                        name: file.name,
+                        content: content,
+                        lastModified: new Date().toISOString(),
+                        wordCount: content.split('\n')
+                            .filter(line => line.trim() && !line.trim().startsWith('#') && !line.trim().startsWith('//')).length
+                    });
+                }
+
+                // 保存到本地存储
+                localStorage.setItem('wordFiles', JSON.stringify(state.files));
+
+                renderFileList();
+                showStatus(`文件 "${file.name}" 上传成功！`, 'success');
+
+                // 重置文件输入
+                fileInput.value = '';
+            } catch (error) {
+                showStatus('上传失败: ' + error.message, 'error');
+            }
+        };
+    }
+
+    // 读取文件为文本
+    function readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = (e) => reject(new Error('读取文件失败'));
+            reader.readAsText(file);
+        });
+    }
+
+    // 模拟保存到服务器（实际项目中需要实现）
+    async function saveFileToServer(filename, content) {
+        // 这里应该调用你的后端API
+        console.log(`保存文件到服务器: ${filename}`);
+
+        // 模拟网络延迟
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // 在实际项目中，应该是这样的：
+        // const response = await fetch(`${API_BASE}/files`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({ filename, content })
+        // });
+        //
+        // if (!response.ok) {
+        //     throw new Error('保存到服务器失败');
+        // }
+    }
+
+    // 事件监听
+    document.getElementById('refreshBtn').addEventListener('click', loadFileList);
+    document.getElementById('newFileBtn').addEventListener('click', newFile);
+    document.getElementById('uploadBtn').addEventListener('click', uploadFile);
+    document.getElementById('closeEditorBtn').addEventListener('click', closeEditor);
+    document.getElementById('cancelBtn').addEventListener('click', closeEditor);
+
+    elements.fileForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveFile();
+    });
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+        loadFileList();
+
+        // 显示使用提示
+        setTimeout(() => {
+            showStatus(
+                '提示：这是一个前端模拟的词库管理系统。实际项目中需要后端API支持文件操作。',
+                'warning',
+                5000
+            );
+        }, 1000);
+    });
+</script>
+</body>
+</html>
