@@ -1780,18 +1780,7 @@
                     console.log(`添加主题: ${themeName} (${words.length}个词语)`);
                 }
             }
-            // 所有主题加载完毕后，手动添加一个“更多”主题卡片，点击跳转反馈
-            const moreThemeCard = document.createElement('div');
-            moreThemeCard.className = 'theme-card';
-            moreThemeCard.innerHTML = `
-                <i class="fas fa-plus theme-icon" style="color: #666;"></i>
-                <div class="theme-name">更多</div>
-            `;
-            moreThemeCard.addEventListener('click', () => {
-                document.getElementById('feedbackTrigger').click();
-            });
-            elements.themeGrid.appendChild(moreThemeCard);
-
+        
             // 如果没加载到任何主题，使用默认数据
             if (gameState.themes.length === 0) {
                 console.log('使用默认主题数据');
@@ -1823,6 +1812,32 @@
             elements.themeGrid.appendChild(themeCard);
         });
 
+        // ==================== 新增：添加"更多"卡片 ====================
+        const moreCard = document.createElement('div');
+        moreCard.className = 'theme-card';
+        moreCard.dataset.id = 'more';
+        moreCard.style.cursor = 'pointer';
+        moreCard.innerHTML = `
+            <i class="fas fa-plus theme-icon" style="color:#6a11cb"></i>
+            <div class="theme-name">更多</div>
+        `;
+        
+        // 点击"更多"卡片时触发底部反馈入口
+        moreCard.addEventListener('click', () => {
+            // 触发底部反馈入口的点击事件
+            document.getElementById('feedbackTrigger').click();
+            
+            // 可选：添加点击反馈动画
+            moreCard.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                moreCard.style.transform = 'scale(1)';
+            }, 200);
+        });
+        
+        // 将"更多"卡片添加到网格中
+        elements.themeGrid.appendChild(moreCard);
+        // ==================== 新增代码结束 ====================
+        
         // 初始化时间选项
         initTimeOptions();
 
