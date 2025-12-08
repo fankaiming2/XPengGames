@@ -1772,6 +1772,17 @@
                     console.log(`添加主题: ${themeName} (${words.length}个词语)`);
                 }
             }
+            // 所有主题加载完毕后，手动添加一个“更多”主题卡片，点击跳转反馈
+            const moreThemeCard = document.createElement('div');
+            moreThemeCard.className = 'theme-card';
+            moreThemeCard.innerHTML = `
+                <i class="fas fa-plus theme-icon" style="color: #666;"></i>
+                <div class="theme-name">更多</div>
+            `;
+            moreThemeCard.addEventListener('click', () => {
+                document.getElementById('feedbackTrigger').click();
+            });
+            elements.themeGrid.appendChild(moreThemeCard);
 
             // 如果没加载到任何主题，使用默认数据
             if (gameState.themes.length === 0) {
