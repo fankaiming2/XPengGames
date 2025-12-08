@@ -1566,28 +1566,30 @@
         defaultThemeColor: '#888',
         // 主题配置文件映射（文件名 -> 显示名称）
         themeFiles: {
-            'idiom.txt': '成语',
-            'star.txt': '明星',
-            'food.txt': '美食',
-            'sport.txt': '运动',
-            'movie.txt': '电影',
-            'animal.txt': '动物'
         },
 
         // 主题图标映射
         themeIcons: {
             '成语': 'fas fa-book-open',
-            '明星': 'fas fa-star',
+            '名人明星': 'fas fa-star',
             '美食': 'fas fa-utensils',
             '运动': 'fas fa-running',
             '电影': 'fas fa-film',
-            '动物': 'fas fa-paw'
+            '动物': 'fas fa-paw',
+            '八零九零': 'fas fa-history',           // 怀旧、年代感 → 历史图标
+            '吃喝玩乐': 'fas fa-glass-cheers', // 聚会享乐 → 干杯/庆祝
+            '教育学习': 'fas fa-graduation-cap', // 教育 → 学士帽
+            '科技': 'fas fa-microchip',         // 科技 → 芯片/硬件
+            '社会时事': 'fas fa-newspaper',     // 新闻时事 → 报纸
+            '生活日常': 'fas fa-home',          // 日常生活 → 房子
+            '兴趣爱好': 'fas fa-heart',         // 兴趣爱好 → 心形（热爱）
+            '职场': 'fas fa-briefcase'          // 职场 → 公文包
         },
 
         // 主题颜色映射
         themeColors: {
             '成语': '#2575fc',
-            '明星': '#ff9f43',
+            '名人明星': '#ff9f43',
             '美食': '#ee5a24',
             '运动': '#2ed573',
             '电影': '#6c5ce7',
@@ -1683,24 +1685,24 @@
             // 如果索引文件不存在，使用默认列表
             console.log('索引文件不存在，使用默认列表');
             return [
-                'idiom.txt',
-                'star.txt',
-                'food.txt',
-                'sport.txt',
-                'movie.txt',
-                'animal.txt',
+                '成语.txt',
+                '名人明星.txt',
+                '美食.txt',
+                '运动.txt',
+                '电影.txt',
+                '动物.txt',
                 '水果.txt'  // 添加水果
             ];
         } catch (error) {
             console.error('获取主题文件列表失败:', error);
             // 返回包含所有可能文件的列表
             return [
-                'idiom.txt',
-                'star.txt',
-                'food.txt',
-                'sport.txt',
-                'movie.txt',
-                'animal.txt',
+                '成语.txt',
+                '名人明星.txt',
+                '美食.txt',
+                '运动.txt',
+                '电影.txt',
+                '动物.txt',
                 '水果.txt'
             ];
         }
@@ -2485,15 +2487,15 @@
     function getDefaultThemes() {
         return [
             {
-                id: 'idiom',
+                id: '成语',
                 name: '成语',
                 icon: 'fas fa-book-open',
                 color: '#2575fc',
                 words: ['画蛇添足', '守株待兔', '刻舟求剑', '叶公好龙', '狐假虎威']
             },
             {
-                id: 'star',
-                name: '明星',
+                id: '名人明星',
+                name: '名人明星',
                 icon: 'fas fa-star',
                 color: '#ff9f43',
                 words: ['周杰伦', '刘德华', '张学友', '王菲', '林俊杰']
@@ -2506,30 +2508,30 @@
         // 这是一个空函数，因为现在我们直接从文件中加载词语
         // 只在文件加载失败时使用
         const defaults = {
-            'idiom.txt': ['画蛇添足', '守株待兔', '刻舟求剑', '叶公好龙', '狐假虎威'],
-            'star.txt': ['周杰伦', '刘德华', '张学友', '王菲', '林俊杰'],
-            'food.txt': ['火锅', '披萨', '汉堡', '寿司', '拉面'],
-            'sport.txt': ['篮球', '足球', '游泳', '跑步', '瑜伽'],
-            'movie.txt': ['阿凡达', '泰坦尼克号', '复仇者联盟', '教父', '星球大战'],
-            'animal.txt': ['熊猫', '老虎', '狮子', '大象', '长颈鹿']
+            '成语.txt': ['画蛇添足', '守株待兔', '刻舟求剑', '叶公好龙', '狐假虎威'],
+            '名人明星.txt': ['周杰伦', '刘德华', '张学友', '王菲', '林俊杰'],
+            '美食.txt': ['火锅', '披萨', '汉堡', '寿司', '拉面'],
+            '运动.txt': ['篮球', '足球', '游泳', '跑步', '瑜伽'],
+            '电影.txt': ['阿凡达', '泰坦尼克号', '复仇者联盟', '教父', '星球大战'],
+            '动物.txt': ['熊猫', '老虎', '狮子', '大象', '长颈鹿']
         };
         return defaults[filename] || [];
     }
     function getDefaultThemes() {
         return [
             {
-                id: 'idiom',
+                id: '成语',
                 name: '成语',
                 icon: 'fas fa-book-open',
                 color: '#2575fc',
-                words: getDefaultWords('idiom.txt')
+                words: getDefaultWords('成语.txt')
             },
             {
-                id: 'star',
-                name: '明星',
+                id: '名人明星',
+                name: '名人明星',
                 icon: 'fas fa-star',
                 color: '#ff9f43',
-                words: getDefaultWords('star.txt')
+                words: getDefaultWords('名人明星.txt')
             }
         ];
     }
