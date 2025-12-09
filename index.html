@@ -6,6 +6,82 @@
     <title>你说我猜</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        <!-- 在head部分添加音效相关的CSS样式 -->
+        /* 新增：音效控制相关样式 */
+        .audio-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .audio-toggle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #2575fc;
+            color: #2575fc;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .audio-toggle:hover {
+            transform: scale(1.1);
+            background: #2575fc;
+            color: white;
+        }
+
+        .audio-toggle.muted {
+            background: #ff4757;
+            border-color: #ff4757;
+            color: white;
+        }
+
+        /* 倒计时音效提示 */
+        .countdown-audio-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            text-align: center;
+            display: none;
+        }
+
+        .countdown-overlay.active .countdown-audio-hint {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* 音效加载状态 */
+        .audio-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.8rem;
+            text-align: center;
+            opacity: 0.7;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -1186,21 +1262,38 @@
     </style>
 </head>
 <body>
-<!-- 倒计时覆盖层 -->
-<div class="countdown-overlay" id="countdownOverlay">
-    <div class="countdown-number" id="countdownNumber">5</div>
-    <div class="countdown-text">准备开始</div>
-</div>
-
-<div class="container">
-    <div class="header">
-        <h1><i class="fas fa-gamepad"></i>你说我猜</h1>
-    </div>
-    <!-- 在themeSection的游戏控制区域上方添加 -->
-    <div class="game-controls" style="margin-top: 4px;">
-        <button class="btn btn-info" id="requestMotionBtn">
-            <i class="fas fa-mobile-alt"></i> 启用重力感应
+    <!-- 新增：音效控制按钮 -->
+    <div class="audio-controls">
+        <button id="audioToggle" class="audio-toggle" title="切换音效">
+            <i class="fas fa-volume-up"></i>
         </button>
+    </div>
+
+    <!-- 新增：音频元素 -->
+    <audio id="countdownAudio" preload="auto" loop>
+        <!-- 我们将使用base64编码的音频数据，避免外部文件依赖 -->
+    </audio>
+
+    <audio id="countdownBeep" preload="auto"></audio>
+    <audio id="gameStartAudio" preload="auto"></audio>
+    <!-- 倒计时覆盖层 -->
+    <div class="countdown-overlay" id="countdownOverlay">
+        <div class="countdown-number" id="countdownNumber">5</div>
+        <div class="countdown-text">准备开始</div>
+        <div class="countdown-audio-hint">
+            <i class="fas fa-music"></i> 倒计时音效已开启
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-gamepad"></i>你说我猜</h1>
+        </div>
+        <!-- 在themeSection的游戏控制区域上方添加 -->
+        <div class="game-controls" style="margin-top: 4px;">
+            <button class="btn btn-info" id="requestMotionBtn">
+                <i class="fas fa-mobile-alt"></i> 启用重力感应
+            </button>
     </div>
 
     <!-- 在shake-hint上方添加状态显示 -->
@@ -1562,6 +1655,19 @@
         }
     // ==================== 配置区域 ====================
     const CONFIG = {
+        // 新增：音效配置
+        AUDIO: {
+            enabled: true,
+            volume: 0.5,
+            countdownBeepUrls: [
+                "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ",
+                // 这里可以添加更多的beep音效
+            ],
+            // 倒计时背景音乐（简单的合成音效）
+            countdownMusic: "data:audio/mpeg;base64,/+MYxAAAAANIAAAAAExBTUUzLjk4LjIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            // 游戏开始音效
+            gameStartSound: "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQCgAABkYXRhAKAAAGRhZGE="
+        }
          // 主题图标映射 - 保留默认图标
         defaultThemeIcon: 'fas fa-question-circle',
         defaultThemeColor: '#888',
@@ -1640,7 +1746,13 @@
         countdownValue: 5,
         // 新增：重力感应控制标志
         motionEnabled: false,   // 游戏过程中才启用重力感应
-        motionListener: null    // 保存事件监听器引用，便于移除
+        motionListener: null,    // 保存事件监听器引用，便于移除
+         // 新增：音效相关状态
+        audioEnabled: true,
+        audioContext: null,
+        audioBuffers: {},
+        countdownAudio: null,
+        isAudioLoading: false
     };
 
     // ==================== DOM元素 ====================
@@ -2079,6 +2191,8 @@
         });
 
         gameState.correctCount++;
+        // 播放正确音效
+        playGestureSound(true);
         showNextWord();
 
         // 添加额外反馈
@@ -2098,6 +2212,8 @@
         });
 
         gameState.skippedCount++;
+         // 播放跳过音效
+        playGestureSound(false);
         showNextWord();
 
         // 添加额外反馈
@@ -2126,6 +2242,8 @@
         else message = '多玩几次，熟能生巧！';
 
         elements.resultMessage.textContent = message;
+         // 播放游戏结束音效
+        playGameEndSound(score);
 
         // 初始化回顾内容
         initWordReview();
@@ -2571,6 +2689,304 @@
         ];
     }
 
+        // ==================== 音效功能 ====================
+
+    // 初始化音效系统
+    function initAudioSystem() {
+        // 检查浏览器是否支持Web Audio API
+        if (!window.AudioContext && !window.webkitAudioContext) {
+            console.log('浏览器不支持Web Audio API，将使用HTML5 Audio');
+            return;
+        }
+
+        try {
+            // 创建音频上下文
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            gameState.audioContext = new AudioContextClass();
+
+            // 恢复音频上下文（某些浏览器需要用户交互后）
+            if (gameState.audioContext.state === 'suspended') {
+                document.addEventListener('click', function resumeAudio() {
+                    gameState.audioContext.resume();
+                    document.removeEventListener('click', resumeAudio);
+                });
+            }
+        } catch (error) {
+            console.log('初始化音频上下文失败:', error);
+        }
+    }
+
+    // 切换音效状态
+    function toggleAudio() {
+        gameState.audioEnabled = !gameState.audioEnabled;
+
+        const audioToggle = document.getElementById('audioToggle');
+        const audioIcon = audioToggle.querySelector('i');
+
+        if (gameState.audioEnabled) {
+            audioToggle.classList.remove('muted');
+            audioIcon.className = 'fas fa-volume-up';
+            audioToggle.title = '关闭音效';
+
+            // 恢复音频上下文
+            if (gameState.audioContext && gameState.audioContext.state === 'suspended') {
+                gameState.audioContext.resume();
+            }
+        } else {
+            audioToggle.classList.add('muted');
+            audioIcon.className = 'fas fa-volume-mute';
+            audioToggle.title = '开启音效';
+
+            // 停止所有音效
+            stopAllAudio();
+        }
+
+        // 保存到localStorage
+        localStorage.setItem('audioEnabled', gameState.audioEnabled);
+    }
+
+    // 停止所有音效
+    function stopAllAudio() {
+        if (gameState.countdownAudio) {
+            gameState.countdownAudio.pause();
+            gameState.countdownAudio.currentTime = 0;
+        }
+    }
+
+    // 播放倒计时背景音乐
+    function playCountdownMusic() {
+        if (!gameState.audioEnabled) return;
+
+        // 停止之前的音乐
+        stopAllAudio();
+
+        // 创建简单的合成倒计时音效
+        if (gameState.audioContext) {
+            playSyntheticCountdown();
+        } else {
+            playFallbackCountdown();
+        }
+    }
+
+    // 使用Web Audio API合成倒计时音效
+    function playSyntheticCountdown() {
+        try {
+            const context = gameState.audioContext;
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            oscillator.frequency.value = 220; // A3音符
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0, context.currentTime);
+            gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume * 0.3, context.currentTime + 0.1);
+
+            oscillator.start();
+
+            // 在倒计时结束时淡出
+            setTimeout(() => {
+                gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.5);
+                setTimeout(() => oscillator.stop(), 500);
+            }, 4500); // 4.5秒后开始淡出
+        } catch (error) {
+            console.log('合成音效失败:', error);
+            playFallbackCountdown();
+        }
+    }
+
+    // 后备倒计时音效（使用简单的beep声）
+    function playFallbackCountdown() {
+        try {
+            // 创建一个beep音效
+            const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            // 每秒钟beep一次
+            for (let i = 0; i < 5; i++) {
+                const time = context.currentTime + i;
+
+                gainNode.gain.setValueAtTime(0, time);
+                gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume * 0.5, time + 0.1);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
+
+                oscillator.frequency.setValueAtTime(440, time); // A4音符
+                if (i === 4) {
+                    oscillator.frequency.setValueAtTime(880, time); // 最后一次高八度
+                }
+            }
+
+            oscillator.start();
+            oscillator.stop(context.currentTime + 5);
+        } catch (error) {
+            console.log('后备音效失败:', error);
+        }
+    }
+
+    // 播放倒计时数字音效
+    function playCountdownBeep(number) {
+        if (!gameState.audioEnabled) return;
+
+        try {
+            const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            // 根据数字调整音高
+            let frequency;
+            switch(number) {
+                case 5:
+                    frequency = 220; // A3
+                    break;
+                case 4:
+                    frequency = 246.94; // B3
+                    break;
+                case 3:
+                    frequency = 293.66; // D4
+                    break;
+                case 2:
+                    frequency = 349.23; // F4
+                    break;
+                case 1:
+                    frequency = 440; // A4
+                    break;
+                default:
+                    frequency = 440;
+            }
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0, context.currentTime);
+            gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume * 0.7, context.currentTime + 0.05);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.3);
+
+            oscillator.start();
+            oscillator.stop(context.currentTime + 0.3);
+        } catch (error) {
+            console.log('播放beep音效失败:', error);
+        }
+    }
+
+    // 播放游戏开始音效
+    function playGameStartSound() {
+        if (!gameState.audioEnabled) return;
+
+        try {
+            const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator1 = context.createOscillator();
+            const oscillator2 = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator1.connect(gainNode);
+            oscillator2.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            // 两个振荡器创造和弦效果
+            oscillator1.frequency.value = 523.25; // C5
+            oscillator2.frequency.value = 659.25; // E5
+            oscillator1.type = 'sine';
+            oscillator2.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0, context.currentTime);
+            gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume, context.currentTime + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 1);
+
+            oscillator1.start();
+            oscillator2.start();
+
+            oscillator1.stop(context.currentTime + 1);
+            oscillator2.stop(context.currentTime + 1);
+        } catch (error) {
+            console.log('播放开始音效失败:', error);
+        }
+    }
+
+    // 播放手势反馈音效
+    function playGestureSound(isCorrect) {
+        if (!gameState.audioEnabled) return;
+
+        try {
+            const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            if (isCorrect) {
+                // 正确音效 - 上升音调
+                oscillator.frequency.setValueAtTime(440, context.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(880, context.currentTime + 0.2);
+                oscillator.type = 'sine';
+            } else {
+                // 跳过音效 - 下降音调
+                oscillator.frequency.setValueAtTime(880, context.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(440, context.currentTime + 0.2);
+                oscillator.type = 'triangle';
+            }
+
+            gainNode.gain.setValueAtTime(0, context.currentTime);
+            gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume * 0.5, context.currentTime + 0.05);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.2);
+
+            oscillator.start();
+            oscillator.stop(context.currentTime + 0.2);
+        } catch (error) {
+            console.log('播放手势音效失败:', error);
+        }
+    }
+
+    // 播放游戏结束音效
+    function playGameEndSound(score) {
+        if (!gameState.audioEnabled) return;
+
+        try {
+            const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            // 根据分数调整音效
+            let frequency;
+            if (score >= 80) {
+                frequency = [523.25, 659.25, 783.99]; // C5, E5, G5 - 胜利和弦
+            } else if (score >= 50) {
+                frequency = [392, 493.88, 587.33]; // G4, B4, D5 - 中等和弦
+            } else {
+                frequency = [349.23, 440, 523.25]; // F4, A4, C5 - 基本和弦
+            }
+
+            // 播放和弦的每个音符
+            frequency.forEach((freq, index) => {
+                const time = context.currentTime + index * 0.1;
+                oscillator.frequency.setValueAtTime(freq, time);
+            });
+
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0, context.currentTime);
+            gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume, context.currentTime + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.5);
+
+            oscillator.start();
+            oscillator.stop(context.currentTime + 0.5);
+        } catch (error) {
+            console.log('播放结束音效失败:', error);
+        }
+    }
+
     // ==================== 事件监听 ====================
     
     document.getElementById('startGameBtn').addEventListener('click', startGame);
@@ -2600,6 +3016,22 @@
     // 修改初始化函数
     window.addEventListener('DOMContentLoaded', () => {
         initAllThemes();
+         // 初始化音效系统
+        initAudioSystem();
+            // 从localStorage加载音效设置
+        const savedAudioSetting = localStorage.getItem('audioEnabled');
+        if (savedAudioSetting !== null) {
+            gameState.audioEnabled = JSON.parse(savedAudioSetting);
+        }
+
+        // 更新音效按钮状态
+        const audioToggle = document.getElementById('audioToggle');
+        const audioIcon = audioToggle.querySelector('i');
+        if (!gameState.audioEnabled) {
+            audioToggle.classList.add('muted');
+            audioIcon.className = 'fas fa-volume-mute';
+            audioToggle.title = '开启音效';
+        }
 
         // 检查设备支持情况并更新UI
         if (!motionState.isSupported) {
@@ -2620,6 +3052,9 @@
         document.head.appendChild(style);
     });
     // ==================== 新增：反馈功能事件监听 ====================
+        // 在现有的事件监听部分添加音效控制
+        document.getElementById('audioToggle').addEventListener('click', toggleAudio);
+
         document.getElementById('feedbackTrigger').addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('feedbackModal').style.display = 'block';
