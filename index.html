@@ -6,6 +6,24 @@
     <title>你说我猜</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+                /* 修改计时器紧张状态样式 */
+        .timer.timer-low {
+            color: #ff4757 !important; /* 红色更紧张 */
+            animation: urgentPulse 0.3s infinite !important;
+        }
+
+        @keyframes urgentPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+                text-shadow: 0 0 10px #ff4757;
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05);
+                text-shadow: 0 0 20px #ff4757;
+            }
+        }
         <!-- 在head部分添加音效相关的CSS样式 -->
         /* 新增：音效控制相关样式 */
         .audio-controls {
@@ -1754,6 +1772,191 @@
         isAudioLoading: false
     };
 
+
+    // 紧张音效状态
+    const tenseAudioState = {
+        isPlaying: false,
+        audioContext: null,
+        oscillators: [],
+        gainNode: null
+    };
+
+    // 初始化紧张音效
+    function initTenseAudio() {
+        if (!window.AudioContext && !window.webkitAudioContext) return;
+
+        try {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            tenseAudioState.audioContext = new AudioContextClass();
+        } catch (error) {
+            console.log('初始化紧张音效失败:', error);
+        }
+    }
+    // ==================== 修改：紧张音效配置 ====================
+    const TENSE_AUDIO_CONFIG = {
+        minInterval: 1000, // 初始间隔：1秒
+        maxInterval: 200,  // 最小间隔：0.2秒
+        volume: 0.4,       // 固定音量（40%）
+        baseFreq: 800,     // 基础频率
+        maxFreq: 1200,     // 最高频率
+        minDuration: 0.1,  // 最短持续时间
+        maxDuration: 0.2   // 最长持续时间
+    };
+
+    // ==================== 修改：播放倒计时紧张音效 ====================
+    function playCountdownTenseSound(remainingTime) {
+        if (!gameState.audioEnabled) return;
+
+        try {
+            const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
+
+            // 计算紧张度 (10秒 -> 0秒，紧张度从0到1)
+            const tension = 1 - (remainingTime / 10000);
+
+            // 根据紧张度计算参数
+            const frequency = TENSE_AUDIO_CONFIG.baseFreq +
+                             (TENSE_AUDIO_CONFIG.maxFreq - TENSE_AUDIO_CONFIG.baseFreq) * tension;
+
+            const duration = TENSE_AUDIO_CONFIG.minDuration +
+                            (TENSE_AUDIO_CONFIG.maxDuration - TENSE_AUDIO_CONFIG.minDuration) * (1 - tension);
+
+            // 创建两个振荡器制造电子表滴答声
+            const oscillator1 = context.createOscillator();
+            const oscillator2 = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator1.connect(gainNode);
+            oscillator2.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            // 设置频率：随着紧张度增加，频率升高
+            oscillator1.frequency.value = frequency;
+            oscillator2.frequency.value = frequency * 1.2; // 第二个振荡器稍高
+
+            // 使用三角波，声音更柔和
+            oscillator1.type = 'triangle';
+            oscillator2.type = 'triangle';
+
+            const now = context.currentTime;
+
+            // 固定音量，不渐强
+            gainNode.gain.setValueAtTime(0, now);
+            gainNode.gain.linearRampToValueAtTime(TENSE_AUDIO_CONFIG.volume, now + 0.002); // 快速起音
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration); // 快速衰减
+
+            oscillator1.start(now);
+            oscillator2.start(now);
+            oscillator1.stop(now + duration);
+            oscillator2.stop(now + duration);
+
+        } catch (error) {
+            console.log('播放倒计时紧张音效失败:', error);
+        }
+    }
+    function playTenseBackgroundSound(volumeMultiplier = 1, speedMultiplier = 0) {
+        if (!gameState.audioEnabled) return;
+
+        try {
+            const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
+
+            // 根据紧张程度选择播放哪种音效
+            if (volumeMultiplier > 0.7) {
+                // 最后3秒使用更急促的音效
+                playIntenseTicking(context, volumeMultiplier, speedMultiplier);
+            } else {
+                // 前7秒使用渐强音效
+                playClockBeep(context, volumeMultiplier);
+            }
+
+        } catch (error) {
+            console.log('播放紧张音效失败:', error);
+        }
+    }
+
+    function playClockBeep(context, volumeMultiplier = 1) {
+        try {
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            const now = context.currentTime;
+
+            // 闹钟清脆声 - 最后几秒频率更高更急促
+            // 时间越少，频率越高（从1000Hz到1500Hz）
+            const baseFreq = 1000 + (volumeMultiplier * 500);
+            oscillator.frequency.value = baseFreq;
+            oscillator.type = 'square'; // 方波有电子感
+
+            // 非常短促 - 最后几秒更急促
+            const duration = 0.15 - (volumeMultiplier * 0.05); // 从150ms缩短到100ms
+
+            gainNode.gain.setValueAtTime(0, now);
+            // 应用渐强音量：CONFIG.AUDIO.volume * 0.6 * volumeMultiplier
+            gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume * 0.6 * volumeMultiplier, now + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+            oscillator.start();
+            oscillator.stop(now + duration);
+
+        } catch (error) {
+            console.log('播放闹钟声失败:', error);
+        }
+    }
+    // 新增：播放渐强急促音效
+    function playIntenseTicking(context, volumeMultiplier, speedMultiplier) {
+        try {
+            const oscillator1 = context.createOscillator();
+            const oscillator2 = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator1.connect(gainNode);
+            oscillator2.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            const now = context.currentTime;
+
+            // 频率随紧张度提高而增加
+            const baseFreq = 800 + (volumeMultiplier * 700); // 从800Hz到1500Hz
+
+            oscillator1.frequency.value = baseFreq;
+            oscillator2.frequency.value = baseFreq * 1.5; // 制造紧迫感
+
+            oscillator1.type = 'square';
+            oscillator2.type = 'square'; // 两个方波制造更刺耳的效果
+
+            // 持续时间随速度加快而缩短
+            const duration = 0.12 - (speedMultiplier * 0.08); // 从120ms缩短到40ms
+
+            // 更尖锐的起音
+            gainNode.gain.setValueAtTime(0, now);
+            gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume * 0.8 * volumeMultiplier, now + 0.005);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+            oscillator1.start();
+            oscillator2.start();
+
+            oscillator1.stop(now + duration);
+            oscillator2.stop(now + duration);
+
+        } catch (error) {
+            console.log('播放急促音效失败:', error);
+        }
+    }
+       // ==================== 修改：停止紧张音效 ====================
+    function stopTenseBackgroundSound() {
+        // 这里主要是重置状态，音效本身是短暂播放的，会自动停止
+        // 我们只需要确保没有持续的音频上下文问题
+        try {
+            if (gameState.audioContext && gameState.audioContext.state !== 'closed') {
+                // 如果有需要可以在这里停止所有音源
+            }
+        } catch (error) {
+            console.log('停止音效时出错:', error);
+        }
+    }
+
     // ==================== DOM元素 ====================
     const elements = {
         themeGrid: document.getElementById('themeGrid'),
@@ -2110,7 +2313,8 @@
         gameState.lastGestureTime = 0; // 重置手势时间
         gameState.motionEnabled = false; // 新增：重置为禁用状态
 
-
+        // 停止紧张音效
+        stopTenseBackgroundSound();
         // 重置UI
         elements.correctCount.textContent = '0';
         elements.skippedCount.textContent = '0';
@@ -2119,9 +2323,18 @@
         resetBaselineAngle(); // 重置基准角度
     }
 
-    // 修改计时器HTML结构
+    // ==================== 修改：计时器更新逻辑 ====================
+    // 在 startTimer 函数中修改最后10秒的处理逻辑
+
     function startTimer() {
         clearInterval(gameState.timer);
+
+        // 新增：最后10秒音效相关状态
+        let lastBeepTime = 0;
+        let beepInterval = TENSE_AUDIO_CONFIG.minInterval;
+
+        // 重置UI状态
+        elements.timer.classList.remove('timer-low');
 
         // 设置初始显示
         const minutes = Math.floor(gameState.timeLeft / 60);
@@ -2141,13 +2354,49 @@
 
             updateTimerDisplay();
 
+            // ==================== 修改：最后10秒音效逻辑 ====================
+            if (remaining <= 10000 && remaining > 0) { // 最后10秒
+                const currentTime = Date.now();
+
+                // 计算紧张度 (10秒 -> 0秒，紧张度从0到1)
+                const tension = 1 - (remaining / 10000);
+
+                // 计算当前应该的滴答间隔：越紧张间隔越短
+                beepInterval = TENSE_AUDIO_CONFIG.minInterval -
+                              (TENSE_AUDIO_CONFIG.minInterval - TENSE_AUDIO_CONFIG.maxInterval) * tension;
+
+                // 每隔 beepInterval 毫秒播放一次滴答声
+                if (currentTime - lastBeepTime >= beepInterval) {
+                    playCountdownTenseSound(remaining);
+                    lastBeepTime = currentTime;
+
+                    // 添加震动反馈（如果支持）
+                    if (navigator.vibrate) {
+                        const vibrationDuration = Math.max(30, 100 - (tension * 80));
+                        navigator.vibrate(vibrationDuration);
+                    }
+                }
+
+                // 添加视觉反馈（不依赖紧张度）
+                if (!elements.timer.classList.contains('timer-low')) {
+                    elements.timer.classList.add('timer-low');
+                }
+
+                // 调整闪烁速度：越紧张闪烁越快
+                const pulseSpeed = 1 + (tension * 2); // 从1秒到3秒一次闪烁
+                elements.timer.style.animation = `pulse ${1 / pulseSpeed}s infinite`;
+            }
+
+            // 当计时器结束时
             if (remaining <= 0) {
+                // 停止所有音效
+                stopTenseBackgroundSound();
                 endGame();
             }
-        }, 16);
+        }, 16); // 约60fps
     }
 
-    // 修改updateTimerDisplay函数
+        // 修改updateTimerDisplay函数
     function updateTimerDisplay() {
         const minutes = Math.floor(gameState.timeLeft / 60);
         const seconds = gameState.timeLeft % 60;
@@ -2156,11 +2405,13 @@
         const timerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         elements.timer.innerHTML = `${timerText}<span class="timer-ms" id="timerMs">.${gameState.timeLeftMs.toString().padStart(3, '0')}</span>`;
 
-        // 低时间提醒
+        // 低时间提醒（10秒以下）
         if (gameState.timeLeft < 10) {
             elements.timer.classList.add('timer-low');
+            elements.timer.style.animation = 'pulse 0.5s infinite';
         } else {
             elements.timer.classList.remove('timer-low');
+            elements.timer.style.animation = '';
         }
     }
 
@@ -2229,6 +2480,15 @@
     // 11. 游戏结束 - 修改为包含回顾功能
     function endGame() {
         clearInterval(gameState.timer);
+            // 停止所有音效和震动
+        stopTenseBackgroundSound();
+        if (navigator.vibrate) {
+            navigator.vibrate(0); // 停止震动
+        }
+
+        // 重置UI状态
+        elements.timer.classList.remove('timer-low');
+        elements.timer.style.animation = '';
         // 禁用重力感应
         disableGameMotion();
          // 重置重力感应基准角度
@@ -3043,7 +3303,9 @@
         initAllThemes();
          // 初始化音效系统
         initAudioSystem();
-            // 从localStorage加载音效设置
+        // 初始化紧张音效
+        initTenseAudio();
+        // 从localStorage加载音效设置
         const savedAudioSetting = localStorage.getItem('audioEnabled');
         if (savedAudioSetting !== null) {
             gameState.audioEnabled = JSON.parse(savedAudioSetting);
