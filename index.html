@@ -1667,8 +1667,7 @@
             countdownMusic: "data:audio/mpeg;base64,/+MYxAAAAANIAAAAAExBTUUzLjk4LjIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             // 游戏开始音效
             gameStartSound: "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQCgAABkYXRhAKAAAGRhZGE="
-        }
-         // 主题图标映射 - 保留默认图标
+        },
         defaultThemeIcon: 'fas fa-question-circle',
         defaultThemeColor: '#888',
         // 主题配置文件映射（文件名 -> 显示名称）
@@ -2049,13 +2048,16 @@
         gameState.countdownValue = 5;
         elements.countdownNumber.textContent = gameState.countdownValue;
         elements.countdownOverlay.style.display = 'flex';
-
+         // 播放倒计时音效
+        playCountdownBeep(gameState.countdownValue);
+        playCountdownMusic();
         gameState.countdownTimer = setInterval(() => {
             gameState.countdownValue--;
 
             if (gameState.countdownValue > 0) {
                 elements.countdownNumber.textContent = gameState.countdownValue;
-
+                // 播放倒计时数字音效
+                playCountdownBeep(gameState.countdownValue);
                 // 添加震动反馈（如果支持）
                 if (navigator.vibrate) {
                     navigator.vibrate(100);
@@ -2064,7 +2066,8 @@
                 // 倒计时结束时直接隐藏覆盖层并开始游戏
                 clearInterval(gameState.countdownTimer);
                 elements.countdownOverlay.style.display = 'none';
-
+                // 播放游戏开始音效
+                playGameStartSound();
                 // 直接开始游戏，没有额外延迟
                 startActualGame();
             }
@@ -2760,12 +2763,7 @@
         // 停止之前的音乐
         stopAllAudio();
 
-        // 创建简单的合成倒计时音效
-        if (gameState.audioContext) {
-            playSyntheticCountdown();
-        } else {
-            playFallbackCountdown();
-        }
+
     }
 
     // 使用Web Audio API合成倒计时音效
@@ -2830,48 +2828,46 @@
     }
 
     // 播放倒计时数字音效
+    // 播放倒计时数字音效 - 电子表滴声版
     function playCountdownBeep(number) {
         if (!gameState.audioEnabled) return;
 
         try {
             const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = context.createOscillator();
+
+            // 创建两个振荡器模拟电子音效
+            const osc1 = context.createOscillator();
+            const osc2 = context.createOscillator();
             const gainNode = context.createGain();
 
-            oscillator.connect(gainNode);
+            osc1.connect(gainNode);
+            osc2.connect(gainNode);
             gainNode.connect(context.destination);
 
-            // 根据数字调整音高
-            let frequency;
-            switch(number) {
-                case 5:
-                    frequency = 220; // A3
-                    break;
-                case 4:
-                    frequency = 246.94; // B3
-                    break;
-                case 3:
-                    frequency = 293.66; // D4
-                    break;
-                case 2:
-                    frequency = 349.23; // F4
-                    break;
-                case 1:
-                    frequency = 440; // A4
-                    break;
-                default:
-                    frequency = 440;
-            }
+            // 电子表常用的频率
+            const baseFreq = number === 1 ? 1000 : 800; // 最后一声更高
+            osc1.frequency.value = baseFreq;
+            osc2.frequency.value = baseFreq * 1.5; // 制造电子感
 
-            oscillator.frequency.value = frequency;
-            oscillator.type = 'sine';
+            osc1.type = 'square';
+            osc2.type = 'triangle';
 
-            gainNode.gain.setValueAtTime(0, context.currentTime);
-            gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume * 0.7, context.currentTime + 0.05);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.3);
+            const now = context.currentTime;
 
-            oscillator.start();
-            oscillator.stop(context.currentTime + 0.3);
+            // 极快的起音（类似电子表的"滴"声）
+            gainNode.gain.setValueAtTime(0, now);
+            gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume * 0.7, now + 0.002); // 2ms!
+
+            // 非常快速的衰减
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.08); // 80ms总时长
+
+            osc1.start();
+            osc2.start();
+
+            // 短暂持续时间
+            osc1.stop(now + 0.08);
+            osc2.stop(now + 0.08);
+
         } catch (error) {
             console.log('播放beep音效失败:', error);
         }
@@ -2925,9 +2921,8 @@
 
             if (isCorrect) {
                 // 正确音效 - 上升音调
-                oscillator.frequency.setValueAtTime(440, context.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(880, context.currentTime + 0.2);
-                oscillator.type = 'sine';
+                // 正确音效 - 经典正确答案铃声
+                playCorrectSound(context);
             } else {
                 // 跳过音效 - 下降音调
                 oscillator.frequency.setValueAtTime(880, context.currentTime);
@@ -2943,6 +2938,36 @@
             oscillator.stop(context.currentTime + 0.2);
         } catch (error) {
             console.log('播放手势音效失败:', error);
+        }
+    }
+       // 简单经典的"叮"声正确答案音效
+    function playCorrectSound(context) {
+        try {
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            const now = context.currentTime;
+
+            // 清脆的高频"叮"声
+            oscillator.frequency.value = 1318.51; // E6 - 清脆但不刺耳
+
+            // 正弦波最纯净，三角波更柔和，方波更电子感
+            oscillator.type = 'sine';
+
+            // 包络：快速起音，稍长衰减（有回响感）
+            gainNode.gain.setValueAtTime(0, now);
+            gainNode.gain.linearRampToValueAtTime(CONFIG.AUDIO.volume * 0.7, now + 0.01); // 快速起音
+            gainNode.gain.exponentialRampToValueAtTime(CONFIG.AUDIO.volume * 0.3, now + 0.08); // 保持
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.25); // 缓慢衰减
+
+            oscillator.start();
+            oscillator.stop(now + 0.25);
+
+        } catch (error) {
+            console.log('播放叮声音效失败:', error);
         }
     }
 
