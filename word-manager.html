@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>词库管理 - 你说我猜</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ==================== 密码验证界面样式 ==================== */
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .password-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: slideUp 0.5s ease;
+        }
+
+        .password-container h2 {
+            color: #2575fc;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 18px 20px;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            text-align: center;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            letter-spacing: 8px;
+            font-weight: bold;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #2575fc;
+            box-shadow: 0 0 0 4px rgba(37, 117, 252, 0.2);
+            transform: scale(1.02);
+        }
+
+        .password-input.error {
+            border-color: #ff4757;
+            background: #fff5f5;
+            animation: shake 0.5s ease;
+        }
+
+        .btn {
+            padding: 16px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: #2575fc;
+            color: white;
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #1c5dc1;
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: #f1f2f6;
+            color: #333;
+            border: 2px solid #ddd;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e2e9;
+        }
+
+        .password-error {
+            color: #ff4757;
+            margin: 10px 0;
+            min-height: 20px;
+            font-size: 0.9rem;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ==================== 主内容区（默认隐藏） ==================== */
+        .main-content {
+            display: none;
+        }
+
+        /* 修改原来的容器样式 */
+        .container {
+            display: none; /* 改为默认隐藏 */
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 25px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        h1 {
+            color: #2575fc;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .back-home {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            z-index: 10;
+        }
+
+        .back-btn {
+            background: #2575fc;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+        }
+
+        .back-btn:hover {
+            background: #1c5dc1;
+            transform: translateY(-2px);
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section h2 {
+            color: #2575fc;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2575fc;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 16px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: #2575fc;
+            color: white;
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #1c5dc1;
+            transform: translateY(-3px);
+        }
+
+        .btn-success {
+            background: #2ed573;
+            color: white;
+            box-shadow: 0 8px 20px rgba(46, 213, 115, 0.3);
+        }
+
+        .btn-success:hover {
+            background: #25b562;
+            transform: translateY(-3px);
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: #ff3742;
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: #f1f2f6;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e2e9;
+        }
+
+        .theme-list {
+            margin-top: 20px;
+        }
+
+        .theme-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .theme-item:hover {
+            border-color: #2575fc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .theme-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .theme-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2575fc;
+        }
+
+        .theme-meta {
+            display: flex;
+            gap: 15px;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .theme-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .theme-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-edit {
+            background: #ffa502;
+            color: white;
+        }
+
+        .action-delete {
+            background: #ff4757;
+            color: white;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .word-count {
+            background: #f0f7ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #2575fc;
+            margin-top: 10px;
+        }
+
+        .word-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .word-tag {
+            background: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #adb5bd;
+        }
+
+        .hint-box {
+            background: #e7f5ff;
+            border: 2px dashed #339af0;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            color: #1864ab;
+        }
+
+        .hint-box h4 {
+            margin-bottom: 10px;
+            color: #1971c2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hint-box ul {
+            margin-left: 20px;
+        }
+
+        .hint-box li {
+            margin-bottom: 8px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            color: #047857;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            color: #b91c1c;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                border-radius: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+            
+            .theme-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .theme-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== 密码验证界面 ==================== -->
+    <div id="passwordOverlay" class="password-overlay">
+        <div class="password-container">
+            <h2><i class="fas fa-lock"></i> 管理员验证</h2>
+            
+            <input type="password" 
+                id="passwordInput" 
+                class="password-input" 
+                placeholder="请输入6位动态密码" 
+                maxlength="6"
+                autocomplete="off"
+                autofocus>
+            
+            <div class="password-error" id="passwordError"></div>
+            
+            <button class="btn btn-primary" id="submitPasswordBtn">
+                <i class="fas fa-unlock"></i> 验证进入
+            </button>
+            
+            <button class="btn btn-secondary" id="backToGameBtn">
+                <i class="fas fa-arrow-left"></i> 返回游戏
+            </button>
+        </div>
+    </div>
+    <div id="mainContent" class="main-content">
+        <div class="container">
+            <!-- 返回首页按钮 -->
+            <div class="back-home">
+                <button class="back-btn" id="backToGame">
+                    <i class="fas fa-arrow-left"></i> 返回游戏
+                </button>
+            </div>
+
+            <div class="header">
+                <h1><i class="fas fa-book"></i> 词库管理</h1>
+                <p class="subtitle">添加和管理自定义游戏词库（仅本次浏览有效）</p>
+            </div>
+
+            <!-- 提示信息 -->
+            <div class="hint-box">
+                <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+                <ul>
+                    <li>自定义词库仅在当前浏览器会话中有效</li>
+                    <li>刷新页面或关闭浏览器后词库将会丢失</li>
+                    <li>每行输入一个词语，空行会自动忽略</li>
+                    <li>建议每个词库至少包含10个词语</li>
+                    <li>添加完成后，返回游戏即可在主题列表中选择</li>
+                </ul>
+            </div>
+
+            <!-- 操作反馈 -->
+            <div id="alertSuccess" class="alert alert-success">
+                <i class="fas fa-check-circle"></i> 操作成功！
+            </div>
+            <div id="alertError" class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i> 操作失败，请检查输入！
+            </div>
+
+            <!-- 添加新词库 -->
+            <div class="section">
+                <h2><i class="fas fa-plus-circle"></i> 添加新词库</h2>
+                <div class="form-group">
+                    <label for="themeName">主题名称</label>
+                    <input type="text" id="themeName" class="form-control" 
+                        placeholder="例如：动漫角色、电影名称、历史人物..." maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label for="themeIcon">选择图标</label>
+                    <select id="themeIcon" class="form-control">
+                        <option value="fas fa-film">电影</option>
+                        <option value="fas fa-music">音乐</option>
+                        <option value="fas fa-gamepad">游戏</option>
+                        <option value="fas fa-utensils">美食</option>
+                        <option value="fas fa-futbol">运动</option>
+                        <option value="fas fa-graduation-cap">学习</option>
+                        <option value="fas fa-heart">爱好</option>
+                        <option value="fas fa-star">明星</option>
+                        <option value="fas fa-book">书籍</option>
+                        <option value="fas fa-palette">艺术</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="themeWords">词语列表（每行一个）</label>
+                    <textarea id="themeWords" class="form-control" 
+                            placeholder="请输入词语，每行一个...&#10;例如：&#10;蜘蛛侠&#10;钢铁侠&#10;美国队长"></textarea>
+                    <div style="text-align: right; margin-top: 5px; color: #666; font-size: 0.9rem;">
+                        <span id="wordCount">0</span> 个词语
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="addThemeBtn">
+                    <i class="fas fa-plus"></i> 添加词库
+                </button>
+            </div>
+
+            <!-- 已添加的词库 -->
+            <div class="section">
+                <h2><i class="fas fa-list"></i> 已添加的词库</h2>
+                <div id="themesContainer" class="theme-list">
+                    <!-- 词库列表将通过JS动态生成 -->
+                    <div id="emptyThemes" class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>暂无词库</h3>
+                        <p>添加第一个词库开始游戏吧！</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="section">
+                <button class="btn btn-success" id="saveAndPlayBtn">
+                    <i class="fas fa-play-circle"></i> 保存并开始游戏
+                </button>
+                <button class="btn btn-secondary" id="clearAllBtn" style="margin-top: 10px;">
+                    <i class="fas fa-trash-alt"></i> 清空所有词库
+                </button>
+            </div>
+
+            <div class="footer-note">
+                <p><i class="fas fa-exclamation-triangle"></i> 注意：自定义词库仅保存在浏览器内存中，不会永久存储</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        // ==================== 密码验证模块 ====================
+        const PasswordManager = {
+            // 生成当前时间的密码（分+时+日，都是两位数）
+            generatePassword: function() {
+                const now = new Date();
+                const minute = now.getMinutes().toString().padStart(2, '0');
+                const hour = now.getHours().toString().padStart(2, '0');
+                const day = now.getDate().toString().padStart(2, '0');
+                
+                // 格式：分+时+日，共6位
+                return minute + hour + day;
+            },
+            
+            // 验证密码
+            validatePassword: function(input) {
+                const currentPassword = this.generatePassword();
+                return input === currentPassword;
+            },
+            
+            // 设置验证通过标志（1小时有效）
+            setVerified: function() {
+                const expiryTime = Date.now() + 60 * 60 * 1000; // 1小时后过期
+                sessionStorage.setItem('word_manager_verified', expiryTime.toString());
+            },
+            
+            // 检查是否已验证
+            isVerified: function() {
+                const expiryTime = sessionStorage.getItem('word_manager_verified');
+                if (!expiryTime) return false;
+                
+                const currentTime = Date.now();
+                return currentTime < parseInt(expiryTime);
+            },
+            
+            // 清除验证状态
+            clearVerified: function() {
+                sessionStorage.removeItem('word_manager_verified');
+            }
+        };
+    
+        // ==================== DOM元素 ====================
+        const elements = {
+            // 密码验证相关
+            passwordOverlay: document.getElementById('passwordOverlay'),
+            mainContent: document.getElementById('mainContent'),
+            passwordInput: document.getElementById('passwordInput'),
+            submitPasswordBtn: document.getElementById('submitPasswordBtn'),
+            backToGameBtn: document.getElementById('backToGameBtn'),
+            passwordError: document.getElementById('passwordError'),
+            
+            // 主内容相关
+            themeName: document.getElementById('themeName'),
+            themeIcon: document.getElementById('themeIcon'),
+            themeWords: document.getElementById('themeWords'),
+            wordCount: document.getElementById('wordCount'),
+            addThemeBtn: document.getElementById('addThemeBtn'),
+            themesContainer: document.getElementById('themesContainer'),
+            emptyThemes: document.getElementById('emptyThemes'),
+            backToGame: document.getElementById('backToGame'),
+            saveAndPlayBtn: document.getElementById('saveAndPlayBtn'),
+            clearAllBtn: document.getElementById('clearAllBtn'),
+            alertSuccess: document.getElementById('alertSuccess'),
+            alertError: document.getElementById('alertError')
+        };
+    
+        // ==================== 密码验证功能 ====================
+        function verifyPassword() {
+            const input = elements.passwordInput.value.trim();
+            
+            if (!input) {
+                showPasswordError('请输入密码');
+                return;
+            }
+            
+            if (input.length !== 6) {
+                showPasswordError('密码必须是6位数字');
+                return;
+            }
+            
+            if (!/^\d+$/.test(input)) {
+                showPasswordError('密码必须是数字');
+                return;
+            }
+            
+            if (PasswordManager.validatePassword(input)) {
+                // 验证通过
+                PasswordManager.setVerified();
+                showMainContent();
+            } else {
+                showPasswordError('密码错误');
+            }
+        }
+    
+        function showPasswordError(message) {
+            elements.passwordError.textContent = message;
+            elements.passwordInput.classList.add('error');
+            elements.passwordInput.focus();
+            
+            setTimeout(() => {
+                elements.passwordInput.classList.remove('error');
+            }, 1000);
+        }
+    
+        function showMainContent() {
+            elements.passwordOverlay.style.display = 'none';
+            elements.mainContent.style.display = 'block';
+            document.querySelector('.container').style.display = 'block';
+            
+            // 初始化词库管理功能
+            initWordManager();
+        }
+    
+        function initWordManager() {
+            updateWordCount();
+            renderThemes();
+            
+            // 从URL获取参数（用于编辑）
+            const urlParams = new URLSearchParams(window.location.search);
+            const editThemeName = urlParams.get('edit');
+            if (editThemeName) {
+                editTheme(editThemeName);
+            }
+            
+            // 绑定事件
+            bindWordManagerEvents();
+        }
+    
+        // ==================== 词库管理功能 ====================
+        function showAlert(alertElement, message) {
+            alertElement.innerHTML = `<i class="fas ${alertElement.classList.contains('alert-success') ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
+            alertElement.style.display = 'block';
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 3000);
+        }
+    
+        function countWords(text) {
+            const words = text.split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0);
+            return words.length;
+        }
+    
+        function updateWordCount() {
+            const count = countWords(elements.themeWords.value);
+            elements.wordCount.textContent = count;
+        }
+    
+        function renderThemes() {
+            const themes = WordManager.getAll();
+            
+            if (themes.length === 0) {
+                elements.emptyThemes.style.display = 'block';
+                elements.themesContainer.innerHTML = '';
+                elements.themesContainer.appendChild(elements.emptyThemes);
+                return;
+            }
+            
+            elements.emptyThemes.style.display = 'none';
+            
+            const themesHTML = themes.map((theme, index) => `
+                <div class="theme-item" data-index="${index}">
+                    <div class="theme-header">
+                        <div class="theme-name">
+                            <i class="${theme.icon}"></i> ${theme.name}
+                        </div>
+                        <div class="theme-meta">
+                            <span><i class="fas fa-hashtag"></i> ${theme.words.length} 词</span>
+                            <span><i class="fas fa-clock"></i> ${new Date(theme.createdAt).toLocaleTimeString()}</span>
+                        </div>
+                    </div>
+                    <div class="word-count">
+                        <i class="fas fa-info-circle"></i> 预览前5个词语：
+                    </div>
+                    <div class="word-list">
+                        ${theme.words.slice(0, 5).map(word => 
+                            `<span class="word-tag">${word}</span>`
+                        ).join('')}
+                        ${theme.words.length > 5 ? 
+                            `<span class="word-tag">...还有${theme.words.length - 5}个</span>` : 
+                            ''}
+                    </div>
+                    <div class="theme-actions">
+                        <button class="action-btn action-edit" onclick="editTheme('${theme.name}')">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="action-btn action-delete" onclick="deleteTheme('${theme.name}')">
+                            <i class="fas fa-trash"></i> 删除
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            elements.themesContainer.innerHTML = themesHTML;
+        }
+    
+        function addTheme() {
+            const name = elements.themeName.value.trim();
+            const icon = elements.themeIcon.value;
+            const wordsText = elements.themeWords.value;
+            
+            // 验证输入
+            if (!name) {
+                showAlert(elements.alertError, '请输入主题名称');
+                elements.themeName.focus();
+                return;
+            }
+            
+            if (name.length > 20) {
+                showAlert(elements.alertError, '主题名称不能超过20个字');
+                elements.themeName.focus();
+                return;
+            }
+            
+            const words = wordsText.split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0);
+            
+            if (words.length < 3) {
+                showAlert(elements.alertError, '请至少输入3个词语');
+                elements.themeWords.focus();
+                return;
+            }
+            
+            // 创建词库对象
+            const theme = {
+                name: name,
+                icon: icon,
+                words: words,
+                createdAt: new Date().toISOString(),
+                isCustom: true
+            };
+            
+            // 保存到sessionStorage
+            const result = WordManager.add(theme);
+            
+            if (result.success) {
+                showAlert(elements.alertSuccess, result.message);
+                // 清空表单
+                elements.themeName.value = '';
+                elements.themeWords.value = '';
+                updateWordCount();
+                // 重新渲染列表
+                renderThemes();
+            } else {
+                showAlert(elements.alertError, result.message);
+            }
+        }
+    
+        function deleteTheme(themeName) {
+            if (confirm(`确定要删除词库 "${themeName}" 吗？`)) {
+                const result = WordManager.remove(themeName);
+                if (result.success) {
+                    showAlert(elements.alertSuccess, result.message);
+                    renderThemes();
+                } else {
+                    showAlert(elements.alertError, result.message);
+                }
+            }
+        }
+    
+        function editTheme(themeName) {
+            const themes = WordManager.getAll();
+            const theme = themes.find(t => t.name === themeName);
+            
+            if (!theme) return;
+            
+            // 填充表单
+            elements.themeName.value = theme.name;
+            elements.themeIcon.value = theme.icon;
+            elements.themeWords.value = theme.words.join('\n');
+            updateWordCount();
+            
+            // 先删除原词库
+            WordManager.remove(themeName);
+            
+            // 滚动到表单
+            elements.themeName.scrollIntoView({ behavior: 'smooth' });
+            elements.themeName.focus();
+            
+            showAlert(elements.alertSuccess, `已加载词库"${themeName}"到编辑区`);
+        }
+    
+        function clearAllThemes() {
+            if (WordManager.getAll().length === 0) {
+                showAlert(elements.alertError, '没有可清空的词库');
+                return;
+            }
+            
+            if (confirm('确定要清空所有自定义词库吗？此操作不可撤销！')) {
+                const result = WordManager.clearAll();
+                if (result.success) {
+                    showAlert(elements.alertSuccess, result.message);
+                    renderThemes();
+                }
+            }
+        }
+    
+        function saveAndPlay() {
+            // 检查是否有词库
+            const themes = WordManager.getAll();
+            if (themes.length === 0) {
+                showAlert(elements.alertError, '请先添加至少一个词库');
+                return;
+            }
+            
+            // 显示保存成功提示
+            showAlert(elements.alertSuccess, '词库已保存！正在返回游戏...');
+            
+            // 延迟返回游戏页面，让用户看到提示
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+    
+        // ==================== 词库管理器 ====================
+        const WordManager = {
+            // 存储键名
+            STORAGE_KEY: 'custom_themes',
+            
+            // 获取所有自定义词库
+            getAll: function() {
+                const themes = sessionStorage.getItem(this.STORAGE_KEY);
+                return themes ? JSON.parse(themes) : [];
+            },
+            
+            // 保存所有词库
+            saveAll: function(themes) {
+                sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(themes));
+            },
+            
+            // 添加新词库
+            add: function(theme) {
+                const themes = this.getAll();
+                // 检查是否已存在同名词库
+                if (themes.some(t => t.name === theme.name)) {
+                    return { success: false, message: '已存在同名词库' };
+                }
+                
+                themes.push(theme);
+                this.saveAll(themes);
+                return { success: true, message: '词库添加成功' };
+            },
+            
+            // 删除词库
+            remove: function(themeName) {
+                const themes = this.getAll();
+                const newThemes = themes.filter(t => t.name !== themeName);
+                this.saveAll(newThemes);
+                return { success: true, message: '词库删除成功' };
+            },
+            
+            // 清空所有词库
+            clearAll: function() {
+                sessionStorage.removeItem(this.STORAGE_KEY);
+                return { success: true, message: '所有词库已清空' };
+            },
+            
+            // 更新词库
+            update: function(oldName, newTheme) {
+                const themes = this.getAll();
+                const index = themes.findIndex(t => t.name === oldName);
+                
+                if (index === -1) {
+                    return { success: false, message: '词库不存在' };
+                }
+                
+                themes[index] = newTheme;
+                this.saveAll(themes);
+                return { success: true, message: '词库更新成功' };
+            }
+        };
+    
+        // ==================== 事件绑定 ====================
+        function bindWordManagerEvents() {
+            elements.themeWords.addEventListener('input', updateWordCount);
+            elements.addThemeBtn.addEventListener('click', addTheme);
+            elements.backToGame.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+            elements.saveAndPlayBtn.addEventListener('click', saveAndPlay);
+            elements.clearAllBtn.addEventListener('click', clearAllThemes);
+            
+            // 表单提交快捷键
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    addTheme();
+                }
+            });
+        }
+    
+        // ==================== 初始化 ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // 检查是否已验证
+            if (PasswordManager.isVerified()) {
+                showMainContent();
+            } else {
+                // 显示密码验证界面
+                elements.passwordOverlay.style.display = 'flex';
+                elements.passwordInput.focus();
+            }
+            
+            // 密码验证事件
+            elements.submitPasswordBtn.addEventListener('click', verifyPassword);
+            elements.backToGameBtn.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+            
+            // 按Enter键提交密码
+            elements.passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    verifyPassword();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1331,7 +1331,8 @@
         <div class="time-options" id="timeOptions">
             <!-- 时间选项将通过JS动态生成 -->
         </div>
-
+        <!-- 添加隐藏的词库管理按钮 -->
+    
         <div class="game-controls">
             <button class="btn btn-primary" id="startGameBtn">
                 <i class="fas fa-play-circle"></i>进入游戏
@@ -1346,6 +1347,20 @@
                 <p>逆时针晃动 = 跳过</p>
             </div>
         </div>
+        <button id="manageWordsBtn" style="
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background: transparent;
+            border: none;
+            opacity: 0.001;
+            z-index: 1000;
+            cursor: pointer;
+        ">
+            <i class="fas fa-tools" style="opacity: 0;"></i>
+        </button>
     </section>
 
     <!-- 新增：准备界面 -->
@@ -2095,7 +2110,8 @@
                     console.log(`添加主题: ${themeName} (${words.length}个词语)`);
                 }
             }
-        
+            // 加载自定义词库（从sessionStorage）
+            loadCustomThemes();
             // 如果没加载到任何主题，使用默认数据
             if (gameState.themes.length === 0) {
                 console.log('使用默认主题数据');
@@ -2111,7 +2127,33 @@
         showLoader(false);
         console.log(`成功加载 ${gameState.themes.length} 个主题`);
     }
-
+    // 加载自定义词库
+    function loadCustomThemes() {
+        try {
+            const customThemes = sessionStorage.getItem('custom_themes');
+            if (customThemes) {
+                const themes = JSON.parse(customThemes);
+                themes.forEach(theme => {
+                    // 为自定义主题生成唯一的ID
+                    const themeId = `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                    
+                    gameState.themes.push({
+                        id: themeId,
+                        name: theme.name,
+                        icon: theme.icon,
+                        color: '#ff9f43', // 自定义主题使用橙色
+                        words: theme.words,
+                        isCustom: true, // 标记为自定义主题
+                        createdAt: theme.createdAt
+                    });
+                    
+                    console.log(`添加自定义主题: ${theme.name} (${theme.words.length}个词语)`);
+                });
+            }
+        } catch (error) {
+            console.error('加载自定义主题时出错:', error);
+        }
+    }
     // 3. 初始化主题选择界面
     function initThemeSelection() {
         elements.themeGrid.innerHTML = '';
@@ -3273,7 +3315,11 @@
     }
 
     // ==================== 事件监听 ====================
-    
+    // 在事件监听部分添加词库管理按钮的事件
+    document.getElementById('manageWordsBtn').addEventListener('click', () => {
+        // 跳转到词库管理页面
+        window.location.href = 'word-manager.html';
+    });
     document.getElementById('startGameBtn').addEventListener('click', startGame);
     elements.startNowBtn.addEventListener('click', startGameNow);
     elements.cancelStartBtn.addEventListener('click', () => showSection('theme'));
