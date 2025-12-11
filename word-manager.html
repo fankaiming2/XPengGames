@@ -176,32 +176,46 @@
             font-weight: 400;
         }
 
+       /* 修改返回按钮样式 */
+       /* 修改返回按钮样式 */
         .back-home {
             position: absolute;
-            top: 25px;
-            left: 25px;
+            top: 20px; /* 更靠近顶部 */
+            left: 20px; /* 更靠近左侧 */
             z-index: 10;
         }
 
         .back-btn {
-            background: #2575fc;
-            color: white;
+            background: transparent;
+            color: #666;
             border: none;
-            border-radius: 12px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 0;
+            width: auto;
+            height: auto;
+            font-size: 1.8rem;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+            justify-content: center;
+            box-shadow: none;
+            padding: 0; /* 去掉内边距，让箭头更靠近边缘 */
         }
 
         .back-btn:hover {
-            background: #1c5dc1;
-            transform: translateY(-2px);
+            color: #2575fc;
+            transform: translateX(-3px);
+        }
+
+        @media (max-width: 600px) {
+            .back-home {
+                top: 15px;
+                left: 15px;
+            }
+            
+            .back-btn {
+                font-size: 1.5rem;
+            }
         }
 
         .section {
@@ -485,6 +499,97 @@
             border-top: 1px solid #dee2e6;
         }
 
+        /* ==================== 弹窗样式 ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: modalSlideUp 0.3s ease;
+        }
+
+        .modal-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-success .modal-icon {
+            color: #2ed573;
+        }
+
+        .modal-error .modal-icon {
+            color: #ff4757;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-message {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-primary {
+            background: #2575fc;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: #1c5dc1;
+        }
+
+        .modal-btn-secondary {
+            background: #f1f2f6;
+            color: #333;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #e0e2e9;
+        }
+
+        @keyframes modalSlideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
@@ -508,6 +613,12 @@
             .theme-actions {
                 width: 100%;
                 justify-content: space-between;
+            }
+
+            .back-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
             }
         }
 
@@ -547,12 +658,27 @@
             </button>
         </div>
     </div>
+
+    <!-- ==================== 弹窗 ==================== -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div id="modal" class="modal">
+            <div id="modalIcon" class="modal-icon">
+                <i class="fas fa-info-circle"></i>
+            </div>
+            <h3 id="modalTitle" class="modal-title">提示</h3>
+            <p id="modalMessage" class="modal-message">这里是提示信息</p>
+            <div class="modal-buttons">
+                <button id="modalConfirmBtn" class="modal-btn modal-btn-primary">确定</button>
+            </div>
+        </div>
+    </div>
+
     <div id="mainContent" class="main-content">
         <div class="container">
-            <!-- 返回首页按钮 -->
+            <!-- 返回首页按钮（已缩小） -->
             <div class="back-home">
-                <button class="back-btn" id="backToGame">
-                    <i class="fas fa-arrow-left"></i> 返回游戏
+                <button class="back-btn" id="backToGame" title="返回游戏">
+                    <i class="fas fa-chevron-left"></i>
                 </button>
             </div>
 
@@ -613,7 +739,7 @@
                     </div>
                 </div>
                 <button class="btn btn-primary" id="addThemeBtn">
-                    <i class="fas fa-plus"></i> 添加词库
+                    <i class="fas fa-plus"></i> 添加/更新词库
                 </button>
             </div>
 
@@ -686,6 +812,63 @@
             }
         };
     
+        // ==================== 弹窗管理器 ====================
+        const ModalManager = {
+            overlay: document.getElementById('modalOverlay'),
+            modal: document.getElementById('modal'),
+            modalIcon: document.getElementById('modalIcon'),
+            modalTitle: document.getElementById('modalTitle'),
+            modalMessage: document.getElementById('modalMessage'),
+            modalConfirmBtn: document.getElementById('modalConfirmBtn'),
+            
+            // 显示弹窗
+            show: function(type, title, message, onConfirm) {
+                // 设置样式和内容
+                this.modal.className = `modal modal-${type}`;
+                this.modalTitle.textContent = title;
+                this.modalMessage.textContent = message;
+                
+                // 设置图标
+                const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+                this.modalIcon.innerHTML = `<i class="fas ${icon}"></i>`;
+                
+                // 绑定确认按钮事件
+                if (onConfirm) {
+                    const handler = () => {
+                        onConfirm();
+                        this.hide();
+                    };
+                    this.modalConfirmBtn.onclick = handler;
+                } else {
+                    this.modalConfirmBtn.onclick = () => this.hide();
+                }
+                
+                // 显示弹窗
+                this.overlay.style.display = 'flex';
+            },
+            
+            // 隐藏弹窗
+            hide: function() {
+                this.overlay.style.display = 'none';
+            },
+            
+            // 显示成功弹窗
+            success: function(message, onConfirm) {
+                this.show('success', '操作成功', message, onConfirm);
+            },
+            
+            // 显示错误弹窗
+            error: function(message, onConfirm) {
+                this.show('error', '操作失败', message, onConfirm);
+            },
+            
+            // 显示确认弹窗
+            confirm: function(message, onConfirm, onCancel) {
+                // 这里可以扩展为有确认和取消按钮的弹窗
+                this.show('error', '确认操作', message, onConfirm);
+            }
+        };
+    
         // ==================== DOM元素 ====================
         const elements = {
             // 密码验证相关
@@ -711,6 +894,9 @@
             alertError: document.getElementById('alertError')
         };
     
+        // 编辑状态跟踪
+        let editingTheme = null;
+    
         // ==================== 密码验证功能 ====================
         function verifyPassword() {
             const input = elements.passwordInput.value.trim();
@@ -721,12 +907,12 @@
             }
             
             if (input.length !== 6) {
-                showPasswordError('密码必须是6位数字');
+                showPasswordError('密码错误');
                 return;
             }
             
             if (!/^\d+$/.test(input)) {
-                showPasswordError('密码必须是数字');
+                showPasswordError('密码错误');
                 return;
             }
             
@@ -849,13 +1035,13 @@
             
             // 验证输入
             if (!name) {
-                showAlert(elements.alertError, '请输入主题名称');
+                ModalManager.error('请输入主题名称');
                 elements.themeName.focus();
                 return;
             }
             
             if (name.length > 20) {
-                showAlert(elements.alertError, '主题名称不能超过20个字');
+                ModalManager.error('主题名称不能超过20个字');
                 elements.themeName.focus();
                 return;
             }
@@ -865,7 +1051,7 @@
                 .filter(line => line.length > 0);
             
             if (words.length < 3) {
-                showAlert(elements.alertError, '请至少输入3个词语');
+                ModalManager.error('请至少输入3个词语');
                 elements.themeWords.focus();
                 return;
             }
@@ -880,31 +1066,36 @@
             };
             
             // 保存到sessionStorage
-            const result = WordManager.add(theme);
+            const result = editingTheme ? 
+                WordManager.update(editingTheme, theme) : 
+                WordManager.add(theme);
             
             if (result.success) {
-                showAlert(elements.alertSuccess, result.message);
-                // 清空表单
-                elements.themeName.value = '';
-                elements.themeWords.value = '';
-                updateWordCount();
-                // 重新渲染列表
-                renderThemes();
+                ModalManager.success(result.message, () => {
+                    // 清空表单和编辑状态
+                    elements.themeName.value = '';
+                    elements.themeWords.value = '';
+                    editingTheme = null;
+                    updateWordCount();
+                    // 重新渲染列表
+                    renderThemes();
+                });
             } else {
-                showAlert(elements.alertError, result.message);
+                ModalManager.error(result.message);
             }
         }
     
         function deleteTheme(themeName) {
-            if (confirm(`确定要删除词库 "${themeName}" 吗？`)) {
+            ModalManager.confirm(`确定要删除词库 "${themeName}" 吗？`, () => {
                 const result = WordManager.remove(themeName);
                 if (result.success) {
-                    showAlert(elements.alertSuccess, result.message);
-                    renderThemes();
+                    ModalManager.success(result.message, () => {
+                        renderThemes();
+                    });
                 } else {
-                    showAlert(elements.alertError, result.message);
+                    ModalManager.error(result.message);
                 }
-            }
+            });
         }
     
         function editTheme(themeName) {
@@ -919,46 +1110,44 @@
             elements.themeWords.value = theme.words.join('\n');
             updateWordCount();
             
-            // 先删除原词库
-            WordManager.remove(themeName);
+            // 设置编辑状态
+            editingTheme = themeName;
             
             // 滚动到表单
             elements.themeName.scrollIntoView({ behavior: 'smooth' });
             elements.themeName.focus();
             
-            showAlert(elements.alertSuccess, `已加载词库"${themeName}"到编辑区`);
+            ModalManager.success(`已加载词库"${themeName}"到编辑区`);
         }
     
         function clearAllThemes() {
             if (WordManager.getAll().length === 0) {
-                showAlert(elements.alertError, '没有可清空的词库');
+                ModalManager.error('没有可清空的词库');
                 return;
             }
             
-            if (confirm('确定要清空所有自定义词库吗？此操作不可撤销！')) {
+            ModalManager.confirm('确定要清空所有自定义词库吗？此操作不可撤销！', () => {
                 const result = WordManager.clearAll();
                 if (result.success) {
-                    showAlert(elements.alertSuccess, result.message);
-                    renderThemes();
+                    ModalManager.success(result.message, () => {
+                        renderThemes();
+                        editingTheme = null;
+                    });
                 }
-            }
+            });
         }
     
         function saveAndPlay() {
             // 检查是否有词库
             const themes = WordManager.getAll();
             if (themes.length === 0) {
-                showAlert(elements.alertError, '请先添加至少一个词库');
+                ModalManager.error('请先添加至少一个词库');
                 return;
             }
             
-            // 显示保存成功提示
-            showAlert(elements.alertSuccess, '词库已保存！正在返回游戏...');
-            
-            // 延迟返回游戏页面，让用户看到提示
-            setTimeout(() => {
+            ModalManager.success('词库已保存！', () => {
                 window.location.href = 'index.html';
-            }, 1500);
+            });
         }
     
         // ==================== 词库管理器 ====================

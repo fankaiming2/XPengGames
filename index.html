@@ -27,78 +27,79 @@
         <!-- 在head部分添加音效相关的CSS样式 -->
         /* 新增：音效控制相关样式 */
         .audio-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
+            position: fixed;          /* 固定在页面中，不随滚动移动 */
+            top: 15px;                /* 距离顶部15像素（原20px） */
+            right: 15px;              /* 距离右侧15像素（原20px） */
+            z-index: 1000;            /* 确保在最上层显示 */
         }
 
         .audio-toggle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
-            border: 3px solid #2575fc;
-            color: #2575fc;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 42px;              /* 按钮宽度42像素（原50px） */
+            height: 42px;             /* 按钮高度42像素（原50px） */
+            border-radius: 50%;       /* 50%边框半径创建圆形按钮 */
+            background: rgba(255, 255, 255, 0.9); /* 白色背景，90%不透明度 */
+            border: 2px solid #2575fc;/* 2像素蓝色边框（原3px） */
+            color: #2575fc;           /* 图标颜色为蓝色 */
+            font-size: 1.2rem;        /* 图标大小1.2rem（原1.5rem） */
+            cursor: pointer;          /* 鼠标悬停时显示手型光标 */
+            display: flex;            /* 使用Flex布局 */
+            align-items: center;      /* 垂直居中图标 */
+            justify-content: center;  /* 水平居中图标 */
+            transition: all 0.3s ease;/* 所有属性0.3秒缓动过渡效果 */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* 阴影效果（缩小） */
         }
 
         .audio-toggle:hover {
-            transform: scale(1.1);
-            background: #2575fc;
-            color: white;
+            transform: scale(1.08);   /* 鼠标悬停时放大1.08倍（原1.1） */
+            background: #2575fc;      /* 悬停时背景变为蓝色 */
+            color: white;             /* 悬停时图标变为白色 */
         }
 
         .audio-toggle.muted {
-            background: #ff4757;
-            border-color: #ff4757;
-            color: white;
+            background: #ff4757;      /* 静音状态背景变为红色 */
+            border-color: #ff4757;    /* 静音状态边框变为红色 */
+            color: white;             /* 静音状态图标变为白色 */
         }
 
         /* 倒计时音效提示 */
         .countdown-audio-hint {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-            text-align: center;
-            display: none;
+            position: absolute;       /* 绝对定位 */
+            bottom: 8px;              /* 距离底部8像素（原10px） */
+            left: 50%;                /* 水平居中起点 */
+            transform: translateX(-50%); /* 水平居中调整 */
+            color: rgba(255, 255, 255, 0.8); /* 白色文字，80%不透明度 */
+            font-size: 0.8rem;        /* 文字大小0.8rem（原0.9rem） */
+            text-align: center;       /* 文字居中 */
+            display: none;            /* 默认隐藏 */
         }
 
+        /* 当倒计时覆盖层激活时显示音效提示 */
         .countdown-overlay.active .countdown-audio-hint {
-            display: block;
-            animation: fadeInUp 0.5s ease;
+            display: block;           /* 显示音效提示 */
+            animation: fadeInUp 0.5s ease; /* 淡入上移动画 */
         }
 
         @keyframes fadeInUp {
             from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(10px);
+                opacity: 0;                     /* 开始完全透明 */
+                transform: translateX(-50%) translateY(8px); /* 开始位置下移8像素（原10px） */
             }
             to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
+                opacity: 1;                     /* 结束完全不透明 */
+                transform: translateX(-50%) translateY(0); /* 结束位置恢复正常 */
             }
         }
 
         /* 音效加载状态 */
         .audio-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 0.8rem;
-            text-align: center;
-            opacity: 0.7;
+            position: absolute;       /* 绝对定位 */
+            top: 50%;                 /* 垂直居中起点 */
+            left: 50%;                /* 水平居中起点 */
+            transform: translate(-50%, -50%); /* 完全居中 */
+            color: white;             /* 白色文字 */
+            font-size: 0.7rem;        /* 文字大小0.7rem（原0.8rem） */
+            text-align: center;       /* 文字居中 */
+            opacity: 0.7;             /* 70%不透明度 */
         }
         * {
             margin: 0;
