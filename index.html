@@ -2018,7 +2018,7 @@
         }
         // ==================== 配置区域 ====================
         const CONFIG = {
-            // 新增：录制配置
+            // 修改录制配置
             RECORDING: {
                 enabled: true,
                 width: 1280,
@@ -2175,7 +2175,7 @@
             }
         }
 
-        // 开始录制
+        // 修改 startRecording 函数中的配置
         async function startRecording() {
             if (!gameState.mediaStream) {
                 const granted = await requestCameraPermission();
@@ -2192,12 +2192,37 @@
                 canvas.height = CONFIG.RECORDING.height;
                 const ctx = canvas.getContext('2d');
 
-                // 创建MediaRecorder
-                const options = {
-                    mimeType: 'video/webm;codecs=vp9',
-                    videoBitsPerSecond: CONFIG.RECORDING.bitrate
-                };
+                // ==================== 重要修改：检测iOS并选择兼容的格式 ====================
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
+                let options;
+                if (isIOS) {
+                    // iOS设备使用H.264编码的MP4格式
+                    options = {
+                        mimeType: 'video/mp4;codecs=avc1.42E01E', // H.264 Baseline Profile
+                        videoBitsPerSecond: CONFIG.RECORDING.bitrate
+                    };
+                    console.log('iOS设备，使用MP4格式录制');
+                } else {
+                    // 其他设备可以使用WebM
+                    options = {
+                        mimeType: 'video/webm;codecs=vp9',
+                        videoBitsPerSecond: CONFIG.RECORDING.bitrate
+                    };
+                }
+
+                // 检查浏览器是否支持选择的格式
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    console.warn(`不支持的格式: ${options.mimeType}，尝试使用默认格式`);
+
+                    // 尝试使用通用的MP4格式
+                    options = {
+                        mimeType: 'video/mp4',
+                        videoBitsPerSecond: CONFIG.RECORDING.bitrate
+                    };
+                }
+
+                // 创建MediaRecorder
                 gameState.mediaRecorder = new MediaRecorder(gameState.mediaStream, options);
                 gameState.recordedChunks = [];
 
@@ -2314,6 +2339,7 @@
         }
 
         // 保存录制文件
+        // 修改 saveRecording 函数
         function saveRecording() {
             if (gameState.recordedChunks.length === 0) {
                 console.log('没有录制数据');
@@ -2321,8 +2347,23 @@
             }
 
             try {
+                // 检测iOS设备
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+                let blobType, fileExtension;
+
+                if (isIOS) {
+                    // iOS设备使用MP4格式
+                    blobType = 'video/mp4';
+                    fileExtension = 'mp4';
+                } else {
+                    // 其他设备使用WebM
+                    blobType = 'video/webm';
+                    fileExtension = 'webm';
+                }
+
                 // 合并数据
-                const blob = new Blob(gameState.recordedChunks, { type: 'video/webm' });
+                const blob = new Blob(gameState.recordedChunks, { type: blobType });
 
                 // 创建下载链接
                 const url = URL.createObjectURL(blob);
@@ -2330,9 +2371,9 @@
                 a.style.display = 'none';
                 a.href = url;
 
-                // 生成文件名
+                // 生成文件名（根据格式使用正确的扩展名）
                 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-                a.download = `你说我猜_${gameState.currentTheme.name}_${timestamp}.webm`;
+                a.download = `你说我猜_${gameState.currentTheme.name}_${timestamp}.${fileExtension}`;
 
                 // 触发下载
                 document.body.appendChild(a);
@@ -2344,13 +2385,27 @@
                     URL.revokeObjectURL(url);
                 }, 100);
 
-                console.log('视频已保存');
+                console.log(`视频已保存为${fileExtension}格式`);
+
+                // 在iOS上显示额外提示
+                if (isIOS) {
+                    setTimeout(() => {
+                        alert('视频已保存为MP4格式。\n请前往"文件"应用或"照片"应用查看下载的视频。');
+                    }, 500);
+                }
 
             } catch (error) {
                 console.error('保存视频失败:', error);
-                alert('保存视频失败: ' + error.message);
+
+                // 提供用户友好的错误信息
+                let errorMsg = '保存视频失败: ' + error.message;
+                if (error.name === 'NotSupportedError') {
+                    errorMsg += '\n\n您的设备可能不支持视频录制功能。';
+                }
+                alert(errorMsg);
             }
         }
+
 
         // 更新当前词语文本（用于叠加到视频）
         function updateCurrentWordText(word) {
@@ -3856,7 +3911,11 @@
                 console.log('播放叮声音效失败:', error);
             }
         }
-
+        // 新增：显示录制不支持的提示
+        function showRecordingNotSupported() {
+            // 可以在这里更新UI，比如隐藏录制按钮或显示提示
+            console.log('录制功能在此设备上不可用');
+        }
         // 播放游戏结束音效
         function playGameEndSound(score) {
             if (!gameState.audioEnabled) return;
@@ -3956,13 +4015,22 @@
             if (savedAudioSetting !== null) {
                 gameState.audioEnabled = JSON.parse(savedAudioSetting);
             }
-            // 检查录制支持
+            // 检查录制支持（修改这部分）
             console.log('检查设备支持录制功能');
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 console.log('设备不支持录制功能');
                 gameState.recordingEnabled = false;
-            }else{
-                gameState.recordingEnabled = true;
+                showRecordingNotSupported();
+            } else {
+                // 检查是否支持MediaRecorder
+                if (!window.MediaRecorder) {
+                    console.log('浏览器不支持MediaRecorder API');
+                    gameState.recordingEnabled = false;
+                    showRecordingNotSupported();
+                } else {
+                    gameState.recordingEnabled = true;
+                    console.log('设备支持录制功能');
+                }
             }
 
 
