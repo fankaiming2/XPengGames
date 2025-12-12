@@ -1,14 +1,10 @@
 成语.txt
-名人明星.txt
-美食.txt
-运动.txt
-电影.txt
-动物.txt
+影视娱乐.txt
 八零九零.txt
 吃喝玩乐.txt
-教育学习.txt
+校园.txt
 科技.txt
-社会时事.txt
 生活日常.txt
 兴趣爱好.txt
 职场.txt
+历史.txt
