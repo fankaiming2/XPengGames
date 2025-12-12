@@ -24,33 +24,33 @@
                 text-shadow: 0 0 20px #ff4757;
             }
         }
-        <!-- 在head部分添加音效相关的CSS样式 -->
+        /* 新增：音效控制相关样式 */
         /* 新增：音效控制相关样式 */
         .audio-controls {
             position: fixed;          /* 固定在页面中，不随滚动移动 */
-            top: 15px;                /* 距离顶部15像素（原20px） */
-            right: 15px;              /* 距离右侧15像素（原20px） */
+            top: 4px;                /* 距离顶部12像素（原15px） */
+            right: 6px;              /* 距离右侧12像素（原15px） */
             z-index: 1000;            /* 确保在最上层显示 */
         }
 
         .audio-toggle {
-            width: 42px;              /* 按钮宽度42像素（原50px） */
-            height: 42px;             /* 按钮高度42像素（原50px） */
+            width: 36px;              /* 按钮宽度36像素（原42px） */
+            height: 36px;             /* 按钮高度36像素（原42px） */
             border-radius: 50%;       /* 50%边框半径创建圆形按钮 */
-            background: rgba(255, 255, 255, 0.9); /* 白色背景，90%不透明度 */
-            border: 2px solid #2575fc;/* 2像素蓝色边框（原3px） */
+            background: rgba(255, 255, 255, 0.95); /* 白色背景，95%不透明度 */
+            border: 1.5px solid #2575fc;/* 1.5像素蓝色边框（原2px） */
             color: #2575fc;           /* 图标颜色为蓝色 */
-            font-size: 1.2rem;        /* 图标大小1.2rem（原1.5rem） */
+            font-size: 1rem;          /* 图标大小1rem（原1.2rem） */
             cursor: pointer;          /* 鼠标悬停时显示手型光标 */
             display: flex;            /* 使用Flex布局 */
             align-items: center;      /* 垂直居中图标 */
             justify-content: center;  /* 水平居中图标 */
-            transition: all 0.3s ease;/* 所有属性0.3秒缓动过渡效果 */
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* 阴影效果（缩小） */
+            transition: all 0.25s ease;/* 所有属性0.25秒缓动过渡效果 */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); /* 更轻微的阴影效果 */
         }
 
         .audio-toggle:hover {
-            transform: scale(1.08);   /* 鼠标悬停时放大1.08倍（原1.1） */
+            transform: scale(1.05);   /* 鼠标悬停时放大1.05倍（原1.08） */
             background: #2575fc;      /* 悬停时背景变为蓝色 */
             color: white;             /* 悬停时图标变为白色 */
         }
@@ -64,11 +64,11 @@
         /* 倒计时音效提示 */
         .countdown-audio-hint {
             position: absolute;       /* 绝对定位 */
-            bottom: 8px;              /* 距离底部8像素（原10px） */
+            bottom: 6px;              /* 距离底部6像素（原8px） */
             left: 50%;                /* 水平居中起点 */
             transform: translateX(-50%); /* 水平居中调整 */
             color: rgba(255, 255, 255, 0.8); /* 白色文字，80%不透明度 */
-            font-size: 0.8rem;        /* 文字大小0.8rem（原0.9rem） */
+            font-size: 0.75rem;       /* 文字大小0.75rem（原0.8rem） */
             text-align: center;       /* 文字居中 */
             display: none;            /* 默认隐藏 */
         }
@@ -76,13 +76,13 @@
         /* 当倒计时覆盖层激活时显示音效提示 */
         .countdown-overlay.active .countdown-audio-hint {
             display: block;           /* 显示音效提示 */
-            animation: fadeInUp 0.5s ease; /* 淡入上移动画 */
+            animation: fadeInUp 0.4s ease; /* 淡入上移动画，时间缩短 */
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;                     /* 开始完全透明 */
-                transform: translateX(-50%) translateY(8px); /* 开始位置下移8像素（原10px） */
+                transform: translateX(-50%) translateY(6px); /* 开始位置下移6像素（原8px） */
             }
             to {
                 opacity: 1;                     /* 结束完全不透明 */
@@ -97,7 +97,7 @@
             left: 50%;                /* 水平居中起点 */
             transform: translate(-50%, -50%); /* 完全居中 */
             color: white;             /* 白色文字 */
-            font-size: 0.7rem;        /* 文字大小0.7rem（原0.8rem） */
+            font-size: 0.65rem;       /* 文字大小0.65rem（原0.7rem） */
             text-align: center;       /* 文字居中 */
             opacity: 0.7;             /* 70%不透明度 */
         }
@@ -419,7 +419,12 @@
             font-weight: 700;
             color: #ff4757;
         }
-
+        #correctCount {
+            color: #2ed573 !important;
+        }
+        #finalCorrect {
+            color: #2ed573 !important;
+        }
         .stat-label {
             color: #666;
             font-size: 0.9rem;
@@ -1447,7 +1452,7 @@
                 <h2>游戏结束!</h2>
                 <p class="result-subtitle">你的最终得分</p>
             </div>
-            <div class="score" id="finalScore">0</div>
+            <!-- <div class="score" id="finalScore">0</div> -->
 
             <div class="result-stats">
                 <div class="stat-item">
@@ -1983,7 +1988,7 @@
         timerMs: document.getElementById('timerMs'),
         correctCount: document.getElementById('correctCount'),
         skippedCount: document.getElementById('skippedCount'),
-        finalScore: document.getElementById('finalScore'),
+        // finalScore: document.getElementById('finalScore'),
         finalCorrect: document.getElementById('finalCorrect'),
         finalSkipped: document.getElementById('finalSkipped'),
         resultMessage: document.getElementById('resultMessage'),
@@ -2537,7 +2542,7 @@
          // 重置重力感应基准角度
         resetBaselineAngle();
         const score = gameState.correctCount * 1;
-        elements.finalScore.textContent = score;
+        // elements.finalScore.textContent = score;
         elements.finalCorrect.textContent = gameState.correctCount;
         elements.finalSkipped.textContent = gameState.skippedCount;
 
