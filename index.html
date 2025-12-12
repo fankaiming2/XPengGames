@@ -1827,7 +1827,7 @@
         <span class="recording-time" id="recordingTime">00:00</span>
     </div>
 
-    <div class="permission-modal" id="permissionModal">
+    <!-- <div class="permission-modal" id="permissionModal">
         <div class="permission-content">
             <h3><i class="fas fa-video"></i> 录制功能</h3>
             <p>游戏过程中将录制视频并叠加当前词语，需要摄像头权限。</p>
@@ -1841,7 +1841,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- ==================== 新增：全局底部反馈入口 ==================== -->
     <div id="globalFooter" class="global-footer">
         <div class="footer-content">
@@ -2179,14 +2179,11 @@
 
         // 修改 startRecording 函数
         async function startRecording() {
+            // 现在不需要请求权限，因为已经在进入游戏时请求了
             if (!gameState.mediaStream) {
-                const granted = await requestCameraPermission();
-                if (!granted) {
-                    alert('需要摄像头权限才能录制');
-                    return;
-                }
+                console.log('没有摄像头权限，跳过录制');
+                return;
             }
-
             try {
                 // 创建Canvas用于叠加文字
                 const canvas = document.createElement('canvas');
@@ -2598,19 +2595,7 @@
             gameState.currentWordText = word;
         }
 
-        // 请求录制权限（在开始游戏前）
-        function requestRecordingPermission() {
-            console.log('尝试请求录制权限');
-            if (!gameState.recordingEnabled) {
-                // 如果不启用录制，直接开始倒计时
-                startCountdown();
-                return;
-            }
-            console.log('请求录制权限（在开始游戏前）');
 
-            // 显示权限请求对话框
-            document.getElementById('permissionModal').style.display = 'flex';
-        }
 
         // 初始化紧张音效
         function initTenseAudio() {
@@ -3066,15 +3051,65 @@
                 requestMotionPermission();
             }
 
-            // 更新准备界面信息
-            elements.readyTheme.textContent = gameState.currentTheme.name;
-            elements.readyTime.textContent = gameState.selectedTime;
+            // 新增：前置请求摄像头权限
+            if (gameState.recordingEnabled && CONFIG.RECORDING.enabled) {
+                console.log('前置请求摄像头权限...');
+                requestCameraPermission().then(granted => {
+                    if (granted) {
+                        console.log('摄像头权限已获取，进入准备界面');
+                        // 更新准备界面信息
+                        elements.readyTheme.textContent = gameState.currentTheme.name;
+                        elements.readyTime.textContent = gameState.selectedTime;
 
-            // 滚动到页面顶部
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        // 滚动到页面顶部
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // 显示准备界面
-            showSection('ready');
+                        // 显示准备界面
+                        showSection('ready');
+                    } else {
+                        console.log('摄像头权限被拒绝');
+                        // 用户拒绝录制，但仍然可以继续游戏
+                        gameState.recordingEnabled = false;
+
+                        // 更新准备界面信息
+                        elements.readyTheme.textContent = gameState.currentTheme.name;
+                        elements.readyTime.textContent = gameState.selectedTime;
+
+                        // 滚动到页面顶部
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                        // 显示准备界面
+                        showSection('ready');
+                    }
+                }).catch(error => {
+                    console.error('请求摄像头权限失败:', error);
+                    // 出错时禁用录制功能，继续游戏
+                    gameState.recordingEnabled = false;
+
+                    // 更新准备界面信息
+                    elements.readyTheme.textContent = gameState.currentTheme.name;
+                    elements.readyTime.textContent = gameState.selectedTime;
+
+                    // 滚动到页面顶部
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                    // 显示准备界面
+                    showSection('ready');
+                });
+            } else {
+                // 不启用录制功能，直接进入准备界面
+                console.log('录制功能未启用，直接进入准备界面');
+
+                // 更新准备界面信息
+                elements.readyTheme.textContent = gameState.currentTheme.name;
+                elements.readyTime.textContent = gameState.selectedTime;
+
+                // 滚动到页面顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                // 显示准备界面
+                showSection('ready');
+            }
         }
 
         // 5. 立即开始游戏（从准备界面）
@@ -3096,10 +3131,8 @@
 
             // 更新UI
             elements.currentTheme.textContent = gameState.currentTheme.name + '猜猜猜';
-            // 请求录制权限
-            requestRecordingPermission();
             // // 开始倒计时
-            // startCountdown();
+            startCountdown();
         }
 
         // 6. 开始倒计时
@@ -4148,29 +4181,10 @@
 
         // ==================== 事件监听 ====================
         // 新增：录制相关事件监听
-        // 修改录制权限按钮事件处理
-        document.getElementById('enableRecordingBtn').addEventListener('click', async () => {
-            gameState.recordingEnabled = true;
-            document.getElementById('permissionModal').style.display = 'none';
-
-            // 等待一小段时间让弹窗消失
-            setTimeout(() => {
-                // 开始倒计时
-                startCountdown();
-            }, 300);
-        });
 
 
-        document.getElementById('skipRecordingBtn').addEventListener('click', () => {
-            gameState.recordingEnabled = false;
-            document.getElementById('permissionModal').style.display = 'none';
 
-            // 等待一小段时间让弹窗消失
-            setTimeout(() => {
-                // 开始倒计时
-                startCountdown();
-            }, 300);
-        });
+
         // 在事件监听部分添加词库管理按钮的事件
         document.getElementById('manageWordsBtn').addEventListener('click', () => {
             // 跳转到词库管理页面
@@ -4214,20 +4228,12 @@
             }
             // 检查录制支持（修改这部分）
             console.log('检查设备支持录制功能');
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
                 console.log('设备不支持录制功能');
                 gameState.recordingEnabled = false;
-                showRecordingNotSupported();
             } else {
-                // 检查是否支持MediaRecorder
-                if (!window.MediaRecorder) {
-                    console.log('浏览器不支持MediaRecorder API');
-                    gameState.recordingEnabled = false;
-                    showRecordingNotSupported();
-                } else {
-                    gameState.recordingEnabled = true;
-                    console.log('设备支持录制功能');
-                }
+                gameState.recordingEnabled = CONFIG.RECORDING.enabled;
+                console.log('设备支持录制功能，录制开关:', gameState.recordingEnabled);
             }
 
 
