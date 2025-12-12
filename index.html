@@ -31,8 +31,8 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 120px;
-            height: 160px;
+            width: 90px;      /* 更窄 */
+            height: 160px;    /* 保持高度 */
             background: #000;
             border: 2px solid #2575fc;
             border-radius: 8px;
@@ -165,8 +165,8 @@
             /* 固定在页面中，不随滚动移动 */
             top: 4px;
             /* 距离顶部12像素（原15px） */
-            right: 6px;
-            /* 距离右侧12像素（原15px） */
+            left: 6px;
+            /* 改为左侧 */
             z-index: 1000;
             /* 确保在最上层显示 */
         }
@@ -2022,12 +2022,12 @@
             // 修改录制配置 - 降低质量减少卡顿
             RECORDING: {
                 enabled: true,
-                width: 640,  // 从1280降低到640
-                height: 480, // 从720降低到480
-                frameRate: 15,  // 从30降低到15
-                bitrate: 1000000,  // 从2500000降低到1000000
+                width: 480,   // 竖屏：宽度较小
+                height: 640,  // 竖屏：高度较大
+                frameRate: 15,
+                bitrate: 1000000,
                 textStyle: {
-                    fontSize: '48px',  // 从72px降低到48px
+                    fontSize: '48px',
                     fontFamily: 'PingFang SC, sans-serif',
                     fontWeight: 'bold',
                     color: '#FFFFFF',
@@ -2151,32 +2151,36 @@
         // 请求摄像头权限
         // 请求摄像头权限
         async function requestCameraPermission() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: 'user',
-                        width: { ideal: CONFIG.RECORDING.width },
-                        height: { ideal: CONFIG.RECORDING.height },
-                        frameRate: { ideal: CONFIG.RECORDING.frameRate }  // 限制帧率
-                    },
-                    audio: true
-                });
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: 'user',
+                width: { ideal: CONFIG.RECORDING.height },  // 注意：这里用height作为ideal宽度
+                height: { ideal: CONFIG.RECORDING.width },   // 这里用width作为ideal高度
+                frameRate: { ideal: CONFIG.RECORDING.frameRate },
+                aspectRatio: { ideal: 9/16 }  // 竖屏比例 9:16
+            },
+            audio: true
+        });
 
-                gameState.mediaStream = stream;
+        gameState.mediaStream = stream;
 
-                // 显示摄像头预览
-                const videoElement = document.getElementById('cameraVideo');
-                videoElement.srcObject = stream;
+        // 显示摄像头预览
+        const videoElement = document.getElementById('cameraVideo');
+        videoElement.srcObject = stream;
 
-                // 显示录制界面
-                document.getElementById('cameraPreview').style.display = 'block';
+        // 设置视频方向为竖屏
+        videoElement.style.transform = 'rotate(0deg)'; // 确保正确方向
 
-                return true;
-            } catch (error) {
-                console.error('摄像头权限被拒绝:', error);
-                return false;
-            }
-        }
+        // 显示录制界面
+        document.getElementById('cameraPreview').style.display = 'block';
+
+        return true;
+    } catch (error) {
+        console.error('摄像头权限被拒绝:', error);
+        return false;
+    }
+}
 
         // ==================== 修改：录制功能 ====================
 
@@ -2289,80 +2293,105 @@
                 // 修改后的绘制函数
                 // 修改后的绘制函数
             function drawFrame() {
-                if (!gameState.isRecording || !ctx) return;
+    if (!gameState.isRecording || !ctx) return;
 
-                try {
-                    // 清除画布
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    try {
+        // 清除画布
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    // 绘制视频帧 - 简化计算
-                    if (videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
-                        // 简单居中绘制，不计算宽高比
-                        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-                    }
+        // 绘制视频帧 - 竖屏适配
+        if (videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
+            // 计算竖屏填充方式
+            const videoRatio = videoElement.videoWidth / videoElement.videoHeight;
+            const canvasRatio = canvas.width / canvas.height;
 
-                    // 绘制当前词语（如果存在）
-                    if (gameState.currentWordText) {
-                        // 设置文字样式
-                        ctx.font = `bold ${CONFIG.RECORDING.textStyle.fontSize} ${CONFIG.RECORDING.textStyle.fontFamily}`;
-                        ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
+            let drawWidth, drawHeight, drawX, drawY;
 
-                        // 添加文字阴影
-                        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-                        ctx.shadowOffsetX = 2;
-                        ctx.shadowOffsetY = 2;
-                        ctx.shadowBlur = 8;
-
-                        // 计算文字位置（居中偏下）
-                        const x = canvas.width / 2;
-                        const y = canvas.height - 80;  // 提高位置，避免模糊后看不清
-
-                        // 绘制文字背景（可选，增加可读性）
-                        const textWidth = ctx.measureText(gameState.currentWordText).width;
-                        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                        ctx.fillRect(x - textWidth / 2 - 15, y - 30, textWidth + 30, 60);
-
-                        // 绘制文字
-                        ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
-                        ctx.fillText(gameState.currentWordText, x, y);
-
-                        // 重置阴影
-                        ctx.shadowColor = 'transparent';
-                        ctx.shadowOffsetX = 0;
-                        ctx.shadowOffsetY = 0;
-                        ctx.shadowBlur = 0;
-
-                        // 绘制水印（简化）
-                        ctx.font = `16px ${CONFIG.RECORDING.textStyle.fontFamily}`;
-                        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                        ctx.textAlign = 'left';
-                        ctx.fillText(CONFIG.RECORDING.watermark, 10, 30);
-                    }
-
-                    // 降低绘制频率，从60fps降到30fps
-                    setTimeout(() => {
-                        if (gameState.isRecording) {
-                            requestAnimationFrame(drawFrame);
-                        }
-                    }, 33); // 约30fps
-
-                } catch (error) {
-                    console.error('绘制帧时出错:', error);
-                    // 继续尝试绘制
-                    setTimeout(() => {
-                        if (gameState.isRecording) {
-                            requestAnimationFrame(drawFrame);
-                        }
-                    }, 100);
-                }
+            if (videoRatio > canvasRatio) {
+                // 视频更宽，按高度缩放
+                drawHeight = canvas.height;
+                drawWidth = drawHeight * videoRatio;
+                drawX = (canvas.width - drawWidth) / 2;
+                drawY = 0;
+            } else {
+                // 视频更高，按宽度缩放
+                drawWidth = canvas.width;
+                drawHeight = drawWidth / videoRatio;
+                drawX = 0;
+                drawY = (canvas.height - drawHeight) / 2;
             }
+
+            ctx.drawImage(videoElement, drawX, drawY, drawWidth, drawHeight);
+        }
+
+        // 绘制当前词语（如果存在）- 竖屏布局
+        if (gameState.currentWordText) {
+            // 设置文字样式
+            ctx.font = `bold ${CONFIG.RECORDING.textStyle.fontSize} ${CONFIG.RECORDING.textStyle.fontFamily}`;
+            ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // 添加文字阴影
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            ctx.shadowBlur = 8;
+
+            // 竖屏布局：文字在底部偏上位置
+            const x = canvas.width / 2;
+            const y = canvas.height * 0.85;  // 离底部15%的位置
+
+            // 绘制文字背景（增加可读性）
+            const textWidth = ctx.measureText(gameState.currentWordText).width;
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+            ctx.fillRect(x - textWidth / 2 - 20, y - 40, textWidth + 40, 80);
+
+            // 绘制文字
+            ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
+            ctx.fillText(gameState.currentWordText, x, y);
+
+            // 绘制水印（右上角）
+            ctx.shadowColor = 'transparent';
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            ctx.shadowBlur = 0;
+
+            ctx.font = `14px ${CONFIG.RECORDING.textStyle.fontFamily}`;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.textAlign = 'right';
+            ctx.fillText(CONFIG.RECORDING.watermark, canvas.width - 10, 25);
+        }
+
+        // 降低绘制频率
+        setTimeout(() => {
+            if (gameState.isRecording) {
+                requestAnimationFrame(drawFrame);
+            }
+        }, 33);
+
+    } catch (error) {
+        console.error('绘制帧时出错:', error);
+        setTimeout(() => {
+            if (gameState.isRecording) {
+                requestAnimationFrame(drawFrame);
+            }
+        }, 100);
+    }
+}
 
                 // 开始绘制
                 videoElement.play().then(() => {
                     console.log('视频开始播放，开始绘制');
+                        // 检查并处理摄像头方向
+                        if (screen.orientation) {
+                            screen.orientation.lock('portrait').catch(console.log);
+                        }
+
+                        // 设置视频元素的样式以适应竖屏
+                        videoElement.style.objectFit = 'cover';
+                        videoElement.style.transform = 'scaleX(-1)'; // 如果需要镜像效果
                     drawFrame();
                 }).catch(error => {
                     console.error('视频播放失败:', error);
