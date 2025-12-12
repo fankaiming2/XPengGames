@@ -2175,7 +2175,9 @@
             }
         }
 
-        // 修改 startRecording 函数中的配置
+        // ==================== 修改：录制功能 ====================
+
+        // 修改 startRecording 函数
         async function startRecording() {
             if (!gameState.mediaStream) {
                 const granted = await requestCameraPermission();
@@ -2192,38 +2194,65 @@
                 canvas.height = CONFIG.RECORDING.height;
                 const ctx = canvas.getContext('2d');
 
-                // ==================== 重要修改：检测iOS并选择兼容的格式 ====================
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                // 创建Canvas流
+                const canvasStream = canvas.captureStream(30); // 30 FPS
 
-                let options;
-                if (isIOS) {
-                    // iOS设备使用H.264编码的MP4格式
-                    options = {
-                        mimeType: 'video/mp4;codecs=avc1.42E01E', // H.264 Baseline Profile
-                        videoBitsPerSecond: CONFIG.RECORDING.bitrate
-                    };
-                    console.log('iOS设备，使用MP4格式录制');
-                } else {
-                    // 其他设备可以使用WebM
-                    options = {
-                        mimeType: 'video/webm;codecs=vp9',
-                        videoBitsPerSecond: CONFIG.RECORDING.bitrate
-                    };
+                // 合并音频流（从摄像头获取）
+                const audioTrack = gameState.mediaStream.getAudioTracks()[0];
+                const combinedStream = new MediaStream();
+
+                // 添加音频轨道
+                if (audioTrack) {
+                    combinedStream.addTrack(audioTrack);
                 }
 
-                // 检查浏览器是否支持选择的格式
-                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                    console.warn(`不支持的格式: ${options.mimeType}，尝试使用默认格式`);
+                // 添加Canvas视频轨道
+                const canvasVideoTrack = canvasStream.getVideoTracks()[0];
+                if (canvasVideoTrack) {
+                    combinedStream.addTrack(canvasVideoTrack);
+                }
 
-                    // 尝试使用通用的MP4格式
-                    options = {
-                        mimeType: 'video/mp4',
-                        videoBitsPerSecond: CONFIG.RECORDING.bitrate
-                    };
+                // 检测设备并选择格式
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+                let mimeType = 'video/webm;codecs=vp8,opus';
+
+                if (isIOS || isSafari) {
+                    // iOS/Safari使用H.264
+                    mimeType = 'video/mp4;codecs=avc1.42E01E,mp4a.40.2';
+                }
+
+                console.log('使用MIME类型:', mimeType);
+
+                // 检查是否支持该格式
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    console.warn('首选格式不支持，尝试其他格式');
+                    // 尝试其他格式
+                    const formats = [
+                        'video/mp4',
+                        'video/webm',
+                        'video/webm;codecs=vp9,opus',
+                        'video/webm;codecs=vp8'
+                    ];
+
+                    for (const format of formats) {
+                        if (MediaRecorder.isTypeSupported(format)) {
+                            mimeType = format;
+                            console.log('使用备用格式:', format);
+                            break;
+                        }
+                    }
                 }
 
                 // 创建MediaRecorder
-                gameState.mediaRecorder = new MediaRecorder(gameState.mediaStream, options);
+                const options = {
+                    mimeType: mimeType,
+                    videoBitsPerSecond: CONFIG.RECORDING.bitrate,
+                    audioBitsPerSecond: 128000
+                };
+
+                gameState.mediaRecorder = new MediaRecorder(combinedStream, options);
                 gameState.recordedChunks = [];
 
                 // 监听数据
@@ -2249,50 +2278,105 @@
                 // 开始计时器
                 startRecordingTimer();
 
-                // 合成视频帧
+                // 合成视频帧 - 使用更可靠的方法
                 const videoElement = document.getElementById('cameraVideo');
 
-                // 绘制函数
+                // 确保视频已加载
+                videoElement.onloadedmetadata = () => {
+                    console.log('视频已加载，开始合成');
+                };
+
+                // 修改后的绘制函数
                 function drawFrame() {
-                    if (!gameState.isRecording) return;
+                    if (!gameState.isRecording || !ctx) return;
 
-                    // 绘制视频帧
-                    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                    try {
+                        // 清除画布
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    // 绘制当前词语
-                    if (gameState.currentWordText) {
-                        ctx.font = CONFIG.RECORDING.textStyle.fontSize + ' ' + CONFIG.RECORDING.textStyle.fontFamily;
-                        ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
-                        ctx.textAlign = CONFIG.RECORDING.textStyle.textAlign;
-                        ctx.textBaseline = 'middle';
+                        // 绘制视频帧
+                        if (videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
+                            // 计算视频宽高比并居中绘制
+                            const videoAspect = videoElement.videoWidth / videoElement.videoHeight;
+                            const canvasAspect = canvas.width / canvas.height;
 
-                        // 添加文字阴影
-                        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-                        ctx.shadowOffsetX = 2;
-                        ctx.shadowOffsetY = 2;
-                        ctx.shadowBlur = 8;
+                            let renderWidth, renderHeight, offsetX, offsetY;
 
-                        // 计算文字位置（居中偏下）
-                        const x = canvas.width / 2;
-                        const y = canvas.height - 100;
+                            if (videoAspect > canvasAspect) {
+                                // 视频更宽
+                                renderHeight = canvas.height;
+                                renderWidth = videoElement.videoWidth * (canvas.height / videoElement.videoHeight);
+                                offsetX = -(renderWidth - canvas.width) / 2;
+                                offsetY = 0;
+                            } else {
+                                // 视频更高
+                                renderWidth = canvas.width;
+                                renderHeight = videoElement.videoHeight * (canvas.width / videoElement.videoWidth);
+                                offsetX = 0;
+                                offsetY = -(renderHeight - canvas.height) / 2;
+                            }
 
-                        // 绘制文字
-                        ctx.fillText(gameState.currentWordText, x, y);
+                            ctx.drawImage(videoElement, offsetX, offsetY, renderWidth, renderHeight);
+                        }
 
-                        // 绘制水印
-                        ctx.font = '20px ' + CONFIG.RECORDING.textStyle.fontFamily;
-                        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                        ctx.textAlign = 'left';
-                        ctx.shadowBlur = 4;
-                        ctx.fillText(CONFIG.RECORDING.watermark, 20, 40);
+                        // 绘制当前词语
+                        if (gameState.currentWordText) {
+                            // 设置文字样式
+                            ctx.font = `bold ${CONFIG.RECORDING.textStyle.fontSize} ${CONFIG.RECORDING.textStyle.fontFamily}`;
+                            ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+
+                            // 添加文字阴影
+                            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+                            ctx.shadowOffsetX = 2;
+                            ctx.shadowOffsetY = 2;
+                            ctx.shadowBlur = 8;
+
+                            // 计算文字位置（居中偏下）
+                            const x = canvas.width / 2;
+                            const y = canvas.height - 100;
+
+                            // 绘制文字背景（可选，增加可读性）
+                            const textWidth = ctx.measureText(gameState.currentWordText).width;
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                            ctx.fillRect(x - textWidth / 2 - 20, y - 30, textWidth + 40, 60);
+
+                            // 绘制文字
+                            ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
+                            ctx.fillText(gameState.currentWordText, x, y);
+
+                            // 重置阴影
+                            ctx.shadowColor = 'transparent';
+                            ctx.shadowOffsetX = 0;
+                            ctx.shadowOffsetY = 0;
+                            ctx.shadowBlur = 0;
+
+                            // 绘制水印
+                            ctx.font = `20px ${CONFIG.RECORDING.textStyle.fontFamily}`;
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                            ctx.textAlign = 'left';
+                            ctx.fillText(CONFIG.RECORDING.watermark, 20, 40);
+                        }
+
+                        // 继续下一帧
+                        requestAnimationFrame(drawFrame);
+
+                    } catch (error) {
+                        console.error('绘制帧时出错:', error);
+                        // 继续尝试绘制
+                        requestAnimationFrame(drawFrame);
                     }
-
-                    // 继续下一帧
-                    requestAnimationFrame(drawFrame);
                 }
 
                 // 开始绘制
-                drawFrame();
+                videoElement.play().then(() => {
+                    console.log('视频开始播放，开始绘制');
+                    drawFrame();
+                }).catch(error => {
+                    console.error('视频播放失败:', error);
+                });
 
                 console.log('录制已开始');
 
@@ -2302,6 +2386,108 @@
             }
         }
 
+        // 修改 updateCurrentWordText 函数，确保文字更新
+        function updateCurrentWordText(word) {
+            gameState.currentWordText = word;
+            console.log('更新当前词语文本:', word);
+        }
+
+        // 在 showNextWord 函数中确保调用更新
+        function showNextWord() {
+            if (gameState.currentWordIndex >= gameState.wordsForGame.length) {
+                shuffleArray(gameState.wordsForGame);
+                gameState.currentWordIndex = 0;
+            }
+
+            const word = gameState.wordsForGame[gameState.currentWordIndex];
+            elements.currentWord.textContent = word;
+            gameState.totalWordsShown++;
+            updateGameStats();
+            gameState.currentWordIndex++;
+
+            // 新增：更新录制中的文字
+            updateCurrentWordText(word);
+
+            console.log('显示新词语:', word);
+        }
+
+        // 修改 saveRecording 函数，添加更好的错误处理
+        function saveRecording() {
+            if (gameState.recordedChunks.length === 0) {
+                console.log('没有录制数据');
+                alert('录制失败：没有录制到数据');
+                return;
+            }
+
+            try {
+                // 确定文件类型
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+                let blobType, fileExtension;
+
+                if (isIOS || isSafari) {
+                    blobType = 'video/mp4';
+                    fileExtension = 'mp4';
+                } else {
+                    // 检查第一个chunk的类型
+                    const firstChunk = gameState.recordedChunks[0];
+                    if (firstChunk.type.includes('webm')) {
+                        blobType = 'video/webm';
+                        fileExtension = 'webm';
+                    } else if (firstChunk.type.includes('mp4')) {
+                        blobType = 'video/mp4';
+                        fileExtension = 'mp4';
+                    } else {
+                        blobType = firstChunk.type;
+                        fileExtension = 'mp4';
+                    }
+                }
+
+                console.log('保存文件类型:', blobType, '扩展名:', fileExtension);
+
+                // 合并数据
+                const blob = new Blob(gameState.recordedChunks, { type: blobType });
+
+                // 创建下载链接
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+
+                // 生成文件名
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                a.download = `你说我猜_${gameState.currentTheme.name}_${timestamp}.${fileExtension}`;
+
+                // 触发下载
+                document.body.appendChild(a);
+                a.click();
+
+                // 清理
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    console.log('视频已保存');
+
+                    // 显示保存提示
+                    setTimeout(() => {
+                        alert(`视频已保存为 ${fileExtension.toUpperCase()} 格式文件！\n\n文件名：${a.download}\n\n请查看您的下载文件夹。`);
+                    }, 500);
+                }, 100);
+
+            } catch (error) {
+                console.error('保存视频失败:', error);
+                alert('保存视频失败：' + error.message + '\n\n请尝试使用其他浏览器（如Chrome）或检查存储权限。');
+            }
+        }
+
+        // 添加调试信息
+        console.log('录制功能已加载');
+        console.log('MediaRecorder支持:', !!window.MediaRecorder);
+        console.log('支持的MIME类型测试:');
+        ['video/webm', 'video/mp4', 'video/webm;codecs=vp8', 'video/webm;codecs=vp9'].forEach(type => {
+            console.log(`${type}: ${MediaRecorder.isTypeSupported(type)}`);
+        });
         // 开始录制计时器
         function startRecordingTimer() {
             clearInterval(gameState.recordingTimer);
@@ -2415,8 +2601,11 @@
         // 请求录制权限（在开始游戏前）
         function requestRecordingPermission() {
             console.log('尝试请求录制权限');
-
-            if (!gameState.recordingEnabled) return;
+            if (!gameState.recordingEnabled) {
+                // 如果不启用录制，直接开始倒计时
+                startCountdown();
+                return;
+            }
             console.log('请求录制权限（在开始游戏前）');
 
             // 显示权限请求对话框
@@ -2909,8 +3098,8 @@
             elements.currentTheme.textContent = gameState.currentTheme.name + '猜猜猜';
             // 请求录制权限
             requestRecordingPermission();
-            // 开始倒计时
-            startCountdown();
+            // // 开始倒计时
+            // startCountdown();
         }
 
         // 6. 开始倒计时
@@ -3959,20 +4148,28 @@
 
         // ==================== 事件监听 ====================
         // 新增：录制相关事件监听
+        // 修改录制权限按钮事件处理
         document.getElementById('enableRecordingBtn').addEventListener('click', async () => {
             gameState.recordingEnabled = true;
             document.getElementById('permissionModal').style.display = 'none';
 
-            // 开始倒计时
-            startCountdown();
+            // 等待一小段时间让弹窗消失
+            setTimeout(() => {
+                // 开始倒计时
+                startCountdown();
+            }, 300);
         });
+
 
         document.getElementById('skipRecordingBtn').addEventListener('click', () => {
             gameState.recordingEnabled = false;
             document.getElementById('permissionModal').style.display = 'none';
 
-            // 开始倒计时
-            startCountdown();
+            // 等待一小段时间让弹窗消失
+            setTimeout(() => {
+                // 开始倒计时
+                startCountdown();
+            }, 300);
         });
         // 在事件监听部分添加词库管理按钮的事件
         document.getElementById('manageWordsBtn').addEventListener('click', () => {
