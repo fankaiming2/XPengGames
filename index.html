@@ -2404,8 +2404,8 @@
 
             // 轻度美颜参数（可调节）
             const beautyParams = {
-                smoothness: 0.3,      // 平滑度 (0-1)
-                brightness: 0.05,     // 亮度增强 (0-0.2)
+                smoothness: 0.7,      // 平滑度 (0-1)
+                brightness: 0.15,     // 亮度增强 (0-0.2)
                 contrast: 1.05,       // 对比度增强 (1-1.2)
                 redAdjust: 1.02,      // 红色增强（气色）
                 saturation: 1.08      // 饱和度增强
@@ -2453,7 +2453,7 @@
         // =============== 新增：轻度模糊函数 ===============
         function applyMildBlur(data, width, height, strength) {
             // 简单的高斯模糊效果（轻度）
-            const radius = Math.floor(strength * 2); // 模糊半径
+            const radius = Math.floor(strength *5); // 模糊半径
             if (radius <= 0) return;
 
             // 创建临时数组存储模糊后的数据
