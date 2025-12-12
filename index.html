@@ -2019,14 +2019,15 @@
         // ==================== 配置区域 ====================
         const CONFIG = {
             // 修改录制配置
+            // 修改录制配置 - 降低质量减少卡顿
             RECORDING: {
                 enabled: true,
-                width: 1280,
-                height: 720,
-                frameRate: 30,
-                bitrate: 2500000,
+                width: 640,  // 从1280降低到640
+                height: 480, // 从720降低到480
+                frameRate: 15,  // 从30降低到15
+                bitrate: 1000000,  // 从2500000降低到1000000
                 textStyle: {
-                    fontSize: '72px',
+                    fontSize: '48px',  // 从72px降低到48px
                     fontFamily: 'PingFang SC, sans-serif',
                     fontWeight: 'bold',
                     color: '#FFFFFF',
@@ -2148,15 +2149,17 @@
         // ==================== 新增：录制功能 ====================
 
         // 请求摄像头权限
+        // 请求摄像头权限
         async function requestCameraPermission() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: {
-                        facingMode: 'user', // 前置摄像头
+                        facingMode: 'user',
                         width: { ideal: CONFIG.RECORDING.width },
-                        height: { ideal: CONFIG.RECORDING.height }
+                        height: { ideal: CONFIG.RECORDING.height },
+                        frameRate: { ideal: CONFIG.RECORDING.frameRate }  // 限制帧率
                     },
-                    audio: true // 录制声音
+                    audio: true
                 });
 
                 gameState.mediaStream = stream;
@@ -2284,102 +2287,78 @@
                 };
 
                 // 修改后的绘制函数
-                function drawFrame() {
-                    if (!gameState.isRecording || !ctx) return;
+                // 修改后的绘制函数
+            function drawFrame() {
+                if (!gameState.isRecording || !ctx) return;
 
-                    try {
-                        // 清除画布
-                        ctx.fillStyle = '#000';
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                try {
+                    // 清除画布
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                        // 绘制视频帧
-                        if (videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
-                            // 计算视频宽高比并居中绘制
-                            const videoAspect = videoElement.videoWidth / videoElement.videoHeight;
-                            const canvasAspect = canvas.width / canvas.height;
-
-                            let renderWidth, renderHeight, offsetX, offsetY;
-
-                            if (videoAspect > canvasAspect) {
-                                // 视频更宽
-                                renderHeight = canvas.height;
-                                renderWidth = videoElement.videoWidth * (canvas.height / videoElement.videoHeight);
-                                offsetX = -(renderWidth - canvas.width) / 2;
-                                offsetY = 0;
-                            } else {
-                                // 视频更高
-                                renderWidth = canvas.width;
-                                renderHeight = videoElement.videoHeight * (canvas.width / videoElement.videoWidth);
-                                offsetX = 0;
-                                offsetY = -(renderHeight - canvas.height) / 2;
-                            }
-
-                            // =============== 新增：美颜滤镜处理 ===============
-                            // 创建离屏Canvas用于滤镜处理
-                            const tempCanvas = document.createElement('canvas');
-                            tempCanvas.width = renderWidth;
-                            tempCanvas.height = renderHeight;
-                            const tempCtx = tempCanvas.getContext('2d');
-
-                            // 1. 先绘制原始视频帧到离屏Canvas
-                            tempCtx.drawImage(videoElement, 0, 0, renderWidth, renderHeight);
-
-                            // 2. 应用美颜滤镜
-                            applyBeautyFilter(tempCtx, renderWidth, renderHeight);
-
-                            // 3. 将处理后的图像绘制到主Canvas
-                            ctx.drawImage(videoElement, offsetX, offsetY, renderWidth, renderHeight);
-                        }
-
-                        // 绘制当前词语
-                        if (gameState.currentWordText) {
-                            // 设置文字样式
-                            ctx.font = `bold ${CONFIG.RECORDING.textStyle.fontSize} ${CONFIG.RECORDING.textStyle.fontFamily}`;
-                            ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'middle';
-
-                            // 添加文字阴影
-                            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-                            ctx.shadowOffsetX = 2;
-                            ctx.shadowOffsetY = 2;
-                            ctx.shadowBlur = 8;
-
-                            // 计算文字位置（居中偏下）
-                            const x = canvas.width / 2;
-                            const y = canvas.height - 120;  // 改这里：从 -100 改为 -120，给大字体更多空间
-
-                            // 绘制文字背景（可选，增加可读性）
-                            const textWidth = ctx.measureText(gameState.currentWordText).width;
-                            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                            ctx.fillRect(x - textWidth / 2 - 25, y - 40, textWidth + 50, 80);  // 改这里：增加背景区域
-
-                            // 绘制文字
-                            ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
-                            ctx.fillText(gameState.currentWordText, x, y);
-
-                            // 重置阴影
-                            ctx.shadowColor = 'transparent';
-                            ctx.shadowOffsetX = 0;
-                            ctx.shadowOffsetY = 0;
-                            ctx.shadowBlur = 0;
-
-                            // 绘制水印
-                            ctx.font = `20px ${CONFIG.RECORDING.textStyle.fontFamily}`;
-                            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                            ctx.textAlign = 'left';
-                            ctx.fillText(CONFIG.RECORDING.watermark, 20, 40);
-                        }
-
-                        // 继续下一帧
-                        requestAnimationFrame(drawFrame);
-
-                    } catch (error) {
-                        console.error('绘制帧时出错:', error);
-                        // 继续尝试绘制
-                        requestAnimationFrame(drawFrame);
+                    // 绘制视频帧 - 简化计算
+                    if (videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
+                        // 简单居中绘制，不计算宽高比
+                        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
                     }
+
+                    // 绘制当前词语（如果存在）
+                    if (gameState.currentWordText) {
+                        // 设置文字样式
+                        ctx.font = `bold ${CONFIG.RECORDING.textStyle.fontSize} ${CONFIG.RECORDING.textStyle.fontFamily}`;
+                        ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+
+                        // 添加文字阴影
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+                        ctx.shadowOffsetX = 2;
+                        ctx.shadowOffsetY = 2;
+                        ctx.shadowBlur = 8;
+
+                        // 计算文字位置（居中偏下）
+                        const x = canvas.width / 2;
+                        const y = canvas.height - 80;  // 提高位置，避免模糊后看不清
+
+                        // 绘制文字背景（可选，增加可读性）
+                        const textWidth = ctx.measureText(gameState.currentWordText).width;
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                        ctx.fillRect(x - textWidth / 2 - 15, y - 30, textWidth + 30, 60);
+
+                        // 绘制文字
+                        ctx.fillStyle = CONFIG.RECORDING.textStyle.color;
+                        ctx.fillText(gameState.currentWordText, x, y);
+
+                        // 重置阴影
+                        ctx.shadowColor = 'transparent';
+                        ctx.shadowOffsetX = 0;
+                        ctx.shadowOffsetY = 0;
+                        ctx.shadowBlur = 0;
+
+                        // 绘制水印（简化）
+                        ctx.font = `16px ${CONFIG.RECORDING.textStyle.fontFamily}`;
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                        ctx.textAlign = 'left';
+                        ctx.fillText(CONFIG.RECORDING.watermark, 10, 30);
+                    }
+
+                    // 降低绘制频率，从60fps降到30fps
+                    setTimeout(() => {
+                        if (gameState.isRecording) {
+                            requestAnimationFrame(drawFrame);
+                        }
+                    }, 33); // 约30fps
+
+                } catch (error) {
+                    console.error('绘制帧时出错:', error);
+                    // 继续尝试绘制
+                    setTimeout(() => {
+                        if (gameState.isRecording) {
+                            requestAnimationFrame(drawFrame);
+                        }
+                    }, 100);
                 }
+            }
 
                 // 开始绘制
                 videoElement.play().then(() => {
@@ -2397,75 +2376,41 @@
             }
         }
         // =============== 新增：美颜滤镜函数 ===============
+        // =============== 修改：美颜滤镜函数 ===============
         function applyBeautyFilter(ctx, width, height) {
             // 获取图像数据
             const imageData = ctx.getImageData(0, 0, width, height);
             const data = imageData.data;
 
-            // 轻度美颜参数（可调节）
-            const beautyParams = {
-                smoothness: 0.7,      // 平滑度 (0-1)
-                brightness: 0.15,     // 亮度增强 (0-0.2)
-                contrast: 1.05,       // 对比度增强 (1-1.2)
-                redAdjust: 1.02,      // 红色增强（气色）
-                saturation: 1.08      // 饱和度增强
-            };
+            // 只保留轻度模糊，移除颜色调整
+            const smoothness = 0.3;  // 降低模糊强度（从0.7降到0.3）
 
-            // 1. 先进行轻度模糊（平滑皮肤）
-            applyMildBlur(data, width, height, beautyParams.smoothness);
-
-            // 2. 调整颜色（美白、气色）
-            for (let i = 0; i < data.length; i += 4) {
-                // 获取原始颜色
-                let r = data[i];
-                let g = data[i + 1];
-                let b = data[i + 2];
-
-                // 增加亮度
-                r = Math.min(255, r * (1 + beautyParams.brightness));
-                g = Math.min(255, g * (1 + beautyParams.brightness));
-                b = Math.min(255, b * (1 + beautyParams.brightness));
-
-                // 调整对比度
-                const avg = (r + g + b) / 3;
-                r = avg + (r - avg) * beautyParams.contrast;
-                g = avg + (g - avg) * beautyParams.contrast;
-                b = avg + (b - avg) * beautyParams.contrast;
-
-                // 增强红色（好气色）
-                r = Math.min(255, r * beautyParams.redAdjust);
-
-                // 增加饱和度
-                const gray = 0.2989 * r + 0.5870 * g + 0.1140 * b;
-                r = gray + (r - gray) * beautyParams.saturation;
-                g = gray + (g - gray) * beautyParams.saturation;
-                b = gray + (b - gray) * beautyParams.saturation;
-
-                // 设置新的颜色值
-                data[i] = Math.max(0, Math.min(255, r));
-                data[i + 1] = Math.max(0, Math.min(255, g));
-                data[i + 2] = Math.max(0, Math.min(255, b));
-            }
+            // 应用轻度模糊
+            applyMildBlur(data, width, height, smoothness);
 
             // 3. 应用修改后的图像数据
             ctx.putImageData(imageData, 0, 0);
         }
         // =============== 新增：轻度模糊函数 ===============
+        // =============== 修改：轻度模糊函数 ===============
         function applyMildBlur(data, width, height, strength) {
-            // 简单的高斯模糊效果（轻度）
-            const radius = Math.floor(strength *5); // 模糊半径
-            if (radius <= 0) return;
+            // 如果不需要模糊，直接返回
+            if (strength <= 0) return;
+
+            // 简单快速模糊：减少采样半径
+            const radius = Math.floor(strength * 3); // 从5降低到3
 
             // 创建临时数组存储模糊后的数据
             const tempData = new Uint8ClampedArray(data.length);
 
-            for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
+            // 简化模糊算法，减少循环次数
+            for (let y = 0; y < height; y += 2) {  // 隔行处理
+                for (let x = 0; x < width; x += 2) {  // 隔列处理
+                    // 简化采样
                     let r = 0, g = 0, b = 0, count = 0;
 
-                    // 对周围像素取样
-                    for (let dy = -radius; dy <= radius; dy++) {
-                        for (let dx = -radius; dx <= radius; dx++) {
+                    for (let dy = -radius; dy <= radius; dy += 2) {  // 减少采样点
+                        for (let dx = -radius; dx <= radius; dx += 2) {
                             const nx = x + dx;
                             const ny = y + dy;
 
@@ -2479,17 +2424,18 @@
                         }
                     }
 
-                    // 计算平均值
                     const index = (y * width + x) * 4;
-                    tempData[index] = r / count;
-                    tempData[index + 1] = g / count;
-                    tempData[index + 2] = b / count;
-                    tempData[index + 3] = data[index + 3]; // 保持Alpha不变
+                    if (count > 0) {
+                        tempData[index] = r / count;
+                        tempData[index + 1] = g / count;
+                        tempData[index + 2] = b / count;
+                        tempData[index + 3] = data[index + 3];
+                    }
                 }
             }
 
-            // 将模糊后的数据混合回原数据（部分混合，保持细节）
-            const mixRatio = 0.6; // 混合比例，值越小越自然
+            // 简化混合：只混合模糊区域
+            const mixRatio = 0.4; // 降低混合比例（从0.6降到0.4）
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = data[i] * (1 - mixRatio) + tempData[i] * mixRatio;
                 data[i + 1] = data[i + 1] * (1 - mixRatio) + tempData[i + 1] * mixRatio;
