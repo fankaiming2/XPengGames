@@ -3183,7 +3183,11 @@
             resetGameState();
             // 确保重力感应是禁用状态（倒计时期间）
             disableGameMotion();
-
+// ==================== 新增：确保音频系统就绪 ====================
+    if (gameState.audioEnabled) {
+        console.log('游戏开始前检查音频状态');
+        ensureAudioContext();
+    }
             // 准备词语
             gameState.wordsForGame = [...gameState.currentTheme.words];
             shuffleArray(gameState.wordsForGame);
@@ -3277,6 +3281,12 @@
             elements.timer.classList.remove('timer-low');
 
             resetBaselineAngle(); // 重置基准角度
+            // ==================== 新增：确保音频上下文就绪 ====================
+    if (gameState.audioEnabled) {
+        setTimeout(() => {
+            ensureAudioContext();
+        }, 100);
+    }
         }
 
         // ==================== 修改：计时器更新逻辑 ====================
@@ -3916,31 +3926,65 @@
 
         // ==================== 音效功能 ====================
 
-        // 初始化音效系统
-        function initAudioSystem() {
-            // 检查浏览器是否支持Web Audio API
-            if (!window.AudioContext && !window.webkitAudioContext) {
-                console.log('浏览器不支持Web Audio API，将使用HTML5 Audio');
-                return;
-            }
+        // 修改 initAudioSystem 函数，添加状态检查
+function initAudioSystem() {
+    // 检查浏览器是否支持Web Audio API
+    if (!window.AudioContext && !window.webkitAudioContext) {
+        console.log('浏览器不支持Web Audio API，将使用HTML5 Audio');
+        return;
+    }
 
-            try {
-                // 创建音频上下文
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                gameState.audioContext = new AudioContextClass();
-
-                // 恢复音频上下文（某些浏览器需要用户交互后）
-                if (gameState.audioContext.state === 'suspended') {
-                    document.addEventListener('click', function resumeAudio() {
-                        gameState.audioContext.resume();
-                        document.removeEventListener('click', resumeAudio);
-                    });
-                }
-            } catch (error) {
-                console.log('初始化音频上下文失败:', error);
-            }
+    try {
+        // 如果已存在但已关闭，创建新的音频上下文
+        if (gameState.audioContext &&
+            (gameState.audioContext.state === 'closed' ||
+             gameState.audioContext.state === 'suspended')) {
+            console.log('音频上下文状态异常，重新创建');
+            gameState.audioContext = null;
         }
 
+        // 创建新的音频上下文（如果需要）
+        if (!gameState.audioContext) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            gameState.audioContext = new AudioContextClass();
+            console.log('创建新的音频上下文');
+        }
+
+        // 确保音频上下文是激活状态
+        if (gameState.audioContext.state === 'suspended') {
+            gameState.audioContext.resume().then(() => {
+                console.log('音频上下文已恢复');
+            }).catch(error => {
+                console.error('恢复音频上下文失败:', error);
+            });
+        }
+    } catch (error) {
+        console.log('初始化音频上下文失败:', error);
+        gameState.audioContext = null;
+    }
+}
+// ==================== 修改：确保音频上下文可用 ====================
+// 在所有播放音效的函数开始时添加这个检查
+function ensureAudioContext() {
+    if (!gameState.audioEnabled) return false;
+
+    // 如果音频上下文不存在或已关闭，重新初始化
+    if (!gameState.audioContext || gameState.audioContext.state === 'closed') {
+        console.log('音频上下文无效，重新初始化');
+        initAudioSystem();
+    }
+
+    // 尝试恢复暂停的上下文
+    if (gameState.audioContext && gameState.audioContext.state === 'suspended') {
+        gameState.audioContext.resume().then(() => {
+            console.log('音频上下文已恢复');
+        }).catch(error => {
+            console.error('恢复音频上下文失败:', error);
+        });
+    }
+
+    return gameState.audioContext && gameState.audioContext.state === 'running';
+}
         // 切换音效状态
         function toggleAudio() {
             gameState.audioEnabled = !gameState.audioEnabled;
@@ -4053,7 +4097,8 @@
         // 播放倒计时数字音效 - 电子表滴声版
         function playCountdownBeep(number) {
             if (!gameState.audioEnabled) return;
-
+         // 确保音频上下文可用
+            if (!ensureAudioContext()) return;
             try {
                 const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
 
@@ -4098,7 +4143,8 @@
         // 播放游戏开始音效
         function playGameStartSound() {
             if (!gameState.audioEnabled) return;
-
+// 确保音频上下文可用
+    if (!ensureAudioContext()) return;
             try {
                 const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator1 = context.createOscillator();
@@ -4132,7 +4178,8 @@
         // 播放手势反馈音效
         function playGestureSound(isCorrect) {
             if (!gameState.audioEnabled) return;
-
+// 确保音频上下文可用
+    if (!ensureAudioContext()) return;
             try {
                 const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = context.createOscillator();
@@ -4200,7 +4247,8 @@
         // 播放游戏结束音效
         function playGameEndSound(score) {
             if (!gameState.audioEnabled) return;
-
+// 确保音频上下文可用
+    if (!ensureAudioContext()) return;
             try {
                 const context = gameState.audioContext || new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = context.createOscillator();
