@@ -158,9 +158,10 @@
             border-radius: 15px;
             padding: 12px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-            border: 2px solid #00b894;
+            border: 5px solid #00b894;
             position: relative;
-            min-height: 60px;
+            height: 80px;
+            min-height: 200px;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -232,33 +233,37 @@
             transform: translateY(-2px);
         }
 
-        /* 统计区域样式 */
-        .stats-section-container {
-            display: flex;
-            justify-content: space-between;
-            max-width: 900px;
-            margin: 30px auto 0;
-            gap: 20px;
-        }
+        /* 修改统计区域布局 - 保持在一行 */
+.stats-section-container {
+    display: flex;
+    flex-direction: row; /* 确保横向排列 */
+    justify-content: space-between; /* 左右分布 */
+    max-width: 500px;
+    margin: 30px auto 0;
+    gap: 20px;
+    flex-wrap: nowrap; /* 防止换行 */
+}
 
-        .stats-section {
-            flex: 1;
-            background: rgba(45, 52, 54, 0.7);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid;
-            min-width: 250px;
-        }
 
-        .stats-section.our-action {
-            border-color: #00b894;
-            margin-right: auto;
-        }
+  .stats-section {
+    flex: 1;
+    background: rgba(45, 52, 54, 0.7);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid;
+    min-width: 150px;
+}
 
-        .stats-section.enemy-action {
-            border-color: #e74c3c;
-            margin-left: auto;
-        }
+
+.stats-section.our-action {
+    border-color: #00b894;
+    /* 移除之前多余的 margin-right: auto; */
+}
+
+.stats-section.enemy-action {
+    border-color: #e74c3c;
+    /* 移除之前多余的 margin-left: auto; */
+}
 
         .section-title {
             font-size: 1.2rem;
@@ -570,10 +575,10 @@
                 margin-bottom: 20px;
             }
 
-            .stats-section-container {
-                flex-direction: column;
-                gap: 15px;
-            }
+<!--            .stats-section-container {-->
+<!--                flex-direction: column;-->
+<!--                gap: 15px;-->
+<!--            }-->
 
             .stats-section {
                 width: 100%;
@@ -702,7 +707,7 @@
 <!-- 密码本页面 -->
 <div id="codebookPage">
     <button class="back-btn" id="backFromCodebook">
-        <i class="fas fa-arrow-left"></i> 返回
+        <i class="fas fa-arrow-left"></i>
     </button>
     <h2 class="page-title">密码本</h2>
 
@@ -765,7 +770,7 @@
 <!-- 电报机页面 -->
 <div id="telegraphPage">
     <button class="back-btn" id="backFromTelegraph">
-        <i class="fas fa-arrow-left"></i> 返回
+        <i class="fas fa-arrow-left"></i>
     </button>
     <div class="telegraph-container">
         <div class="telegraph-screen">
@@ -773,7 +778,7 @@
         </div>
         <div class="telegraph-controls">
             <button class="telegraph-btn" id="changeCodeBtn">
-                <i class="fas fa-random"></i> 换
+                <i class="fas fa-random"></i>
             </button>
         </div>
     </div>
