@@ -2379,20 +2379,19 @@
     }
     // =============== 新增：美颜滤镜函数 ===============
     // =============== 修改：美颜滤镜函数 ===============
-    function applyBeautyFilter(ctx, width, height) {
-        // 获取图像数据
-        const imageData = ctx.getImageData(0, 0, width, height);
-        const data = imageData.data;
+  // =============== 极致简化美白滤镜 ===============
+function applyBeautyFilter(ctx, width, height) {
+    const imageData = ctx.getImageData(0, 0, width, height);
+    const data = imageData.data;
 
-        // 只保留轻度模糊，移除颜色调整
-        const smoothness = 0.3;  // 降低模糊强度（从0.7降到0.3）
-
-        // 应用轻度模糊
-        applyMildBlur(data, width, height, smoothness);
-
-        // 3. 应用修改后的图像数据
-        ctx.putImageData(imageData, 0, 0);
+    // 强效美白
+    for (let i = 0; i < data.length; i += 4) {
+        data[i] = Math.min(255, data[i] * 0.9 + 30);     // 红色减少更多
+        data[i + 2] = Math.min(255, data[i + 2] * 0.8 + 50); // 蓝色增加更多
     }
+
+    ctx.putImageData(imageData, 0, 0);
+}
     // =============== 新增：轻度模糊函数 ===============
     // =============== 修改：轻度模糊函数 ===============
     function applyMildBlur(data, width, height, strength) {
