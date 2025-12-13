@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>窃听风云</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #0a0a14;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 首页样式 */
+        #homePage {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(rgba(10, 10, 20, 0.8), rgba(10, 10, 20, 0.9)),
+                url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.7) contrast(1.2);
+            z-index: -1;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #00b894;
+            text-shadow: 0 0 10px rgba(0, 184, 148, 0.5),
+                         0 0 20px rgba(0, 184, 148, 0.3);
+            margin-bottom: 50px;
+            text-align: center;
+            letter-spacing: 4px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 184, 148, 0.5),
+                             0 0 20px rgba(0, 184, 148, 0.3);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(0, 184, 148, 0.7),
+                             0 0 25px rgba(0, 184, 148, 0.5),
+                             0 0 35px rgba(0, 184, 148, 0.3);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #81ecec;
+            margin-bottom: 80px;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .menu-btn {
+            background: linear-gradient(135deg, #006266 0%, #00a8a8 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 20px 30px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0, 168, 168, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 168, 168, 0.4);
+        }
+
+        .menu-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .menu-btn i {
+            font-size: 1.6rem;
+        }
+
+        /* 密码本页面样式 - 横屏 */
+        /* 密码本页面样式 - 横屏 */
+#codebookPage {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vh; /* 横屏时交换宽高 */
+    height: 100vw;
+    transform: rotate(90deg) translateY(-100vw);
+    transform-origin: top left;
+    background: #1a1a2e;
+    padding: 15px; /* 减小内边距 */
+    overflow-y: auto;
+}
+
+.page-title {
+    font-size: 2rem; /* 减小标题大小 */
+    color: #00b894;
+    text-align: center;
+    margin-bottom: 20px; /* 减小下边距 */
+    text-shadow: 0 0 5px rgba(0, 184, 148, 0.5);
+}
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 改为4列 */
+    gap: 15px; /* 减小间距 */
+    margin-bottom: 30px; /* 减小下边距 */
+    max-width: 900px; /* 增加最大宽度 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card {
+    background: linear-gradient(135deg, #2d3436 0%, #34495e 100%);
+    border-radius: 12px; /* 减小圆角 */
+    padding: 15px; /* 减小内边距 */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid #00b894;
+    position: relative;
+    min-height: 150px; /* 减小最小高度 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-number {
+    position: absolute;
+    top: 10px; /* 调整位置 */
+    left: 10px; /* 调整位置 */
+    width: 32px; /* 减小大小 */
+    height: 32px; /* 减小大小 */
+    background: #00b894;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem; /* 减小字体 */
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 3px 8px rgba(0, 184, 148, 0.3);
+}
+
+.card-word {
+    font-size: 1.6rem; /* 减小字体大小 */
+    font-weight: bold;
+    color: #dfe6e9;
+    text-align: center;
+    margin: 15px 0; /* 减小边距 */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    min-height: 50px; /* 减小最小高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    word-break: break-word; /* 长词自动换行 */
+    line-height: 1.3;
+}
+
+.change-word-btn {
+    background: #0984e3;
+    border: none;
+    border-radius: 8px; /* 减小圆角 */
+    padding: 8px 15px; /* 减小内边距 */
+    color: white;
+    font-size: 0.9rem; /* 减小字体 */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+}
+
+.change-word-btn:hover {
+    background: #74b9ff;
+    transform: translateY(-2px);
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px; /* 减小间距 */
+    max-width: 900px; /* 增加最大宽度 */
+    margin: 0 auto;
+    background: rgba(45, 52, 54, 0.7);
+    padding: 20px; /* 减小内边距 */
+    border-radius: 12px; /* 减小圆角 */
+    border: 1px solid #00b894;
+}
+.stats-section-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 900px;
+    margin: 30px auto 0;
+    gap: 20px;
+}
+
+.stats-section {
+    flex: 1;
+    background: rgba(45, 52, 54, 0.7);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid;
+    min-width: 250px;
+}
+
+.stats-section.our-action {
+    border-color: #00b894; /* 我方行动 - 绿色 */
+    margin-right: auto; /* 靠左下 */
+}
+
+.stats-section.enemy-action {
+    border-color: #e74c3c; /* 敌方行动 - 红色 */
+    margin-left: auto; /* 靠右下 */
+}
+
+.section-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid;
+}
+
+.section-title.our-title {
+    border-color: #00b894;
+    color: #00b894;
+}
+
+.section-title.enemy-title {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-title {
+    font-size: 0.95rem;
+    color: #dfe6e9;
+    font-weight: 500;
+}
+
+.stat-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    min-width: 50px;
+    text-align: center;
+}
+
+.stat-value.our-value {
+    color: #00b894; /* 我方数值 - 绿色 */
+}
+
+.stat-value.enemy-value {
+    color: #e74c3c; /* 敌方数值 - 红色 */
+}
+
+.stat-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-btn.our-btn {
+    background: #0984e3; /* 我方按钮 - 蓝色 */
+}
+
+.stat-btn.enemy-btn {
+    background: #c0392b; /* 敌方按钮 - 深红色 */
+}
+
+.stat-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.1);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .stats-section-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .stats-section {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .stats-section.our-action {
+        margin-right: 0;
+    }
+
+    .stats-section.enemy-action {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-section-container {
+        gap: 12px;
+    }
+
+    .stats-section {
+        padding: 15px;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+    }
+
+    .stat-value {
+        font-size: 1.3rem;
+    }
+
+    .stat-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+}
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* 减小间距 */
+}
+
+.stat-title {
+    font-size: 0.95rem; /* 减小字体 */
+    color: #81ecec;
+    font-weight: 500;
+}
+
+.stat-control {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* 减小间距 */
+}
+
+.stat-value {
+    font-size: 1.5rem; /* 减小字体 */
+    font-weight: bold;
+    color: #00b894;
+    min-width: 50px; /* 减小最小宽度 */
+    text-align: center;
+}
+
+.stat-btn {
+    width: 35px; /* 减小大小 */
+    height: 35px; /* 减小大小 */
+    border-radius: 50%;
+    border: none;
+    background: #0984e3;
+    color: white;
+    font-size: 1.3rem; /* 减小字体 */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-btn:hover {
+    background: #74b9ff;
+    transform: scale(1.1);
+}
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 184, 148, 0.8);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 184, 148, 1);
+            transform: translateY(-2px);
+        }
+
+        /* 电报机页面样式 */
+        #telegraphPage {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(rgba(10, 10, 20, 0.9), rgba(10, 10, 20, 0.95)),
+                url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .telegraph-container {
+            max-width: 500px;
+            margin: 50px auto 0;
+            padding: 30px;
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 20px;
+            border: 3px solid #00b894;
+            box-shadow: 0 0 30px rgba(0, 184, 148, 0.3);
+            position: relative;
+        }
+
+        .telegraph-screen {
+            background: #0c0c1a;
+            border: 2px solid #00b894;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: inset 0 0 20px rgba(0, 184, 148, 0.2);
+        }
+
+        .telegraph-number {
+            font-size: 4.5rem;
+            font-weight: bold;
+            color: #00ff9d;
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+            letter-spacing: 10px;
+            font-family: 'Courier New', monospace;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+            }
+            50% {
+                opacity: 0.9;
+                text-shadow: 0 0 15px rgba(0, 255, 157, 0.7),
+                             0 0 25px rgba(0, 255, 157, 0.3);
+            }
+        }
+
+        .telegraph-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .telegraph-btn {
+            background: linear-gradient(135deg, #006266 0%, #00a8a8 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0, 168, 168, 0.3);
+        }
+
+        .telegraph-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 168, 168, 0.4);
+        }
+
+        .telegraph-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* 确认弹窗 */
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirm-content {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            border: 2px solid #00b894;
+            box-shadow: 0 0 30px rgba(0, 184, 148, 0.3);
+        }
+
+        .confirm-text {
+            font-size: 1.4rem;
+            color: #dfe6e9;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .confirm-btn {
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .confirm-yes {
+            background: #00b894;
+            color: white;
+        }
+
+        .confirm-no {
+            background: #636e72;
+            color: white;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* 响应式调整 */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.8rem;
+    }
+
+    #codebookPage {
+        padding: 12px; /* 调整横屏时的内边距 */
+    }
+
+    .cards-container {
+        gap: 12px; /* 进一步减小间距 */
+    }
+
+    .card {
+        min-height: 130px; /* 进一步减小高度 */
+        padding: 12px; /* 进一步减小内边距 */
+    }
+
+    .card-word {
+        font-size: 1.4rem; /* 进一步减小字体 */
+    }
+
+    .telegraph-number {
+        font-size: 3.5rem;
+        letter-spacing: 8px;
+    }
+
+    .page-title {
+        font-size: 1.8rem; /* 调整横屏标题大小 */
+        margin-bottom: 15px;
+    }
+
+    .stat-value {
+        font-size: 1.3rem; /* 调整统计数字大小 */
+    }
+
+    .stat-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 2.2rem;
+    }
+
+    .menu-btn {
+        font-size: 1.2rem;
+        padding: 18px 25px;
+    }
+
+    #codebookPage {
+        padding: 10px; /* 最小内边距 */
+    }
+
+    .cards-container {
+        gap: 10px; /* 最小间距 */
+        grid-template-columns: repeat(4, 1fr); /* 保持4列 */
+    }
+
+    .card {
+        min-height: 120px; /* 最小高度 */
+        padding: 10px; /* 最小内边距 */
+    }
+
+    .card-word {
+        font-size: 1.2rem; /* 最小字体 */
+        min-height: 40px;
+    }
+
+    .card-number {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+    }
+
+    .change-word-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr; /* 小屏幕时统计区域改为1列 */
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .telegraph-number {
+        font-size: 2.8rem;
+        letter-spacing: 6px;
+    }
+}
+
+/* 针对小屏幕横屏的额外调整 */
+@media (max-height: 500px) and (orientation: landscape) {
+    #codebookPage {
+        padding: 8px;
+    }
+
+    .cards-container {
+        gap: 8px;
+    }
+
+    .card {
+        min-height: 110px;
+        padding: 8px;
+    }
+
+    .card-word {
+        font-size: 1.1rem;
+        margin: 10px 0;
+    }
+}
+
+/* 针对小屏幕横屏的额外调整 */
+@media (max-height: 500px) and (orientation: landscape) {
+    #codebookPage {
+        padding: 8px;
+    }
+
+    .cards-container {
+        gap: 8px;
+    }
+
+    .card {
+        min-height: 110px;
+        padding: 8px;
+    }
+
+    .card-word {
+        font-size: 1.1rem;
+        margin: 10px 0;
+    }
+}
+
+        /* 加载动画 */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 20, 0.9);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(0, 184, 148, 0.3);
+            border-top: 5px solid #00b894;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<!-- 首页 -->
+<div id="homePage">
+    <div class="background-overlay"></div>
+    <h1 class="title">窃听风云</h1>
+    <p class="subtitle">机密通信 · 密码破译 · 电报传递</p>
+    <div class="menu-buttons">
+        <button class="menu-btn" id="codebookBtn">
+            <i class="fas fa-book"></i> 密码本
+        </button>
+        <button class="menu-btn" id="telegraphBtn">
+            <i class="fas fa-broadcast-tower"></i> 电报机
+        </button>
+    </div>
+</div>
+
+<!-- 密码本页面 -->
+<div id="codebookPage">
+    <button class="back-btn" id="backFromCodebook">
+        <i class="fas fa-arrow-left"></i> 返回
+    </button>
+    <h2 class="page-title">密码本</h2>
+
+    <div class="cards-container" id="cardsContainer">
+        <!-- 卡片将通过JS动态生成 -->
+    </div>
+
+    <!-- 在密码本页面中，替换原有的.stats-container部分 -->
+    <!-- 修改后的统计区域 -->
+    <div class="stats-section-container">
+        <!-- 我方行动 - 靠左下 -->
+        <div class="stats-section our-action">
+            <div class="section-title our-title">我方行动</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-title">已破译敌方密码</div>
+                    <div class="stat-control">
+                        <button class="stat-btn our-btn" onclick="changeStat('crackEnemy', -1, 'our')">-</button>
+                        <span class="stat-value our-value" id="crackEnemy">0</span>
+                        <button class="stat-btn our-btn" onclick="changeStat('crackEnemy', 1, 'our')">+</button>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-title">密文传递失败</div>
+                    <div class="stat-control">
+                        <button class="stat-btn our-btn" onclick="changeStat('transmitFail', -1, 'our')">-</button>
+                        <span class="stat-value our-value" id="transmitFail">0</span>
+                        <button class="stat-btn our-btn" onclick="changeStat('transmitFail', 1, 'our')">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 敌方行动 - 靠右下 -->
+        <div class="stats-section enemy-action">
+            <div class="section-title enemy-title">敌方行动</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-title">被敌方破译密码</div>
+                    <div class="stat-control">
+                        <button class="stat-btn enemy-btn" onclick="changeStat('enemyCrack', -1, 'enemy')">-</button>
+                        <span class="stat-value enemy-value" id="enemyCrack">0</span>
+                        <button class="stat-btn enemy-btn" onclick="changeStat('enemyCrack', 1, 'enemy')">+</button>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-title">敌方密文传递失败</div>
+                    <div class="stat-control">
+                        <button class="stat-btn enemy-btn" onclick="changeStat('enemyTransmitFail', -1, 'enemy')">-</button>
+                        <span class="stat-value enemy-value" id="enemyTransmitFail">0</span>
+                        <button class="stat-btn enemy-btn" onclick="changeStat('enemyTransmitFail', 1, 'enemy')">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 电报机页面 -->
+<div id="telegraphPage">
+    <button class="back-btn" id="backFromTelegraph">
+        <i class="fas fa-arrow-left"></i> 返回
+    </button>
+    <div class="telegraph-container">
+        <div class="telegraph-screen">
+            <div class="telegraph-number" id="telegraphCode">1.3.2</div>
+        </div>
+        <div class="telegraph-controls">
+            <button class="telegraph-btn" id="changeCodeBtn">
+                <i class="fas fa-random"></i> 换
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 确认弹窗 -->
+<div class="confirm-modal" id="confirmModal">
+    <div class="confirm-content">
+        <p class="confirm-text" id="confirmText">确定要更换电报码吗？</p>
+        <div class="confirm-buttons">
+            <button class="confirm-btn confirm-yes" id="confirmYes">确定</button>
+            <button class="confirm-btn confirm-no" id="confirmNo">取消</button>
+        </div>
+    </div>
+</div>
+
+<!-- 加载动画 -->
+<div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p style="color: #00b894; font-size: 1.2rem;">加载中...</p>
+</div>
+
+<script>
+    // 游戏状态
+    const gameState = {
+        words: [],
+        currentWords: ['', '', '', ''],
+        stats: {
+            crackEnemy: 0,
+            transmitFail: 0,
+            enemyCrack: 0,
+            enemyTransmitFail: 0
+        },
+        telegraphCode: '1.3.2'
+    };
+
+    // DOM元素
+    const elements = {
+        homePage: document.getElementById('homePage'),
+        codebookPage: document.getElementById('codebookPage'),
+        telegraphPage: document.getElementById('telegraphPage'),
+        cardsContainer: document.getElementById('cardsContainer'),
+        telegraphCode: document.getElementById('telegraphCode'),
+        confirmModal: document.getElementById('confirmModal'),
+        confirmText: document.getElementById('confirmText'),
+        confirmYes: document.getElementById('confirmYes'),
+        confirmNo: document.getElementById('confirmNo'),
+        loading: document.getElementById('loading')
+    };
+
+    // 页面切换
+    function showPage(page) {
+        elements.homePage.style.display = 'none';
+        elements.codebookPage.style.display = 'none';
+        elements.telegraphPage.style.display = 'none';
+
+        if (page === 'home') {
+            elements.homePage.style.display = 'flex';
+        } else if (page === 'codebook') {
+            elements.codebookPage.style.display = 'block';
+            initCodebook();
+        } else if (page === 'telegraph') {
+            elements.telegraphPage.style.display = 'block';
+            updateTelegraphCode();
+        }
+
+        // 重置滚动位置
+        window.scrollTo(0, 0);
+    }
+
+    // 加载词语文件
+    async function loadWords() {
+        showLoading(true);
+        try {
+            // 尝试从不同路径加载
+            const paths = [
+                'words.txt',
+                './words.txt',
+                'word.txt',
+                './word.txt',
+                'words/words.txt',
+                'words/word.txt'
+            ];
+
+            let response;
+            for (const path of paths) {
+                try {
+                    response = await fetch(path);
+                    if (response.ok) break;
+                } catch (e) {
+                    continue;
+                }
+            }
+
+            if (!response || !response.ok) {
+                throw new Error('无法加载词语文件');
+            }
+
+            const text = await response.text();
+            const words = text.split('\n')
+                .map(word => word.trim())
+                .filter(word => word.length > 0 && !word.startsWith('#'));
+
+            if (words.length === 0) {
+                // 如果文件为空，使用默认词语
+                gameState.words = getDefaultWords();
+            } else {
+                gameState.words = words;
+            }
+
+            console.log(`加载了 ${gameState.words.length} 个词语`);
+            return true;
+        } catch (error) {
+            console.error('加载词语失败:', error);
+            gameState.words = getDefaultWords();
+            return true;
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // 默认词语（备用）
+    function getDefaultWords() {
+        return [
+            '情报', '密码', '电台', '间谍', '监听', '解密', '加密', '电报',
+            '暗号', '代号', '行动', '任务', '目标', '地点', '时间', '人员',
+            '文件', '资料', '证据', '线索', '嫌疑', '追踪', '监视', '卧底',
+            '接头', '信号', '频率', '波长', '干扰', '扫描', '分析', '破译',
+            '通讯', '网络', '系统', '程序', '代码', '密钥', '算法', '协议',
+            '安全', '机密', '绝密', '公开', '秘密', '内部', '外部', '边界',
+            '防御', '攻击', '保护', '破坏', '渗透', '反制', '对抗', '竞争'
+        ];
+    }
+
+    // 获取随机词语
+    function getRandomWord() {
+        if (gameState.words.length === 0) {
+            return '未加载';
+        }
+        const randomIndex = Math.floor(Math.random() * gameState.words.length);
+        return gameState.words[randomIndex];
+    }
+
+    // 初始化密码本
+    function initCodebook() {
+        // 确保有4个词语
+        for (let i = 0; i < 4; i++) {
+            if (!gameState.currentWords[i]) {
+                gameState.currentWords[i] = getRandomWord();
+            }
+        }
+
+        // 渲染卡片
+        renderCards();
+
+        // 加载统计数据
+        loadStats();
+    }
+
+    // 渲染卡片
+    function renderCards() {
+        elements.cardsContainer.innerHTML = '';
+
+        for (let i = 0; i < 4; i++) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-number">${i + 1}</div>
+                <div class="card-word">${gameState.currentWords[i]}</div>
+                <button class="change-word-btn" onclick="changeWord(${i})">
+                    <i class="fas fa-sync-alt"></i> 换词
+                </button>
+            `;
+            elements.cardsContainer.appendChild(card);
+        }
+    }
+
+    // 更换单个词语
+    function changeWord(index) {
+        gameState.currentWords[index] = getRandomWord();
+        renderCards();
+    }
+
+    // 更新统计数字
+  // 更新统计数字
+function changeStat(stat, delta, type) {
+    let newValue = gameState.stats[stat] + delta;
+    if (newValue < 0) newValue = 0;
+    gameState.stats[stat] = newValue;
+    document.getElementById(stat).textContent = newValue;
+    saveStats();
+}
+
+    // 保存统计数据
+    function saveStats() {
+        localStorage.setItem('telegraph_stats', JSON.stringify(gameState.stats));
+    }
+
+    // 加载统计数据
+    function loadStats() {
+        const saved = localStorage.getItem('telegraph_stats');
+        if (saved) {
+            try {
+                gameState.stats = JSON.parse(saved);
+                // 更新UI
+                Object.keys(gameState.stats).forEach(stat => {
+                    const element = document.getElementById(stat);
+                    if (element) {
+                        element.textContent = gameState.stats[stat];
+                    }
+                });
+            } catch (e) {
+                console.error('加载统计失败:', e);
+            }
+        }
+    }
+
+    // 生成电报码
+    function generateTelegraphCode() {
+        const numbers = [1, 2, 3, 4];
+        // 随机打乱数组并取前3个
+        const shuffled = [...numbers].sort(() => Math.random() - 0.5);
+        return shuffled.slice(0, 3).join('.');
+    }
+
+    // 更新电报码
+    function updateTelegraphCode() {
+        gameState.telegraphCode = generateTelegraphCode();
+        elements.telegraphCode.textContent = gameState.telegraphCode;
+    }
+
+    // 确认更换电报码
+    function confirmChangeTelegraphCode() {
+        elements.confirmText.textContent = '确定要更换电报码吗？';
+        elements.confirmModal.style.display = 'flex';
+    }
+
+    // 显示/隐藏加载动画
+    function showLoading(show) {
+        elements.loading.style.display = show ? 'flex' : 'none';
+    }
+
+    // 事件监听
+    document.getElementById('codebookBtn').addEventListener('click', async () => {
+        await loadWords();
+        showPage('codebook');
+    });
+
+    document.getElementById('telegraphBtn').addEventListener('click', () => {
+        showPage('telegraph');
+    });
+
+    document.getElementById('backFromCodebook').addEventListener('click', () => {
+        showPage('home');
+    });
+
+    document.getElementById('backFromTelegraph').addEventListener('click', () => {
+        showPage('home');
+    });
+
+    document.getElementById('changeCodeBtn').addEventListener('click', () => {
+        confirmChangeTelegraphCode();
+    });
+
+    elements.confirmYes.addEventListener('click', () => {
+        updateTelegraphCode();
+        elements.confirmModal.style.display = 'none';
+    });
+
+    elements.confirmNo.addEventListener('click', () => {
+        elements.confirmModal.style.display = 'none';
+    });
+
+    // 点击蒙版关闭确认框
+    elements.confirmModal.addEventListener('click', (e) => {
+        if (e.target === elements.confirmModal) {
+            elements.confirmModal.style.display = 'none';
+        }
+    });
+
+    // 初始加载
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 预加载词语
+        await loadWords();
+
+        // 确保初始电报码
+        updateTelegraphCode();
+
+        // 添加键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (elements.codebookPage.style.display === 'block' ||
+                    elements.telegraphPage.style.display === 'block') {
+                    showPage('home');
+                }
+            }
+        });
+    });
+
+    // 处理横屏显示（针对密码本页面）
+    function handleOrientation() {
+        if (window.matchMedia("(orientation: portrait)").matches) {
+            console.log('当前是竖屏模式');
+        } else {
+            console.log('当前是横屏模式');
+        }
+    }
+
+    // 监听屏幕方向变化
+    window.addEventListener('resize', handleOrientation);
+    window.addEventListener('orientationchange', handleOrientation);
+
+    // 初始化
+    handleOrientation();
+</script>
+</body>
+</html>
