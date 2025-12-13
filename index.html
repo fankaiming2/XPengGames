@@ -2023,8 +2023,9 @@
         // 修改录制配置 - 降低质量减少卡顿
         RECORDING: {
             enabled: true,
-            width: 480,  // 从1280降低到640
-            height: 640, // 从720降低到480
+            width: 540,  // 从1280降低到640
+            height: 720, // 从720降低到480
+            aspectRatio: 0.75, // 3:4画幅，更适合人脸
             frameRate: 15,  // 从30降低到15
             bitrate: 1000000,  // 从2500000降低到1000000
             textStyle: {
