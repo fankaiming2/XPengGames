@@ -153,19 +153,25 @@
         }
 
         .card {
-            background: linear-gradient(135deg, #2d3436 0%, #34495e 100%);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-            border: 2px solid #00b894;
-            position: relative;
-            min-height: 180px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
+    background: linear-gradient(135deg, #2d3436 0%, #34495e 100%);
+    border-radius: 15px;
+    padding: 15px; /* 减小内边距 */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid #00b894;
+    position: relative;
+    min-height: 120px; /* 减小卡片高度 */
+    display: flex;
+    flex-direction: column;
+}
+/* 卡片内容区域 - 改为水平布局 */
+.card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex: 1;
+    gap: 15px; /* 词语和按钮之间的间距 */
+}
         .card-number {
             position: absolute;
             top: 15px;
@@ -183,41 +189,44 @@
             box-shadow: 0 3px 8px rgba(0, 184, 148, 0.3);
         }
 
-        .card-word {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #dfe6e9;
-            text-align: center;
-            margin: 20px 0;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            word-break: break-word;
-            line-height: 1.4;
-        }
+/* 词语区域 */
+.card-word {
+    font-size: 1.6rem; /* 稍微减小字体大小 */
+    font-weight: bold;
+    color: #dfe6e9;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1; /* 占据剩余空间 */
+    word-break: break-word;
+    line-height: 1.4;
+    padding: 0 10px;
+}
 
-        .change-word-btn {
-            background: #0984e3;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 15px;
-            color: white;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: auto;
-        }
+      /* 修改换词按钮样式 */
+.change-word-btn {
+    background: #0984e3;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap; /* 防止按钮文字换行 */
+    flex-shrink: 0; /* 防止按钮被压缩 */
+}
 
-        .change-word-btn:hover {
-            background: #74b9ff;
-            transform: translateY(-2px);
-        }
+.change-word-btn:hover {
+    background: #74b9ff;
+    transform: translateY(-2px);
+}
+
 
         /* 统计区域样式 */
         .stats-section-container {
@@ -510,6 +519,42 @@
             opacity: 0.9;
         }
 
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .card {
+        min-height: 100px; /* 小屏幕时进一步减小高度 */
+        padding: 12px;
+    }
+
+    .card-word {
+        font-size: 1.4rem;
+    }
+
+    .change-word-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        min-height: 90px;
+        padding: 10px;
+    }
+
+    .card-word {
+        font-size: 1.2rem;
+    }
+
+    .change-word-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    .card-content {
+        gap: 8px; /* 小屏幕时减小间距 */
+    }
+}
         /* 响应式调整 */
         @media (max-width: 768px) {
             .title {
@@ -901,22 +946,25 @@
     }
 
     // 渲染卡片
-    function renderCards() {
-        elements.cardsContainer.innerHTML = '';
+   // 修改渲染卡片的函数
+function renderCards() {
+    elements.cardsContainer.innerHTML = '';
 
-        for (let i = 0; i < 4; i++) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="card-number">${i + 1}</div>
+    for (let i = 0; i < 4; i++) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div class="card-number">${i + 1}</div>
+            <div class="card-content">
                 <div class="card-word">${gameState.currentWords[i]}</div>
                 <button class="change-word-btn" onclick="changeWord(${i})">
                     <i class="fas fa-sync-alt"></i> 换词
                 </button>
-            `;
-            elements.cardsContainer.appendChild(card);
-        }
+            </div>
+        `;
+        elements.cardsContainer.appendChild(card);
     }
+}
 
     // 更换单个词语
     function changeWord(index) {
