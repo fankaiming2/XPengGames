@@ -232,7 +232,7 @@
             transform: translateY(-2px);
         }
 
-        /* 修改统计区域布局 - 保持在一行 */
+/* 修改统计区域布局 - 各自居中对齐 */
 .stats-section-container {
     display: flex;
     flex-direction: row; /* 确保横向排列 */
@@ -242,6 +242,7 @@
     gap: 20px;
     flex-wrap: nowrap; /* 防止换行 */
 }
+
 
 /* 添加我方失败次数的红色样式 */
 .stat-item.failure-item .stat-title {
@@ -285,11 +286,46 @@
 }
 
 
+/* 让两个统计区域各自居中对齐 */
 .stats-section.our-action {
     border-color: #00b894;
-    /* 移除之前多余的 margin-right: auto; */
+    text-align: center; /* 内部内容居中 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 水平居中 */
+}
+.stats-section.enemy-action {
+    border-color: #e74c3c;
+    text-align: center; /* 内部内容居中 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 水平居中 */
 }
 
+/* 确保统计网格也居中对齐 */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    width: 100%; /* 确保宽度100% */
+}
+
+/* 确保统计项居中对齐 */
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center; /* 水平居中 */
+    text-align: center; /* 文字居中 */
+}
+
+/* 确保统计控制区域居中对齐 */
+.stat-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center; /* 水平居中 */
+}
 .stats-section.enemy-action {
     border-color: #e74c3c;
     /* 移除之前多余的 margin-left: auto; */
