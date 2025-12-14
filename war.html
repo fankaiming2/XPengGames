@@ -33,6 +33,25 @@
             padding: 20px;
             overflow: hidden;
         }
+        /* 词语编辑输入框样式 */
+.word-edit-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-align: center;
+    background: #2d3436;
+    color: #dfe6e9;
+    border: 2px solid #00b894;
+    border-radius: 8px;
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 184, 148, 0.3);
+}
+.word-edit-input:focus {
+    border-color: #00b894;
+    box-shadow: 0 0 15px rgba(0, 184, 148, 0.5);
+}
+
 
         .background-overlay {
             position: absolute;
@@ -215,6 +234,16 @@
     word-break: break-word;
     line-height: 1.3;
     padding: 0;
+}
+/* 让词语区域可点击 */
+.card-word {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.card-word:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
 }
 
         /* 切换按钮样式 */
@@ -1270,6 +1299,80 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* 再来一局区域 */
+.restart-section {
+    max-width: 800px;
+    margin: 20px auto 50px;
+    text-align: center;
+    padding: 20px;
+    background: rgba(45, 52, 54, 0.5);
+    border-radius: 12px;
+    border: 1px dashed #00b894;
+}
+
+.restart-btn {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    border: none;
+    border-radius: 15px;
+    padding: 18px 40px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    margin: 0 auto;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.restart-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+    background: linear-gradient(135deg, #ff6b6b 0%, #e74c3c 100%);
+}
+
+.restart-btn:active {
+    transform: translateY(-1px);
+    transition: transform 0.1s ease;
+}
+
+.restart-hint {
+    font-size: 0.9rem;
+    color: #b2bec3;
+    margin-top: 12px;
+    font-style: italic;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .restart-btn {
+        padding: 16px 30px;
+        font-size: 1.2rem;
+    }
+
+    .restart-section {
+        margin: 15px auto 40px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .restart-btn {
+        padding: 14px 25px;
+        font-size: 1.1rem;
+        min-height: 60px;
+    }
+
+    .restart-hint {
+        font-size: 0.85rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -1348,6 +1451,13 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!-- 新增：再来一局按钮 -->
+    <div class="restart-section">
+        <button class="restart-btn" id="restartGameBtn">
+            <i class="fas fa-redo"></i> 再来一局
+        </button>
+        <p class="restart-hint">重置所有统计和密码本词语</p>
     </div>
 </div>
 
@@ -1496,6 +1606,8 @@
 
     // DOM元素
     const elements = {
+    // ... 现有元素保持不变 ...
+    restartGameBtn: document.getElementById('restartGameBtn'),
         homePage: document.getElementById('homePage'),
         codebookPage: document.getElementById('codebookPage'),
         telegraphPage: document.getElementById('telegraphPage'),
@@ -1530,7 +1642,103 @@
         // 重置滚动位置
         window.scrollTo(0, 0);
     }
+// 新增：重置游戏函数
+function resetGame() {
+    // 重置统计数字
+    gameState.stats = {
+        crackEnemy: 0,
+        transmitFail: 0,
+        enemyCrack: 0,
+        enemyTransmitFail: 0
+    };
 
+    // 更新UI
+    Object.keys(gameState.stats).forEach(stat => {
+        const element = document.getElementById(stat);
+        if (element) {
+            element.textContent = gameState.stats[stat];
+        }
+    });
+
+    // 重置词语
+    for (let i = 0; i < 4; i++) {
+        gameState.currentWords[i] = getRandomWord();
+    }
+
+    // 重新渲染卡片
+    renderCards();
+
+    // 保存重置后的状态
+    saveStats();
+
+    // 显示成功消息
+    showTemporaryMessage('游戏已重置！');
+}
+
+// 新增：显示临时消息
+function showTemporaryMessage(message) {
+    // 创建消息元素
+    const messageEl = document.createElement('div');
+    messageEl.className = 'temp-message';
+    messageEl.textContent = message;
+    messageEl.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 184, 148, 0.9);
+        color: white;
+        padding: 20px 40px;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        z-index: 3000;
+        box-shadow: 0 5px 20px rgba(0, 184, 148, 0.3);
+        animation: fadeInOut 2s ease;
+    `;
+
+    // 添加动画关键帧
+    if (!document.querySelector('#tempMessageStyle')) {
+        const style = document.createElement('style');
+        style.id = 'tempMessageStyle';
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    document.body.appendChild(messageEl);
+
+    // 2秒后移除消息
+    setTimeout(() => {
+        if (messageEl.parentNode) {
+            messageEl.parentNode.removeChild(messageEl);
+        }
+    }, 2000);
+}
+
+// 新增：确认重置游戏
+function confirmResetGame() {
+    elements.confirmText.textContent = '确定要重新开始游戏吗？\n\n这将重置所有统计数字和密码本词语。';
+    elements.confirmModal.style.display = 'flex';
+
+    // 设置确认按钮的行为
+    const confirmHandler = (e) => {
+        e.stopPropagation();
+        resetGame();
+        elements.confirmModal.style.display = 'none';
+        // 移除事件监听器，避免重复绑定
+        elements.confirmYes.removeEventListener('click', confirmHandler);
+    };
+
+    // 添加一次性事件监听器
+    elements.confirmYes.addEventListener('click', confirmHandler, { once: true });
+}
     // 加载词语文件
     // 加载词语文件
 async function loadWords() {
@@ -1629,33 +1837,115 @@ async function loadWords() {
     }
 
     // 渲染卡片
-    function renderCards() {
-        elements.cardsContainer.innerHTML = '';
+function renderCards() {
+    elements.cardsContainer.innerHTML = '';
 
-        for (let i = 0; i < 4; i++) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="card-number">${i + 1}</div>
-                <div class="card-content">
-                    <div class="card-word">${gameState.currentWords[i]}</div>
-                    <button class="change-word-btn" data-index="${i}">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
+    for (let i = 0; i < 4; i++) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div class="card-number">${i + 1}</div>
+            <div class="card-content">
+                <div class="card-word" data-index="${i}">
+                    <span class="word-text">${gameState.currentWords[i]}</span>
                 </div>
-            `;
-            elements.cardsContainer.appendChild(card);
+                <button class="change-word-btn" data-index="${i}">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        `;
+        elements.cardsContainer.appendChild(card);
+    }
+
+    // 为新生成的切换按钮添加事件监听
+    document.querySelectorAll('.change-word-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation(); // 防止事件冒泡
+            const index = parseInt(this.getAttribute('data-index'));
+            changeWord(index);
+        });
+    });
+
+    // 为词语文本添加点击事件（新增）
+    document.querySelectorAll('.card-word').forEach(wordElement => {
+        wordElement.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const index = parseInt(this.getAttribute('data-index'));
+            editWord(index, this);
+        });
+    });
+}
+
+// 新增：编辑词语函数
+function editWord(index, wordElement) {
+    const currentWord = gameState.currentWords[index];
+    const wordTextElement = wordElement.querySelector('.word-text');
+
+    // 创建输入框
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = currentWord;
+    input.className = 'word-edit-input';
+    input.style.cssText = `
+        width: 100%;
+        padding: 8px;
+        font-size: 1.8rem;
+        font-weight: 800;
+        text-align: center;
+        background: #2d3436;
+        color: #dfe6e9;
+        border: 2px solid #00b894;
+        border-radius: 8px;
+        outline: none;
+    `;
+
+    // 保存原始文本
+    const originalText = wordTextElement.textContent;
+
+    // 替换文本为输入框
+    wordTextElement.style.display = 'none';
+    wordElement.appendChild(input);
+    input.focus();
+    input.select();
+
+    // 处理输入完成
+    function finishEdit() {
+        const newWord = input.value.trim();
+
+        if (newWord === '') {
+            // 如果输入为空，恢复原词语
+            wordTextElement.textContent = originalText;
+            gameState.currentWords[index] = originalText;
+        } else {
+            // 更新词语
+            wordTextElement.textContent = newWord;
+            gameState.currentWords[index] = newWord;
         }
 
-        // 为新生成的切换按钮添加事件监听
-        document.querySelectorAll('.change-word-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation(); // 防止事件冒泡
-                const index = parseInt(this.getAttribute('data-index'));
-                changeWord(index);
-            });
-        });
+        // 恢复显示
+        wordTextElement.style.display = 'block';
+        input.remove();
     }
+
+    // 回车键保存
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            finishEdit();
+        } else if (e.key === 'Escape') {
+            // ESC键取消
+            wordTextElement.style.display = 'block';
+            input.remove();
+        }
+    });
+
+    // 失去焦点时保存
+    input.addEventListener('blur', finishEdit);
+
+    // 阻止事件冒泡，防止触发卡片其他事件
+    input.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+}
 
     // 更换单个词语
     function changeWord(index) {
@@ -1875,6 +2165,17 @@ async function loadWords() {
                 e.preventDefault();
             });
         });
+        // 再来一局按钮
+    elements.restartGameBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        confirmResetGame();
+    }, false);
+
+    // 确保确认弹窗的其他部分正常工作
+    elements.confirmNo.addEventListener('click', (e) => {
+        e.stopPropagation();
+        elements.confirmModal.style.display = 'none';
+    }, false);
     }
 
     // 初始加载
