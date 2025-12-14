@@ -883,14 +883,13 @@
     object-fit: cover;
 }
 
-        .message-content {
-            background: rgba(45, 52, 54, 0.8);
-            padding: 16px 20px;
-            border-radius: 18px;
-            max-width: 85%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
+       .message-content {
+    background: rgba(45, 52, 54, 0.8);
+    padding: 12px 16px; /* 从16px 20px减少到12px 16px */
+    border-radius: 15px; /* 从18px减少到15px */
+    max-width: 85%;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); /* 从4px 12px减少到3px 8px */
+}
 
         .message-content:after {
             content: '';
@@ -911,25 +910,25 @@
             line-height: 1.5;
         }
 
-        /* 用户输入区域 */
-        .user-input-area {
-            margin-top: 25px;
-        }
+        /* 调整用户输入区域 */
+.user-input-area {
+    margin-top: 15px; /* 从25px减少到15px */
+}
 
-        #userMessage {
-            width: 100%;
-            padding: 16px;
-            background: #0c0c1a;
-            border: 2px solid #00b894;
-            border-radius: 12px;
-            font-size: 15px;
-            resize: vertical;
-            min-height: 120px;
-            margin-bottom: 20px;
-            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
-            transition: all 0.3s ease;
-            color: #dfe6e9;
-        }
+     #userMessage {
+    width: 100%;
+    padding: 12px; /* 从16px减少到12px */
+    background: #0c0c1a;
+    border: 2px solid #00b894;
+    border-radius: 10px; /* 从12px减少到10px */
+    font-size: 14px; /* 从15px减少到14px */
+    resize: vertical;
+    min-height: 100px; /* 从120px减少到100px */
+    margin-bottom: 15px; /* 从20px减少到15px */
+    font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+    transition: all 0.3s ease;
+    color: #dfe6e9;
+}
 
         #userMessage:focus {
             outline: none;
@@ -1417,7 +1416,7 @@
             <!-- 玩家输入区域 -->
             <div class="user-input-area">
                 <textarea id="userMessage"
-                          placeholder="请输入您的问题/建议（如：我发现一个游戏BUG，具体是...）"
+                          placeholder="请输入您的问题/建议（如：我发现一个BUG）"
                           rows="4"></textarea>
                 <button id="sendEmailBtn" class="btn btn-primary"
                         style="float: right; width: auto; padding: 16px 30px;">
