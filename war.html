@@ -285,9 +285,13 @@
 .stats-section-container {
     display: flex;
     flex-direction: row;
-    justify-content:  center;
-    gap: 8px;
+    justify-content: center; /* 改为 center 使整个容器居中 */
+    align-items: flex-start; /* 保持顶部对齐 */
+    gap: 80px; /* 增加间距以更好地区分两个区域 */
     flex-wrap: nowrap;
+    max-width: 900px; /* 限制最大宽度 */
+    margin: 0 auto; /* 水平居中 */
+    padding: 0 15px; /* 添加内边距防止边缘触碰 */
 }
 
 
