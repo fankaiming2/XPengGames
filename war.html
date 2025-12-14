@@ -1299,17 +1299,16 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* 再来一局区域 */
+/* 再来一局区域 */
 .restart-section {
     max-width: 800px;
-    margin: 10px auto 30px; /* 修改这里：将上边距从20px减少到10px，下边距从50px减少到30px */
+    margin: 10px auto 80px; /* 修改这里：增加底部外边距从30px到80px */
     text-align: center;
     padding: 20px;
     background: rgba(45, 52, 54, 0.5);
     border-radius: 12px;
     border: 1px dashed #00b894;
 }
-
 .restart-btn {
     background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
     border: none;
@@ -1357,11 +1356,10 @@
     }
 
     .restart-section {
-        margin: 8px auto 25px; /* 修改这里：将上边距从15px减少到8px，下边距从40px减少到25px */
+        margin: 8px auto 70px; /* 修改这里：增加底部外边距从25px到70px */
         padding: 15px;
     }
 }
-
 @media (max-width: 480px) {
     .restart-btn {
         padding: 14px 25px;
@@ -1371,6 +1369,10 @@
 
     .restart-hint {
         font-size: 0.85rem;
+    }
+
+    .restart-section {
+        margin: 6px auto 60px; /* 修改这里：移动端也增加底部外边距 */
     }
 }
         /* 添加游戏规则配置相关样式 */
