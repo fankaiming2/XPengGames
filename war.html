@@ -243,7 +243,38 @@
     flex-wrap: nowrap; /* 防止换行 */
 }
 
+/* 添加我方失败次数的红色样式 */
+.stat-item.failure-item .stat-title {
+    color: #ffcccc; /* 浅红色文字 */
+}
 
+.stat-item.failure-item .stat-value {
+    color: #ff6666; /* 亮红色数值 */
+}
+
+.stat-item.failure-item .stat-btn {
+    background: #c0392b; /* 深红色按钮 */
+}
+
+.stat-item.failure-item .stat-btn:hover {
+    background: #e74c3c; /* 悬停时亮红色 */
+}
+/* 敌方行动中的失败次数特殊样式 - 绿色 */
+.stats-section.enemy-action .stat-item.failure-item .stat-title {
+    color: #00b894 !important; /* 浅绿色文字 */
+}
+
+.stats-section.enemy-action .stat-item.failure-item .stat-value {
+    color: #00b894 !important; /* 次数数字亮绿色数值 */
+}
+
+.stats-section.enemy-action .stat-item.failure-item .stat-btn {
+    background: #00b894 !important; /* 青绿色按钮 */
+}
+
+.stats-section.enemy-action .stat-item.failure-item .stat-btn:hover {
+    background: #00b894 !important; /* 悬停时亮绿色 */
+}
   .stats-section {
     flex: 1;
     background: rgba(45, 52, 54, 0.7);
@@ -263,7 +294,76 @@
     border-color: #e74c3c;
     /* 移除之前多余的 margin-left: auto; */
 }
+/* 敌方区域使用我方颜色主题的项 */
+.stats-section.enemy-action .stat-item.our-theme-item .stat-title {
+    color: #00b894 !important; /* 保持原有的文字颜色 */
+}
 
+.stats-section.enemy-action .stat-item.our-theme-item .stat-value {
+    color: #00b894 !important; /* 青色数值，匹配我方主题 */
+}
+
+.stats-section.enemy-action .stat-item.our-theme-item .stat-btn {
+    background: #00b894 !important; /* 蓝色按钮，匹配我方主题 */
+}
+
+.stats-section.enemy-action .stat-item.our-theme-item .stat-btn:hover {
+    background: #00b894 !important; /* 悬停时浅蓝色 */
+}
+
+/* 修改我方行动中的破译敌方密码次数为#00b894颜色 */
+.stats-section.our-action .stat-item:not(.failure-item) .stat-title {
+    color: #00b894 !important; /* 文字颜色改为#00b894 */
+}
+
+.stats-section.our-action .stat-item:not(.failure-item) .stat-value {
+    color: #00b894 !important; /* 数值颜色改为#00b894 */
+}
+
+.stats-section.our-action .stat-item:not(.failure-item) .stat-btn {
+    background: #00b894 !important; /* 按钮背景改为#00b894 */
+}
+
+.stats-section.our-action .stat-item:not(.failure-item) .stat-btn:hover {
+    background: #00a884 !important; /* 悬停时稍深一点的#00b894 */
+}
+
+/* 修改敌方行动中的破译我方密码次数为#e74c3c颜色 */
+.stats-section.enemy-action .stat-item:not(.failure-item) .stat-title {
+    color: #e74c3c !important; /* 文字颜色改为#e74c3c */
+}
+
+.stats-section.enemy-action .stat-item:not(.failure-item) .stat-value {
+    color: #e74c3c !important; /* 数值颜色改为#e74c3c */
+}
+
+.stats-section.enemy-action .stat-item:not(.failure-item) .stat-btn {
+    background: #e74c3c !important; /* 按钮背景改为#e74c3c */
+}
+
+.stats-section.enemy-action .stat-item:not(.failure-item) .stat-btn:hover {
+    background: #c0392b !important; /* 悬停时稍深一点的红色 */
+}
+/* 修改我方行动中的失败项为#e74c3c颜色 */
+.stats-section.our-action .stat-item.failure-item .stat-title {
+    color: #e74c3c !important; /* 文字颜色改为#e74c3c */
+}
+
+.stats-section.our-action .stat-item.failure-item .stat-value {
+    color: #e74c3c !important; /* 数值颜色改为#e74c3c */
+}
+
+.stats-section.our-action .stat-item.failure-item .stat-btn {
+    background: #e74c3c !important; /* 按钮背景改为#e74c3c */
+}
+
+.stats-section.our-action .stat-item.failure-item .stat-btn:hover {
+    background: #c0392b !important; /* 悬停时稍深一点的红色 */
+}
+/* 特别处理失败项中的数字颜色 */
+.stats-section.enemy-action .stat-item.failure-item.our-theme-item .stat-value {
+    color: #00b894 !important; /* 绿色数值，匹配失败项主题 */
+}
         .section-title {
             font-size: 1.2rem;
             font-weight: bold;
@@ -721,7 +821,7 @@
             <div class="section-title our-title">我方行动</div>
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-title">已破译敌方密码</div>
+                    <div class="stat-title">破译敌方密码次数</div>
                     <div class="stat-control">
                         <button class="stat-btn our-btn" onclick="changeStat('crackEnemy', -1, 'our')">-</button>
                         <span class="stat-value our-value" id="crackEnemy">0</span>
@@ -729,8 +829,8 @@
                     </div>
                 </div>
 
-                <div class="stat-item">
-                    <div class="stat-title">密文传递失败</div>
+                <div class="stat-item failure-item">
+                    <div class="stat-title">密文传递失败次数</div>
                     <div class="stat-control">
                         <button class="stat-btn our-btn" onclick="changeStat('transmitFail', -1, 'our')">-</button>
                         <span class="stat-value our-value" id="transmitFail">0</span>
@@ -744,8 +844,8 @@
         <div class="stats-section enemy-action">
             <div class="section-title enemy-title">敌方行动</div>
             <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-title">被敌方破译密码</div>
+                <div class="stat-item ">
+                    <div class="stat-title">破译我方密码次数</div>
                     <div class="stat-control">
                         <button class="stat-btn enemy-btn" onclick="changeStat('enemyCrack', -1, 'enemy')">-</button>
                         <span class="stat-value enemy-value" id="enemyCrack">0</span>
@@ -753,8 +853,8 @@
                     </div>
                 </div>
 
-                <div class="stat-item">
-                    <div class="stat-title">敌方密文传递失败</div>
+                <div class="stat-item failure-item our-theme-item">
+                    <div class="stat-title">密文传递失败次数</div>
                     <div class="stat-control">
                         <button class="stat-btn enemy-btn" onclick="changeStat('enemyTransmitFail', -1, 'enemy')">-</button>
                         <span class="stat-value enemy-value" id="enemyTransmitFail">0</span>
