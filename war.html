@@ -158,6 +158,8 @@
             padding: 20px;
             overflow-y: auto;
             z-index: 100;
+                padding-bottom: 100px; /* 确保有足够的空间显示全局底部栏 */
+
         }
 
         .page-title {
@@ -279,12 +281,11 @@
         }
 
 /* 修改统计区域布局 - 横向并排 */
+/* 修改现有的 .stats-section-container 样式 */
 .stats-section-container {
     display: flex;
-    flex-direction: row; /* 改为横向排列 */
-    justify-content: space-between; /* 左右分布 */
-    max-width: 800px; /* 适当增加最大宽度 */
-    margin: 30px auto 80px; /* 增加底部外边距从30px到80px */
+    flex-direction: row;
+    justify-content: space-between;
     gap: 10px;
     flex-wrap: nowrap;
 }
@@ -1299,17 +1300,16 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-/* 再来一局区域 */
-/* 再来一局区域 */
+/* 修改现有的 .restart-section 样式 */
 .restart-section {
-    max-width: 800px;
-    margin: 20px auto 40px; /* 修改这里：将底部外边距从80px减少到40px，上部从10px增加到20px */
     text-align: center;
     padding: 20px;
     background: rgba(45, 52, 54, 0.5);
     border-radius: 12px;
     border: 1px dashed #00b894;
+    margin-top: 0; /* 移除上边距 */
 }
+
 .restart-btn {
     background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
     border: none;
@@ -1356,11 +1356,24 @@
         font-size: 1.2rem;
     }
 
+    .stats-and-restart-container {
+        max-width: 600px;
+        margin: 20px auto 20px;
+    }
     .restart-section {
-        margin: 15px auto 30px; /* 修改这里：移动端也减少底部外边距 */
+        margin-top: 0;
         padding: 15px;
     }
 }
+/* 新增：统计和再来一局容器 */
+.stats-and-restart-container {
+    max-width: 800px;
+    margin: 30px auto 30px; /* 只保留上下边距 */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 控制统计区域和再来一局区域之间的间距 */
+}
+
 @media (max-width: 480px) {
     .restart-btn {
         padding: 14px 25px;
@@ -1370,10 +1383,6 @@
 
     .restart-hint {
         font-size: 0.85rem;
-    }
-
-    .restart-section {
-        margin: 10px auto 25px; /* 修改这里：移动端继续减少底部外边距 */
     }
 }
         /* 添加游戏规则配置相关样式 */
@@ -1604,59 +1613,64 @@ input[type="range"]::-webkit-slider-thumb {
 
     <!-- 修改后的统计区域 -->
     <div class="stats-section-container">
-        <!-- 我方行动 - 靠左下 -->
-        <div class="stats-section our-action">
-            <div class="section-title our-title">我方行动</div>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-title">破译敌方密码次数</div>
-                    <div class="stat-control">
-                        <button class="stat-btn our-btn" data-stat="crackEnemy" data-delta="-1">-</button>
-                        <span class="stat-value our-value" id="crackEnemy">0</span>
-                        <button class="stat-btn our-btn" data-stat="crackEnemy" data-delta="1">+</button>
+        <!-- 修改后的统计区域 -->
+        <div class="stats-section-container">
+            <!-- 我方行动 - 靠左下 -->
+            <div class="stats-section our-action">
+                <div class="section-title our-title">我方行动</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-title">破译敌方密码次数</div>
+                        <div class="stat-control">
+                            <button class="stat-btn our-btn" data-stat="crackEnemy" data-delta="-1">-</button>
+                            <span class="stat-value our-value" id="crackEnemy">0</span>
+                            <button class="stat-btn our-btn" data-stat="crackEnemy" data-delta="1">+</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="stat-item failure-item">
-                    <div class="stat-title">密文传递失败次数</div>
-                    <div class="stat-control">
-                        <button class="stat-btn our-btn" data-stat="transmitFail" data-delta="-1">-</button>
-                        <span class="stat-value our-value" id="transmitFail">0</span>
-                        <button class="stat-btn our-btn" data-stat="transmitFail" data-delta="1">+</button>
+                    <div class="stat-item failure-item">
+                        <div class="stat-title">密文传递失败次数</div>
+                        <div class="stat-control">
+                            <button class="stat-btn our-btn" data-stat="transmitFail" data-delta="-1">-</button>
+                            <span class="stat-value our-value" id="transmitFail">0</span>
+                            <button class="stat-btn our-btn" data-stat="transmitFail" data-delta="1">+</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 敌方行动 - 靠右下 -->
-        <div class="stats-section enemy-action">
-            <div class="section-title enemy-title">敌方行动</div>
-            <div class="stats-grid">
-                <div class="stat-item ">
-                    <div class="stat-title">破译我方密码次数</div>
-                    <div class="stat-control">
-                        <button class="stat-btn enemy-btn" data-stat="enemyCrack" data-delta="-1">-</button>
-                        <span class="stat-value enemy-value" id="enemyCrack">0</span>
-                        <button class="stat-btn enemy-btn" data-stat="enemyCrack" data-delta="1">+</button>
+            <!-- 敌方行动 - 靠右下 -->
+            <div class="stats-section enemy-action">
+                <div class="section-title enemy-title">敌方行动</div>
+                <div class="stats-grid">
+                    <div class="stat-item ">
+                        <div class="stat-title">破译我方密码次数</div>
+                        <div class="stat-control">
+                            <button class="stat-btn enemy-btn" data-stat="enemyCrack" data-delta="-1">-</button>
+                            <span class="stat-value enemy-value" id="enemyCrack">0</span>
+                            <button class="stat-btn enemy-btn" data-stat="enemyCrack" data-delta="1">+</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="stat-item failure-item our-theme-item">
-                    <div class="stat-title">密文传递失败次数</div>
-                    <div class="stat-control">
-                        <button class="stat-btn enemy-btn" data-stat="enemyTransmitFail" data-delta="-1">-</button>
-                        <span class="stat-value enemy-value" id="enemyTransmitFail">0</span>
-                        <button class="stat-btn enemy-btn" data-stat="enemyTransmitFail" data-delta="1">+</button>
+                    <div class="stat-item failure-item our-theme-item">
+                        <div class="stat-title">密文传递失败次数</div>
+                        <div class="stat-control">
+                            <button class="stat-btn enemy-btn" data-stat="enemyTransmitFail" data-delta="-1">-</button>
+                            <span class="stat-value enemy-value" id="enemyTransmitFail">0</span>
+                            <button class="stat-btn enemy-btn" data-stat="enemyTransmitFail" data-delta="1">+</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- 新增：再来一局按钮 -->
+    <div class="restart-section">
         <button class="restart-btn" id="restartGameBtn">
             <i class="fas fa-redo"></i> 再来一局
         </button>
         <p class="restart-hint">重置所有统计和密码本词语</p>
+    </div>
 </div>
 
 <!-- 电报机页面 -->
