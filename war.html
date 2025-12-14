@@ -1530,55 +1530,63 @@
     }
 
     // 加载词语文件
-    async function loadWords() {
-        showLoading(true);
-        try {
-            // 尝试从不同路径加载
-            const paths = [
-                'words.txt',
-                './words.txt',
-                'word.txt',
-                './word.txt',
-                'words/words.txt',
-                'words/word.txt'
-            ];
+    // 加载词语文件
+async function loadWords() {
+    showLoading(true);
+    try {
+        // 从 words/words.txt 文件加载词语
+        const response = await fetch('words/war.txt');
 
-            let response;
-            for (const path of paths) {
-                try {
-                    response = await fetch(path);
-                    if (response.ok) break;
-                } catch (e) {
-                    continue;
+        if (!response.ok) {
+            throw new Error(`无法加载词语文件: ${response.status} ${response.statusText}`);
+        }
+
+        const text = await response.text();
+        const words = text.split('\n')
+            .map(word => word.trim())
+            .filter(word => word.length > 0 && !word.startsWith('#') && !word.startsWith('//'));
+
+        if (words.length === 0) {
+            // 如果文件为空，使用默认词语
+            console.warn('词语文件为空，使用默认词语');
+            gameState.words = getDefaultWords();
+        } else {
+            gameState.words = words;
+        }
+
+        console.log(`加载了 ${gameState.words.length} 个词语`);
+        return true;
+    } catch (error) {
+        console.error('加载词语失败:', error);
+
+        // 尝试备用路径
+        console.log('尝试从备用路径加载词语...');
+        try {
+            const backupResponse = await fetch('war.txt');
+            if (backupResponse.ok) {
+                const text = await backupResponse.text();
+                const words = text.split('\n')
+                    .map(word => word.trim())
+                    .filter(word => word.length > 0 && !word.startsWith('#') && !word.startsWith('//'));
+
+                if (words.length > 0) {
+                    gameState.words = words;
+                    console.log(`从备用路径加载了 ${gameState.words.length} 个词语`);
+                    return true;
                 }
             }
-
-            if (!response || !response.ok) {
-                throw new Error('无法加载词语文件');
-            }
-
-            const text = await response.text();
-            const words = text.split('\n')
-                .map(word => word.trim())
-                .filter(word => word.length > 0 && !word.startsWith('#'));
-
-            if (words.length === 0) {
-                // 如果文件为空，使用默认词语
-                gameState.words = getDefaultWords();
-            } else {
-                gameState.words = words;
-            }
-
-            console.log(`加载了 ${gameState.words.length} 个词语`);
-            return true;
-        } catch (error) {
-            console.error('加载词语失败:', error);
-            gameState.words = getDefaultWords();
-            return true;
-        } finally {
-            showLoading(false);
+        } catch (backupError) {
+            console.error('备用路径加载也失败:', backupError);
         }
+
+        // 所有加载都失败，使用默认词语
+        console.log('使用默认词语');
+        gameState.words = getDefaultWords();
+        return true;
+    } finally {
+        showLoading(false);
     }
+}
 
     // 默认词语（备用）
     function getDefaultWords() {
