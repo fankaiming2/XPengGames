@@ -710,6 +710,381 @@
             transition: transform 0.1s ease;
         }
 
+        /* ==================== 新增：底部反馈入口和弹窗样式 ==================== */
+        /* 全局底部反馈入口 */
+        .global-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #006266 0%, #00a8a8 100%);
+            color: white;
+            padding: 14px 0;
+            text-align: center;
+            z-index: 999;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feedback-link {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            padding: 8px 20px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .feedback-link:hover,
+        .feedback-link:active {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 为页面内容添加底部内边距，防止被遮挡 */
+        body {
+            padding-bottom: 65px;
+        }
+
+        /* 反馈弹窗样式 */
+        .feedback-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1001;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            margin: 20px auto;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+            border: 2px solid #00b894;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #dfe6e9;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: #2d3436;
+            color: white;
+        }
+
+        /* 开发者信息 */
+        .developer-info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #2d3436;
+        }
+
+        .developer-avatar img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #00b894;
+            object-fit: cover;
+        }
+
+        .developer-message p {
+            margin: 6px 0;
+            line-height: 1.5;
+            color: #dfe6e9;
+        }
+
+        .developer-email {
+            color: #00b894;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .developer-email a {
+            color: #00b894;
+            text-decoration: none;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(0, 184, 148, 0.1);
+        }
+
+        .developer-email a:hover {
+            background: rgba(0, 184, 148, 0.2);
+        }
+
+        /* 对话区域 */
+        .chat-area {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(45, 52, 54, 0.5);
+            border-radius: 15px;
+        }
+
+        .message-bubble {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .message-avatar img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid #00b894;
+            object-fit: cover;
+        }
+
+        .message-content {
+            background: rgba(45, 52, 54, 0.8);
+            padding: 16px 20px;
+            border-radius: 18px;
+            max-width: 85%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .message-content:after {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid rgba(45, 52, 54, 0.8);
+        }
+
+        .message-content p {
+            margin: 0;
+            color: #dfe6e9;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        /* 用户输入区域 */
+        .user-input-area {
+            margin-top: 25px;
+        }
+
+        #userMessage {
+            width: 100%;
+            padding: 16px;
+            background: #0c0c1a;
+            border: 2px solid #00b894;
+            border-radius: 12px;
+            font-size: 15px;
+            resize: vertical;
+            min-height: 120px;
+            margin-bottom: 20px;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            transition: all 0.3s ease;
+            color: #dfe6e9;
+        }
+
+        #userMessage:focus {
+            outline: none;
+            border-color: #00b894;
+            box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.2);
+        }
+
+        #sendEmailBtn {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #006266 0%, #00a8a8 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #sendEmailBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 168, 168, 0.3);
+        }
+
+        /* 打赏区域 */
+        .donation-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px dashed #2d3436;
+            text-align: center;
+        }
+
+        .donation-section h4 {
+            color: #e74c3c;
+            margin-bottom: 12px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .donation-section p {
+            color: #b2bec3;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .qrcode-container {
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+            padding: 15px;
+            background: #2d3436;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #00b894;
+            margin: 20px auto 0 auto;
+            width: fit-content;
+        }
+
+        .donation-qrcode {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .qrcode-hint {
+            color: #b2bec3;
+            font-size: 13px;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        /* 弹窗内的自定义滚动条 */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #2d3436;
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #00b894;
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #00a884;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 10px auto;
+                padding: 20px 15px;
+                max-height: 90vh;
+            }
+
+            .donation-qrcode {
+                width: 180px;
+                height: 180px;
+            }
+
+            .developer-avatar img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .message-avatar img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .message-content {
+                max-width: 80%;
+                padding: 14px 18px;
+            }
+
+            .global-footer {
+                padding: 12px 0;
+            }
+
+            .feedback-link {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            body {
+                padding-bottom: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .donation-qrcode {
+                width: 160px;
+                height: 160px;
+            }
+
+            .developer-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 12px;
+            }
+
+            .message-bubble {
+                gap: 12px;
+            }
+        }
+
         /* 响应式调整 */
         @media (max-width: 768px) {
             .title {
@@ -995,6 +1370,63 @@
     </div>
 </div>
 
+<!-- ==================== 新增：全局底部反馈入口 ==================== -->
+<div id="globalFooter" class="global-footer">
+    <div class="footer-content">
+        <a href="#" id="feedbackTrigger" class="feedback-link">
+            <i class="fas fa-comment-alt"></i> 支持开发者 / 反馈BUG
+        </a>
+    </div>
+</div>
+
+<!-- ==================== 新增：反馈弹窗 ==================== -->
+<div id="feedbackModal" class="feedback-modal">
+    <div class="modal-content">
+        <!-- 关闭按钮 -->
+        <span class="close-modal">&times;</span>
+
+        <!-- 开发者信息 -->
+        <div class="developer-info">
+            <div class="developer-message" style="margin-left: 15px; padding-left: 0;">
+                <h1 style="color: #00b894; font-size: 2rem; margin-bottom: 10px;">窃听风云</h1>
+                <p style="color: #b2bec3; font-size: 14px;">一款基于密码破译的间谍主题游戏</p>
+            </div>
+        </div>
+
+        <!-- 对话区域 -->
+        <div class="chat-area">
+            <div class="message-bubble">
+                <div class="message-avatar">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=spyagent" alt="开发者头像">
+                </div>
+                <div class="message-content">
+                    <p>您好，有什么可以帮到您呢？</p>
+                </div>
+            </div>
+
+            <!-- 玩家输入区域 -->
+            <div class="user-input-area">
+                <textarea id="userMessage"
+                          placeholder="请输入您的问题/建议（如：我发现一个游戏BUG，具体是...）"
+                          rows="4"></textarea>
+                <button id="sendEmailBtn" class="btn btn-primary"
+                        style="float: right; width: auto; padding: 16px 30px;">
+                    <i class="fas fa-paper-plane"></i> 发送
+                </button>
+                <div style="clear: both;"></div> <!-- 清除浮动 -->
+            </div>
+        </div>
+
+        <!-- 开发者信息 -->
+        <div class="developer-info">
+            <div class="developer-message" style="margin-left: 15px; padding-left: 0; margin-top: 15px;">
+                <p class="developer-email">联系邮箱：<a href="mailto:ming95ming@126.com">ming95ming@126.com</a></p>
+                <p style="color: #b2bec3; font-size: 13px; margin-top: 8px;">您的反馈对我们非常重要！</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 加载动画 -->
 <div class="loading" id="loading">
     <div class="spinner"></div>
@@ -1026,7 +1458,10 @@
         confirmText: document.getElementById('confirmText'),
         confirmYes: document.getElementById('confirmYes'),
         confirmNo: document.getElementById('confirmNo'),
-        loading: document.getElementById('loading')
+        loading: document.getElementById('loading'),
+        feedbackModal: document.getElementById('feedbackModal'),
+        userMessage: document.getElementById('userMessage'),
+        sendEmailBtn: document.getElementById('sendEmailBtn')
     };
 
     // 页面切换
@@ -1231,6 +1666,92 @@
         elements.loading.style.display = show ? 'flex' : 'none';
     }
 
+    // ==================== 新增：反馈功能 ====================
+    function initFeedbackModal() {
+        // 反馈入口点击事件
+        document.getElementById('feedbackTrigger').addEventListener('click', function (e) {
+            e.preventDefault();
+            elements.feedbackModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+
+        // 关闭按钮
+        document.querySelector('.close-modal').addEventListener('click', function () {
+            elements.feedbackModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // 点击蒙版关闭
+        elements.feedbackModal.addEventListener('click', function (e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // 发送邮件按钮
+        elements.sendEmailBtn.addEventListener('click', function () {
+            const message = elements.userMessage.value.trim();
+
+            if (!message) {
+                alert('请输入您的留言内容');
+                elements.userMessage.focus();
+                return;
+            }
+
+            // 获取用户设备信息
+            const deviceInfo = `设备信息: ${navigator.userAgent}`;
+            const gameVersion = `游戏版本: 窃听风云 v1.0`;
+            const currentPage = `当前页面: ${window.location.href}`;
+
+            // 构造邮件内容
+            const subject = encodeURIComponent('【窃听风云游戏】用户反馈');
+            const body = encodeURIComponent(`用户反馈内容：\n\n${message}\n\n───────────────\n${gameVersion}\n${deviceInfo}\n${currentPage}\n\n感谢您的反馈！`);
+
+            // 清空输入框
+            elements.userMessage.value = '';
+
+            // 显示成功提示
+            const sendBtn = this;
+            const originalText = sendBtn.innerHTML;
+            sendBtn.innerHTML = '<i class="fas fa-check"></i> 邮件客户端已打开';
+            sendBtn.style.background = '#00b894';
+
+            // 延迟一点时间，让用户看到按钮状态变化
+            setTimeout(() => {
+                window.location.href = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
+                // 恢复按钮状态
+                setTimeout(() => {
+                    sendBtn.innerHTML = originalText;
+                    sendBtn.style.background = 'linear-gradient(135deg, #006266 0%, #00a8a8 100%)';
+                }, 1000);
+            }, 300);
+        });
+
+        // 当弹窗打开时自动聚焦到输入框
+        elements.feedbackModal.addEventListener('click', function (e) {
+            if (e.target === this || e.target.classList.contains('close-modal')) {
+                return;
+            }
+            setTimeout(() => {
+                elements.userMessage.focus();
+            }, 300);
+        });
+
+        // 阻止在反馈弹窗内滚动时背景滚动
+        elements.feedbackModal.addEventListener('touchmove', function (e) {
+            if (e.target === this) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    }
+
+    // 确保页面内容不会被底部栏遮挡
+    function adjustContentPadding() {
+        const footerHeight = document.getElementById('globalFooter').offsetHeight;
+        document.body.style.paddingBottom = footerHeight + 20 + 'px';
+    }
+
     // 事件监听器设置
     function setupEventListeners() {
         // 主菜单按钮
@@ -1306,11 +1827,18 @@
         // 设置事件监听器
         setupEventListeners();
 
+        // 初始化反馈功能
+        initFeedbackModal();
+
         // 预加载词语
         await loadWords();
 
         // 确保初始电报码
         updateTelegraphCode();
+
+        // 调整页面内边距
+        adjustContentPadding();
+        window.addEventListener('resize', adjustContentPadding);
 
         // 添加键盘快捷键
         document.addEventListener('keydown', (e) => {
@@ -1318,6 +1846,10 @@
                 if (elements.codebookPage.style.display === 'block' ||
                     elements.telegraphPage.style.display === 'block') {
                     showPage('home');
+                }
+                if (elements.feedbackModal.style.display === 'block') {
+                    elements.feedbackModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
                 }
             }
         });
