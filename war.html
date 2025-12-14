@@ -166,7 +166,7 @@
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     border: 5px solid #00b894;
     position: relative;
-    height: 100px; /* 增加高度，从80px增加到100px */
+    height: 79px; /* 增加高度，从80px增加到100px */
     min-height: 100px; /* 调整最小高度 */
     display: flex;
     flex-direction: row;
@@ -820,11 +820,11 @@
         /* 开发者信息 */
         .developer-info {
             display: flex;
-            align-items: center;
-            gap: 18px;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #2d3436;
+                align-items: center;
+    gap: 12px; /* 从18px减少到12px */
+    margin-bottom: 15px; /* 从25px减少到15px */
+    padding-bottom: 12px; /* 从20px减少到12px */
+    border-bottom: 2px solid #2d3436;
         }
 
         .developer-avatar img {
@@ -861,26 +861,27 @@
 
         /* 对话区域 */
         .chat-area {
-            margin: 25px 0;
-            padding: 20px;
-            background: rgba(45, 52, 54, 0.5);
-            border-radius: 15px;
+             margin: 15px 0; /* 从25px 0减少到15px 0 */
+    padding: 15px; /* 从20px减少到15px */
+    background: rgba(45, 52, 54, 0.5);
+    border-radius: 15px;
         }
 
-        .message-bubble {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            animation: fadeIn 0.5s ease;
-        }
+     .message-bubble {
+    display: flex;
+    gap: 10px; /* 从15px减少到10px */
+    margin-bottom: 15px; /* 从20px减少到15px */
+    animation: fadeIn 0.5s ease;
+}
 
-        .message-avatar img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 2px solid #00b894;
-            object-fit: cover;
-        }
+      /* 调整消息气泡样式 */
+.message-avatar img {
+    width: 40px; /* 从45px减少到40px */
+    height: 40px; /* 从45px减少到40px */
+    border-radius: 50%;
+    border: 2px solid #00b894;
+    object-fit: cover;
+}
 
         .message-content {
             background: rgba(45, 52, 54, 0.8);
