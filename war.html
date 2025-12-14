@@ -1300,9 +1300,10 @@
             100% { transform: rotate(360deg); }
         }
 /* 再来一局区域 */
+/* 再来一局区域 */
 .restart-section {
     max-width: 800px;
-    margin: 10px auto 80px; /* 修改这里：增加底部外边距从30px到80px */
+    margin: 20px auto 40px; /* 修改这里：将底部外边距从80px减少到40px，上部从10px增加到20px */
     text-align: center;
     padding: 20px;
     background: rgba(45, 52, 54, 0.5);
@@ -1356,7 +1357,7 @@
     }
 
     .restart-section {
-        margin: 8px auto 70px; /* 修改这里：增加底部外边距从25px到70px */
+        margin: 15px auto 30px; /* 修改这里：移动端也减少底部外边距 */
         padding: 15px;
     }
 }
@@ -1372,7 +1373,7 @@
     }
 
     .restart-section {
-        margin: 6px auto 60px; /* 修改这里：移动端也增加底部外边距 */
+        margin: 10px auto 25px; /* 修改这里：移动端继续减少底部外边距 */
     }
 }
         /* 添加游戏规则配置相关样式 */
@@ -1652,12 +1653,10 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
     </div>
     <!-- 新增：再来一局按钮 -->
-    <div class="restart-section">
         <button class="restart-btn" id="restartGameBtn">
             <i class="fas fa-redo"></i> 再来一局
         </button>
         <p class="restart-hint">重置所有统计和密码本词语</p>
-    </div>
 </div>
 
 <!-- 电报机页面 -->
