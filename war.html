@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,24 +34,26 @@
             padding: 20px;
             overflow: hidden;
         }
+
         /* 词语编辑输入框样式 */
-.word-edit-input {
-    width: 100%;
-    padding: 8px;
-    font-size: 1.8rem;
-    font-weight: 800;
-    text-align: center;
-    background: #2d3436;
-    color: #dfe6e9;
-    border: 2px solid #00b894;
-    border-radius: 8px;
-    outline: none;
-    box-shadow: 0 0 10px rgba(0, 184, 148, 0.3);
-}
-.word-edit-input:focus {
-    border-color: #00b894;
-    box-shadow: 0 0 15px rgba(0, 184, 148, 0.5);
-}
+        .word-edit-input {
+            width: 100%;
+            padding: 8px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            background: #2d3436;
+            color: #dfe6e9;
+            border: 2px solid #00b894;
+            border-radius: 8px;
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 184, 148, 0.3);
+        }
+
+        .word-edit-input:focus {
+            border-color: #00b894;
+            box-shadow: 0 0 15px rgba(0, 184, 148, 0.5);
+        }
 
 
         .background-overlay {
@@ -73,7 +76,7 @@
             font-weight: bold;
             color: #00b894;
             text-shadow: 0 0 10px rgba(0, 184, 148, 0.5),
-                         0 0 20px rgba(0, 184, 148, 0.3);
+                0 0 20px rgba(0, 184, 148, 0.3);
             margin-bottom: 50px;
             text-align: center;
             letter-spacing: 4px;
@@ -83,12 +86,13 @@
         @keyframes glow {
             from {
                 text-shadow: 0 0 10px rgba(0, 184, 148, 0.5),
-                             0 0 20px rgba(0, 184, 148, 0.3);
+                    0 0 20px rgba(0, 184, 148, 0.3);
             }
+
             to {
                 text-shadow: 0 0 15px rgba(0, 184, 148, 0.7),
-                             0 0 25px rgba(0, 184, 148, 0.5),
-                             0 0 35px rgba(0, 184, 148, 0.3);
+                    0 0 25px rgba(0, 184, 148, 0.5),
+                    0 0 35px rgba(0, 184, 148, 0.3);
             }
         }
 
@@ -158,7 +162,8 @@
             padding: 20px;
             overflow-y: auto;
             z-index: 100;
-                padding-bottom: 100px; /* 确保有足够的空间显示全局底部栏 */
+            padding-bottom: 100px;
+            /* 确保有足够的空间显示全局底部栏 */
 
         }
 
@@ -180,21 +185,24 @@
             margin-right: auto;
         }
 
-       .card {
-    background: linear-gradient(135deg, #2d3436 0%, #34495e 100%);
-    border-radius: 15px;
-    padding: 15px; /* 增加内边距 */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    border: 5px solid #00b894;
-    position: relative;
-    height: 79px; /* 增加高度，从80px增加到100px */
-    min-height: 100px; /* 调整最小高度 */
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-}
+        .card {
+            background: linear-gradient(135deg, #2d3436 0%, #34495e 100%);
+            border-radius: 15px;
+            padding: 15px;
+            /* 增加内边距 */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            border: 5px solid #00b894;
+            position: relative;
+            height: 79px;
+            /* 增加高度，从80px增加到100px */
+            min-height: 100px;
+            /* 调整最小高度 */
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
 
         /* 修改卡片编号样式 */
         .card-number {
@@ -222,31 +230,35 @@
             padding: 0;
         }
 
-/* 修改卡片内的词语样式 - 加大并加粗 */
-.card-word {
-    font-size: 2.0rem; /* 从1.4rem增加到2.0rem */
-    font-weight: 800;   /* 增加加粗程度，从bold改为800 */
-    color: #dfe6e9;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* 增强阴影效果 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    word-break: break-word;
-    line-height: 1.3;
-    padding: 0;
-}
-/* 让词语区域可点击 */
-.card-word {
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+        /* 修改卡片内的词语样式 - 加大并加粗 */
+        .card-word {
+            font-size: 2.0rem;
+            /* 从1.4rem增加到2.0rem */
+            font-weight: 800;
+            /* 增加加粗程度，从bold改为800 */
+            color: #dfe6e9;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            /* 增强阴影效果 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            word-break: break-word;
+            line-height: 1.3;
+            padding: 0;
+        }
 
-.card-word:hover {
-    opacity: 0.8;
-    transform: scale(1.05);
-}
+        /* 让词语区域可点击 */
+        .card-word {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card-word:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
 
         /* 切换按钮样式 */
         .change-word-btn {
@@ -280,179 +292,228 @@
             transition: transform 0.1s ease;
         }
 
-/* 修改统计区域布局 - 横向并排 */
-/* 修改现有的 .stats-section-container 样式 */
-.stats-section-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center; /* 改为 center 使整个容器居中 */
-    align-items: flex-start; /* 保持顶部对齐 */
-    gap: 80px; /* 增加间距以更好地区分两个区域 */
-    flex-wrap: nowrap;
-    max-width: 900px; /* 限制最大宽度 */
-    margin: 0 auto; /* 水平居中 */
-    padding: 0 15px; /* 添加内边距防止边缘触碰 */
-}
+        /* 修改统计区域布局 - 横向并排 */
+        /* 修改现有的 .stats-section-container 样式 */
+        .stats-section-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            /* 改为 center 使整个容器居中 */
+            align-items: flex-start;
+            /* 保持顶部对齐 */
+            gap: 80px;
+            /* 增加间距以更好地区分两个区域 */
+            flex-wrap: nowrap;
+            max-width: 900px;
+            /* 限制最大宽度 */
+            margin: 0 auto;
+            /* 水平居中 */
+            padding: 0 15px;
+            /* 添加内边距防止边缘触碰 */
+        }
 
 
 
 
-/* 添加我方失败次数的红色样式 */
-.stat-item.failure-item .stat-title {
-    color: #ffcccc; /* 浅红色文字 */
-}
+        /* 添加我方失败次数的红色样式 */
+        .stat-item.failure-item .stat-title {
+            color: #ffcccc;
+            /* 浅红色文字 */
+        }
 
-.stat-item.failure-item .stat-value {
-    color: #ff6666; /* 亮红色数值 */
-}
+        .stat-item.failure-item .stat-value {
+            color: #ff6666;
+            /* 亮红色数值 */
+        }
 
-.stat-item.failure-item .stat-btn {
-    background: #c0392b; /* 深红色按钮 */
-}
+        .stat-item.failure-item .stat-btn {
+            background: #c0392b;
+            /* 深红色按钮 */
+        }
 
-.stat-item.failure-item .stat-btn:hover {
-    background: #e74c3c; /* 悬停时亮红色 */
-}
-/* 敌方行动中的失败次数特殊样式 - 绿色 */
-.stats-section.enemy-action .stat-item.failure-item .stat-title {
-    color: #00b894 !important; /* 浅绿色文字 */
-}
+        .stat-item.failure-item .stat-btn:hover {
+            background: #e74c3c;
+            /* 悬停时亮红色 */
+        }
 
-.stats-section.enemy-action .stat-item.failure-item .stat-value {
-    color: #00b894 !important; /* 次数数字亮绿色数值 */
-}
+        /* 敌方行动中的失败次数特殊样式 - 绿色 */
+        .stats-section.enemy-action .stat-item.failure-item .stat-title {
+            color: #00b894 !important;
+            /* 浅绿色文字 */
+        }
 
-.stats-section.enemy-action .stat-item.failure-item .stat-btn {
-    background: #00b894 !important; /* 青绿色按钮 */
-}
+        .stats-section.enemy-action .stat-item.failure-item .stat-value {
+            color: #00b894 !important;
+            /* 次数数字亮绿色数值 */
+        }
 
-.stats-section.enemy-action .stat-item.failure-item .stat-btn:hover {
-    background: #00b894 !important; /* 悬停时亮绿色 */
-}
-/* 确保两个统计区域并排且宽度相等 */
-.stats-section {
-    flex: 1; /* 每个区域平均分配宽度 */
-    min-width: 0; /* 防止内容溢出 */
-    background: rgba(45, 52, 54, 0.7);
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid;
-}
+        .stats-section.enemy-action .stat-item.failure-item .stat-btn {
+            background: #00b894 !important;
+            /* 青绿色按钮 */
+        }
 
-/* 让两个统计区域各自居中对齐 */
-.stats-section.our-action {
-    border-color: #00b894;
-    text-align: center; /* 内部内容居中 */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 水平居中 */
-}
-.stats-section.enemy-action {
-    border-color: #e74c3c;
-    text-align: center; /* 内部内容居中 */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 水平居中 */
-}
+        .stats-section.enemy-action .stat-item.failure-item .stat-btn:hover {
+            background: #00b894 !important;
+            /* 悬停时亮绿色 */
+        }
 
-/* 确保统计网格也居中对齐 */
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px;
-    width: 100%; /* 确保宽度100% */
-}
+        /* 确保两个统计区域并排且宽度相等 */
+        .stats-section {
+            flex: 1;
+            /* 每个区域平均分配宽度 */
+            min-width: 0;
+            /* 防止内容溢出 */
+            background: rgba(45, 52, 54, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid;
+        }
 
-/* 确保统计项居中对齐 */
-.stat-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center; /* 水平居中 */
-    text-align: center; /* 文字居中 */
-}
+        /* 让两个统计区域各自居中对齐 */
+        .stats-section.our-action {
+            border-color: #00b894;
+            text-align: center;
+            /* 内部内容居中 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 水平居中 */
+        }
 
-/* 确保统计控制区域居中对齐 */
-.stat-control {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    justify-content: center; /* 水平居中 */
-}
-.stats-section.enemy-action {
-    border-color: #e74c3c;
-    /* 移除之前多余的 margin-left: auto; */
-}
-/* 敌方区域使用我方颜色主题的项 */
-.stats-section.enemy-action .stat-item.our-theme-item .stat-title {
-    color: #00b894 !important; /* 保持原有的文字颜色 */
-}
+        .stats-section.enemy-action {
+            border-color: #e74c3c;
+            text-align: center;
+            /* 内部内容居中 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 水平居中 */
+        }
 
-.stats-section.enemy-action .stat-item.our-theme-item .stat-value {
-    color: #00b894 !important; /* 青色数值，匹配我方主题 */
-}
+        /* 确保统计网格也居中对齐 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            width: 100%;
+            /* 确保宽度100% */
+        }
 
-.stats-section.enemy-action .stat-item.our-theme-item .stat-btn {
-    background: #00b894 !important; /* 蓝色按钮，匹配我方主题 */
-}
+        /* 确保统计项居中对齐 */
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            /* 水平居中 */
+            text-align: center;
+            /* 文字居中 */
+        }
 
-.stats-section.enemy-action .stat-item.our-theme-item .stat-btn:hover {
-    background: #00b894 !important; /* 悬停时浅蓝色 */
-}
+        /* 确保统计控制区域居中对齐 */
+        .stat-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            /* 水平居中 */
+        }
 
-/* 修改我方行动中的破译敌方密码次数为#00b894颜色 */
-.stats-section.our-action .stat-item:not(.failure-item) .stat-title {
-    color: #00b894 !important; /* 文字颜色改为#00b894 */
-}
+        .stats-section.enemy-action {
+            border-color: #e74c3c;
+            /* 移除之前多余的 margin-left: auto; */
+        }
 
-.stats-section.our-action .stat-item:not(.failure-item) .stat-value {
-    color: #00b894 !important; /* 数值颜色改为#00b894 */
-}
+        /* 敌方区域使用我方颜色主题的项 */
+        .stats-section.enemy-action .stat-item.our-theme-item .stat-title {
+            color: #00b894 !important;
+            /* 保持原有的文字颜色 */
+        }
 
-.stats-section.our-action .stat-item:not(.failure-item) .stat-btn {
-    background: #00b894 !important; /* 按钮背景改为#00b894 */
-}
+        .stats-section.enemy-action .stat-item.our-theme-item .stat-value {
+            color: #00b894 !important;
+            /* 青色数值，匹配我方主题 */
+        }
 
-.stats-section.our-action .stat-item:not(.failure-item) .stat-btn:hover {
-    background: #00a884 !important; /* 悬停时稍深一点的#00b894 */
-}
+        .stats-section.enemy-action .stat-item.our-theme-item .stat-btn {
+            background: #00b894 !important;
+            /* 蓝色按钮，匹配我方主题 */
+        }
 
-/* 修改敌方行动中的破译我方密码次数为#e74c3c颜色 */
-.stats-section.enemy-action .stat-item:not(.failure-item) .stat-title {
-    color: #e74c3c !important; /* 文字颜色改为#e74c3c */
-}
+        .stats-section.enemy-action .stat-item.our-theme-item .stat-btn:hover {
+            background: #00b894 !important;
+            /* 悬停时浅蓝色 */
+        }
 
-.stats-section.enemy-action .stat-item:not(.failure-item) .stat-value {
-    color: #e74c3c !important; /* 数值颜色改为#e74c3c */
-}
+        /* 修改我方行动中的破译敌方密码次数为#00b894颜色 */
+        .stats-section.our-action .stat-item:not(.failure-item) .stat-title {
+            color: #00b894 !important;
+            /* 文字颜色改为#00b894 */
+        }
 
-.stats-section.enemy-action .stat-item:not(.failure-item) .stat-btn {
-    background: #e74c3c !important; /* 按钮背景改为#e74c3c */
-}
+        .stats-section.our-action .stat-item:not(.failure-item) .stat-value {
+            color: #00b894 !important;
+            /* 数值颜色改为#00b894 */
+        }
 
-.stats-section.enemy-action .stat-item:not(.failure-item) .stat-btn:hover {
-    background: #c0392b !important; /* 悬停时稍深一点的红色 */
-}
-/* 修改我方行动中的失败项为#e74c3c颜色 */
-.stats-section.our-action .stat-item.failure-item .stat-title {
-    color: #e74c3c !important; /* 文字颜色改为#e74c3c */
-}
+        .stats-section.our-action .stat-item:not(.failure-item) .stat-btn {
+            background: #00b894 !important;
+            /* 按钮背景改为#00b894 */
+        }
 
-.stats-section.our-action .stat-item.failure-item .stat-value {
-    color: #e74c3c !important; /* 数值颜色改为#e74c3c */
-}
+        .stats-section.our-action .stat-item:not(.failure-item) .stat-btn:hover {
+            background: #00a884 !important;
+            /* 悬停时稍深一点的#00b894 */
+        }
 
-.stats-section.our-action .stat-item.failure-item .stat-btn {
-    background: #e74c3c !important; /* 按钮背景改为#e74c3c */
-}
+        /* 修改敌方行动中的破译我方密码次数为#e74c3c颜色 */
+        .stats-section.enemy-action .stat-item:not(.failure-item) .stat-title {
+            color: #e74c3c !important;
+            /* 文字颜色改为#e74c3c */
+        }
 
-.stats-section.our-action .stat-item.failure-item .stat-btn:hover {
-    background: #c0392b !important; /* 悬停时稍深一点的红色 */
-}
-/* 特别处理失败项中的数字颜色 */
-.stats-section.enemy-action .stat-item.failure-item.our-theme-item .stat-value {
-    color: #00b894 !important; /* 绿色数值，匹配失败项主题 */
-}
+        .stats-section.enemy-action .stat-item:not(.failure-item) .stat-value {
+            color: #e74c3c !important;
+            /* 数值颜色改为#e74c3c */
+        }
+
+        .stats-section.enemy-action .stat-item:not(.failure-item) .stat-btn {
+            background: #e74c3c !important;
+            /* 按钮背景改为#e74c3c */
+        }
+
+        .stats-section.enemy-action .stat-item:not(.failure-item) .stat-btn:hover {
+            background: #c0392b !important;
+            /* 悬停时稍深一点的红色 */
+        }
+
+        /* 修改我方行动中的失败项为#e74c3c颜色 */
+        .stats-section.our-action .stat-item.failure-item .stat-title {
+            color: #e74c3c !important;
+            /* 文字颜色改为#e74c3c */
+        }
+
+        .stats-section.our-action .stat-item.failure-item .stat-value {
+            color: #e74c3c !important;
+            /* 数值颜色改为#e74c3c */
+        }
+
+        .stats-section.our-action .stat-item.failure-item .stat-btn {
+            background: #e74c3c !important;
+            /* 按钮背景改为#e74c3c */
+        }
+
+        .stats-section.our-action .stat-item.failure-item .stat-btn:hover {
+            background: #c0392b !important;
+            /* 悬停时稍深一点的红色 */
+        }
+
+        /* 特别处理失败项中的数字颜色 */
+        .stats-section.enemy-action .stat-item.failure-item.our-theme-item .stat-value {
+            color: #00b894 !important;
+            /* 绿色数值，匹配失败项主题 */
+        }
+
         .section-title {
             font-size: 1.2rem;
             font-weight: bold;
@@ -629,14 +690,17 @@
         }
 
         @keyframes pulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 1;
                 text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
             }
+
             50% {
                 opacity: 0.9;
                 text-shadow: 0 0 15px rgba(0, 255, 157, 0.7),
-                             0 0 25px rgba(0, 255, 157, 0.3);
+                    0 0 25px rgba(0, 255, 157, 0.3);
             }
         }
 
@@ -760,7 +824,8 @@
             z-index: 999;
             box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
             border-top: 2px solid rgba(255, 255, 255, 0.2);
-                height: auto; /* 改为auto，避免固定高度 */
+            height: auto;
+            /* 改为auto，避免固定高度 */
 
         }
 
@@ -824,6 +889,7 @@
                 transform: translateY(50px);
                 opacity: 0;
             }
+
             to {
                 transform: translateY(0);
                 opacity: 1;
@@ -854,11 +920,14 @@
         /* 开发者信息 */
         .developer-info {
             display: flex;
-                align-items: center;
-    gap: 12px; /* 从18px减少到12px */
-    margin-bottom: 15px; /* 从25px减少到15px */
-    padding-bottom: 12px; /* 从20px减少到12px */
-    border-bottom: 2px solid #2d3436;
+            align-items: center;
+            gap: 12px;
+            /* 从18px减少到12px */
+            margin-bottom: 15px;
+            /* 从25px减少到15px */
+            padding-bottom: 12px;
+            /* 从20px减少到12px */
+            border-bottom: 2px solid #2d3436;
         }
 
         .developer-avatar img {
@@ -895,35 +964,44 @@
 
         /* 对话区域 */
         .chat-area {
-             margin: 15px 0; /* 从25px 0减少到15px 0 */
-    padding: 15px; /* 从20px减少到15px */
-    background: rgba(45, 52, 54, 0.5);
-    border-radius: 15px;
+            margin: 15px 0;
+            /* 从25px 0减少到15px 0 */
+            padding: 15px;
+            /* 从20px减少到15px */
+            background: rgba(45, 52, 54, 0.5);
+            border-radius: 15px;
         }
 
-     .message-bubble {
-    display: flex;
-    gap: 10px; /* 从15px减少到10px */
-    margin-bottom: 15px; /* 从20px减少到15px */
-    animation: fadeIn 0.5s ease;
-}
+        .message-bubble {
+            display: flex;
+            gap: 10px;
+            /* 从15px减少到10px */
+            margin-bottom: 15px;
+            /* 从20px减少到15px */
+            animation: fadeIn 0.5s ease;
+        }
 
-      /* 调整消息气泡样式 */
-.message-avatar img {
-    width: 40px; /* 从45px减少到40px */
-    height: 40px; /* 从45px减少到40px */
-    border-radius: 50%;
-    border: 2px solid #00b894;
-    object-fit: cover;
-}
+        /* 调整消息气泡样式 */
+        .message-avatar img {
+            width: 40px;
+            /* 从45px减少到40px */
+            height: 40px;
+            /* 从45px减少到40px */
+            border-radius: 50%;
+            border: 2px solid #00b894;
+            object-fit: cover;
+        }
 
-       .message-content {
-    background: rgba(45, 52, 54, 0.8);
-    padding: 12px 16px; /* 从16px 20px减少到12px 16px */
-    border-radius: 15px; /* 从18px减少到15px */
-    max-width: 85%;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); /* 从4px 12px减少到3px 8px */
-}
+        .message-content {
+            background: rgba(45, 52, 54, 0.8);
+            padding: 12px 16px;
+            /* 从16px 20px减少到12px 16px */
+            border-radius: 15px;
+            /* 从18px减少到15px */
+            max-width: 85%;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            /* 从4px 12px减少到3px 8px */
+        }
 
         .message-content:after {
             content: '';
@@ -945,24 +1023,30 @@
         }
 
         /* 调整用户输入区域 */
-.user-input-area {
-    margin-top: 15px; /* 从25px减少到15px */
-}
+        .user-input-area {
+            margin-top: 15px;
+            /* 从25px减少到15px */
+        }
 
-     #userMessage {
-    width: 100%;
-    padding: 12px; /* 从16px减少到12px */
-    background: #0c0c1a;
-    border: 2px solid #00b894;
-    border-radius: 10px; /* 从12px减少到10px */
-    font-size: 14px; /* 从15px减少到14px */
-    resize: vertical;
-    min-height: 100px; /* 从120px减少到100px */
-    margin-bottom: 15px; /* 从20px减少到15px */
-    font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
-    transition: all 0.3s ease;
-    color: #dfe6e9;
-}
+        #userMessage {
+            width: 100%;
+            padding: 12px;
+            /* 从16px减少到12px */
+            background: #0c0c1a;
+            border: 2px solid #00b894;
+            border-radius: 10px;
+            /* 从12px减少到10px */
+            font-size: 14px;
+            /* 从15px减少到14px */
+            resize: vertical;
+            min-height: 100px;
+            /* 从120px减少到100px */
+            margin-bottom: 15px;
+            /* 从20px减少到15px */
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            transition: all 0.3s ease;
+            color: #dfe6e9;
+        }
 
         #userMessage:focus {
             outline: none;
@@ -1172,17 +1256,22 @@
                 margin-bottom: 20px;
             }
 
-             .stats-section-container {
-        flex-direction: row; /* 保持横向排列 */
-        gap: 20px; /* 减少间距 */
-        max-width: 600px; /* 增加最大宽度 */
-    }
+            .stats-section-container {
+                flex-direction: row;
+                /* 保持横向排列 */
+                gap: 20px;
+                /* 减少间距 */
+                max-width: 600px;
+                /* 增加最大宽度 */
+            }
 
             .stats-section {
-        width: 48%; /* 设置固定宽度百分比 */
-        min-width: unset;
-        padding: 15px; /* 减少内边距 */
-    }
+                width: 48%;
+                /* 设置固定宽度百分比 */
+                min-width: unset;
+                padding: 15px;
+                /* 减少内边距 */
+            }
 
             .stats-section.our-action {
                 margin-right: 0;
@@ -1242,20 +1331,24 @@
                 letter-spacing: 6px;
             }
 
-             .stats-section-container {
-        max-width: 400px; /* 调整最大宽度 */
-        gap: 8px; /* 进一步减少间距 */
-    }
+            .stats-section-container {
+                max-width: 400px;
+                /* 调整最大宽度 */
+                gap: 8px;
+                /* 进一步减少间距 */
+            }
 
 
             .stats-section {
-        padding: 12px; /* 进一步减少内边距 */
-    }
+                padding: 12px;
+                /* 进一步减少内边距 */
+            }
 
             .section-title {
-        font-size: 0.9rem; /* 减小标题字体 */
-        margin-bottom: 12px;
-    }
+                font-size: 0.9rem;
+                /* 减小标题字体 */
+                margin-bottom: 12px;
+            }
 
 
             .stat-value {
@@ -1301,319 +1394,735 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
-/* 修改现有的 .restart-section 样式 */
-.restart-section {
-    text-align: center;
-    padding: 20px;
-    background: rgba(45, 52, 54, 0.5);
-    border-radius: 12px;
-    border: 1px dashed #00b894;
-    margin-top: 70; /* 移除上边距 */
-}
 
-.restart-btn {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-    border: none;
-    border-radius: 15px;
-    padding: 18px 40px;
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-    margin: 0 auto;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-    touch-action: manipulation;
-}
+        /* 修改现有的 .restart-section 样式 */
+        .restart-section {
+            text-align: center;
+            padding: 20px;
+            background: rgba(45, 52, 54, 0.5);
+            border-radius: 12px;
+            border: 1px dashed #00b894;
+            margin-top: 70;
+            /* 移除上边距 */
+        }
 
-.restart-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
-    background: linear-gradient(135deg, #ff6b6b 0%, #e74c3c 100%);
-}
+        .restart-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 18px 40px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            margin: 0 auto;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            touch-action: manipulation;
+        }
 
-.restart-btn:active {
-    transform: translateY(-1px);
-    transition: transform 0.1s ease;
-}
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+            background: linear-gradient(135deg, #ff6b6b 0%, #e74c3c 100%);
+        }
 
-.restart-hint {
-    font-size: 0.9rem;
-    color: #b2bec3;
-    margin-top: 12px;
-    font-style: italic;
-}
+        .restart-btn:active {
+            transform: translateY(-1px);
+            transition: transform 0.1s ease;
+        }
 
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .restart-btn {
-        padding: 16px 30px;
-        font-size: 1.2rem;
-    }
+        .restart-hint {
+            font-size: 0.9rem;
+            color: #b2bec3;
+            margin-top: 12px;
+            font-style: italic;
+        }
 
-    .stats-and-restart-container {
-        max-width: 600px;
-        margin: 20px auto 20px;
-    }
-    .restart-section {
-         margin-top: 20px; /* 移动端也相应调整 */
-        padding: 15px;
-    }
-}
-/* 新增：统计和再来一局容器 */
-.stats-and-restart-container {
-    max-width: 800px;
-    margin: 30px auto 30px; /* 只保留上下边距 */
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* 控制统计区域和再来一局区域之间的间距 */
-}
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .restart-btn {
+                padding: 16px 30px;
+                font-size: 1.2rem;
+            }
 
-@media (max-width: 480px) {
-    .restart-btn {
-        padding: 14px 25px;
-        font-size: 1.1rem;
-        min-height: 60px;
-    }
+            .stats-and-restart-container {
+                max-width: 600px;
+                margin: 20px auto 20px;
+            }
 
-    .restart-hint {
-        font-size: 0.85rem;
-    }
-}
+            .restart-section {
+                margin-top: 20px;
+                /* 移动端也相应调整 */
+                padding: 15px;
+            }
+        }
+
+        /* 新增：统计和再来一局容器 */
+        .stats-and-restart-container {
+            max-width: 800px;
+            margin: 30px auto 30px;
+            /* 只保留上下边距 */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            /* 控制统计区域和再来一局区域之间的间距 */
+        }
+
+        @media (max-width: 480px) {
+            .restart-btn {
+                padding: 14px 25px;
+                font-size: 1.1rem;
+                min-height: 60px;
+            }
+
+            .restart-hint {
+                font-size: 0.85rem;
+            }
+        }
+
         /* 添加游戏规则配置相关样式 */
-.config-container {
-    max-width: 500px;
-    margin: 50px auto 0;
-}
+        .config-container {
+            max-width: 500px;
+            margin: 50px auto 0;
+        }
 
-.config-section {
-    background: rgba(45, 52, 54, 0.7);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 25px;
-}
+        .config-section {
+            background: rgba(45, 52, 54, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
 
-.config-item {
-    margin-bottom: 20px;
-}
+        .config-item {
+            margin-bottom: 20px;
+        }
 
-.config-item label {
-    display: block;
-    color: #dfe6e9;
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-}
+        .config-item label {
+            display: block;
+            color: #dfe6e9;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
 
-/* 滑块样式 */
-input[type="range"] {
-    width: 100%;
-    height: 10px;
-    -webkit-appearance: none;
-    appearance: none;
-    background: #2d3436;
-    border-radius: 5px;
-    outline: none;
-}
+        /* 滑块样式 */
+        input[type="range"] {
+            width: 100%;
+            height: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #2d3436;
+            border-radius: 5px;
+            outline: none;
+        }
 
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid white;
-}
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+        }
 
-#crackEnemyRange::-webkit-slider-thumb {
-    background: #00b894;
-}
+        #crackEnemyRange::-webkit-slider-thumb {
+            background: #00b894;
+        }
 
-#enemyTransmitFailRange::-webkit-slider-thumb {
-    background: #00b894;
-}
+        #enemyTransmitFailRange::-webkit-slider-thumb {
+            background: #00b894;
+        }
 
-#enemyCrackRange::-webkit-slider-thumb {
-    background: #e74c3c;
-}
+        #enemyCrackRange::-webkit-slider-thumb {
+            background: #e74c3c;
+        }
 
-#transmitFailRange::-webkit-slider-thumb {
-    background: #e74c3c;
-}
+        #transmitFailRange::-webkit-slider-thumb {
+            background: #e74c3c;
+        }
 
-/* 结算画面按钮悬停效果 */
-.result-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
+        /* 结算画面按钮悬停效果 */
+        .result-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
 
-.result-btn:active {
-    transform: translateY(-1px);
-}
+        .result-btn:active {
+            transform: translateY(-1px);
+        }
 
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .result-content {
-        padding: 30px 20px;
-    }
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .result-content {
+                padding: 30px 20px;
+            }
 
-    .result-icon {
-        font-size: 6rem !important;
-    }
+            .result-icon {
+                font-size: 6rem !important;
+            }
 
-    .result-title {
-        font-size: 2.2rem !important;
-    }
+            .result-title {
+                font-size: 2.2rem !important;
+            }
 
-    .result-buttons {
-        flex-direction: column;
-        gap: 15px !important;
-    }
-}
+            .result-buttons {
+                flex-direction: column;
+                gap: 15px !important;
+            }
+        }
+
+        /* ==================== 游戏向导样式 ==================== */
+        /* 向导悬浮按钮 */
+        .guide-float-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00b894 0%, #00a8a8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 998;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .guide-float-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.6);
+        }
+
+        .guide-float-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 向导弹窗 */
+        .guide-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1002;
+            overflow-y: auto;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .guide-content {
+            background: #1a1a2e;
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 20px;
+            border: 3px solid #00b894;
+            box-shadow: 0 0 40px rgba(0, 184, 148, 0.3);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* 向导头部 */
+        .guide-header {
+            background: linear-gradient(135deg, #006266 0%, #00a8a8 100%);
+            padding: 25px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .guide-title {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .guide-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        /* 关闭按钮 */
+        .guide-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .guide-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        /* 向导主体 */
+        .guide-body {
+            padding: 30px;
+        }
+
+        /* 步骤容器 */
+        .step-container {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(45, 52, 54, 0.3);
+            border-radius: 15px;
+            border-left: 5px solid;
+            transition: all 0.3s ease;
+        }
+
+        .step-container:hover {
+            background: rgba(45, 52, 54, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .step-container.step-prepare {
+            border-left-color: #00b894;
+        }
+
+        .step-container.step-equipment {
+            border-left-color: #0984e3;
+        }
+
+        .step-container.step-process {
+            border-left-color: #e74c3c;
+        }
+
+        .step-container.step-victory {
+            border-left-color: #f39c12;
+        }
+
+        .step-container.step-tips {
+            border-left-color: #9b59b6;
+        }
+
+        /* 步骤标题 */
+        .step-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: #dfe6e9;
+            font-size: 1.5rem;
+        }
+
+        .step-title .step-number {
+            width: 40px;
+            height: 40px;
+            background: #00b894;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* 步骤内容 */
+        .step-content {
+            color: #b2bec3;
+            line-height: 1.7;
+        }
+
+        .step-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .step-content li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 10px;
+        }
+
+        .step-content li:before {
+            content: "•";
+            color: #00b894;
+            position: absolute;
+            left: -15px;
+        }
+
+        /* 设备示意图 */
+        .equipment-diagram {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px dashed #00b894;
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .team-section {
+            background: rgba(0, 184, 148, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .team-title {
+            color: #00b894;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .device-item {
+            background: #2d3436;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            border: 2px solid;
+        }
+
+        .device-item.password-book {
+            border-color: #00b894;
+        }
+
+        .device-item.telegraph {
+            border-color: #0984e3;
+        }
+
+        .device-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .device-name {
+            font-weight: bold;
+            color: #dfe6e9;
+            margin-bottom: 5px;
+        }
+
+        .device-desc {
+            font-size: 0.9rem;
+            color: #b2bec3;
+        }
+
+        /* 流程图 */
+        .process-flow {
+            position: relative;
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .flow-step {
+            background: #2d3436;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #00b894;
+            position: relative;
+        }
+
+        .flow-step.enemy {
+            border-left-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .flow-step.us {
+            border-left-color: #00b894;
+            background: rgba(0, 184, 148, 0.1);
+        }
+
+        .flow-arrow {
+            text-align: center;
+            color: #00b894;
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        /* 快速开始按钮 */
+        .quick-start-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #006266 0%, #00a8a8 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .quick-start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 168, 168, 0.4);
+        }
+
+        .quick-start-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .guide-content {
+                margin: 10px auto;
+                max-height: 95vh;
+            }
+
+            .guide-body {
+                padding: 20px 15px;
+            }
+
+            .step-container {
+                padding: 20px 15px;
+            }
+
+            .equipment-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .guide-float-btn {
+                bottom: 80px;
+                right: 15px;
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .guide-title {
+                font-size: 1.8rem;
+            }
+
+            .step-title {
+                font-size: 1.3rem;
+            }
+
+            .guide-float-btn {
+                bottom: 70px;
+                right: 10px;
+                width: 50px;
+                height: 50px;
+                font-size: 22px;
+            }
+        }
+
+        /* 向导内容滚动条 */
+        .guide-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .guide-content::-webkit-scrollbar-track {
+            background: #2d3436;
+            border-radius: 4px;
+        }
+
+        .guide-content::-webkit-scrollbar-thumb {
+            background: #00b894;
+            border-radius: 4px;
+        }
+
+        .guide-content::-webkit-scrollbar-thumb:hover {
+            background: #00a884;
+        }
     </style>
 </head>
+
 <body>
-<!-- 首页 -->
-<div id="homePage">
-    <div class="background-overlay"></div>
-    <h1 class="title">窃听风云</h1>
-    <p class="subtitle">机密通信 · 密码破译 · 电报传递</p>
-    <div class="menu-buttons">
-        <button class="menu-btn" id="codebookBtn">
-            <i class="fas fa-book"></i> 密码本
+    <!-- 首页 -->
+    <div id="homePage">
+        <div class="background-overlay"></div>
+        <h1 class="title">窃听风云</h1>
+        <p class="subtitle">机密通信 · 密码破译 · 电报传递</p>
+        <div class="menu-buttons">
+            <button class="menu-btn" id="codebookBtn">
+                <i class="fas fa-book"></i> 密码本
+            </button>
+            <button class="menu-btn" id="telegraphBtn">
+                <i class="fas fa-broadcast-tower"></i> 电报机
+            </button>
+        </div>
+    </div>
+    <!-- 在密码本页面之前添加游戏配置页面 -->
+    <div id="configPage"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a2e; padding: 20px; overflow-y: auto; z-index: 100;">
+        <button class="back-btn" id="backFromConfig">
+            <i class="fas fa-arrow-left"></i>
         </button>
-        <button class="menu-btn" id="telegraphBtn">
-            <i class="fas fa-broadcast-tower"></i> 电报机
+        <h2 class="page-title">本次行动规则</h2>
+
+        <div class="config-container" style="max-width: 500px; margin: 0 auto;">
+            <!-- 我方胜利条件 -->
+            <div class="config-section"
+                style="background: rgba(0, 184, 148, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 25px; border: 2px solid #00b894;">
+                <h3 style="color: #00b894; margin-bottom: 20px; text-align: center;">
+                    <i class="fas fa-flag-checkered"></i> 胜利条件
+                </h3>
+
+                <div class="config-item" style="margin-bottom: 15px;">
+                    <label style="display: block; color: #dfe6e9; margin-bottom: 8px; font-size: 1rem;">
+                        <i class="fas fa-code"></i> 破译敌方密码 <span id="crackEnemyValue">3</span> 次
+                    </label>
+                    <input type="range" id="crackEnemyRange" min="1" max="10" value="3"
+                        style="width: 100%; height: 8px; -webkit-appearance: none; background: #2d3436; border-radius: 4px; outline: none;">
+                </div>
+
+                <div class="config-item">
+                    <label style="display: block; color: #dfe6e9; margin-bottom: 8px; font-size: 1rem;">
+                        <i class="fas fa-times-circle"></i> 敌方传递失败 <span id="enemyTransmitFailValue">2</span> 次
+                    </label>
+                    <input type="range" id="enemyTransmitFailRange" min="1" max="10" value="2"
+                        style="width: 100%; height: 8px; -webkit-appearance: none; background: #2d3436; border-radius: 4px; outline: none;">
+                </div>
+            </div>
+
+            <!-- 我方失败条件 -->
+            <div class="config-section"
+                style="background: rgba(231, 76, 60, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 30px; border: 2px solid #e74c3c;">
+                <h3 style="color: #e74c3c; margin-bottom: 20px; text-align: center;">
+                    <i class="fas fa-skull-crossbones"></i> 失败条件
+                </h3>
+
+                <div class="config-item" style="margin-bottom: 15px;">
+                    <label style="display: block; color: #dfe6e9; margin-bottom: 8px; font-size: 1rem;">
+                        <i class="fas fa-code-branch"></i> 敌方破译密码 <span id="enemyCrackValue">3</span> 次
+                    </label>
+                    <input type="range" id="enemyCrackRange" min="1" max="10" value="3"
+                        style="width: 100%; height: 8px; -webkit-appearance: none; background: #2d3436; border-radius: 4px; outline: none;">
+                </div>
+
+                <div class="config-item">
+                    <label style="display: block; color: #dfe6e9; margin-bottom: 8px; font-size: 1rem;">
+                        <i class="fas fa-times-circle"></i> 我方传递失败 <span id="transmitFailValue">2</span> 次
+                    </label>
+                    <input type="range" id="transmitFailRange" min="1" max="10" value="2"
+                        style="width: 100%; height: 8px; -webkit-appearance: none; background: #2d3436; border-radius: 4px; outline: none;">
+                </div>
+            </div>
+
+            <button id="startGameBtn"
+                style="width: 100%; padding: 20px; background: linear-gradient(135deg, #006266 0%, #00a8a8 100%); border: none; border-radius: 15px; color: white; font-size: 1.4rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <i class="fas fa-play"></i> 开始行动
+            </button>
+        </div>
+    </div>
+
+    <!-- 在确认弹窗之后添加胜利/失败结算画面 -->
+    <div class="result-modal" id="victoryModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 3000; align-items: center; justify-content: center; animation: fadeIn 0.5s ease;">
+        <div class="result-content"
+            style="background: #1a1a2e; border-radius: 25px; padding: 40px; max-width: 500px; width: 90%; text-align: center; border: 5px solid #00b894; box-shadow: 0 0 50px rgba(0, 184, 148, 0.5);">
+            <div class="result-icon" style="font-size: 8rem; color: #00b894; margin-bottom: 20px;">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2 class="result-title"
+                style="color: #00b894; font-size: 3rem; margin-bottom: 20px; text-shadow: 0 0 15px rgba(0, 184, 148, 0.5);">
+                任务成功！</h2>
+            <p class="result-message" id="victoryMessage"
+                style="color: #dfe6e9; font-size: 1.2rem; margin-bottom: 30px; line-height: 1.6;">
+                成功破译敌方密码，为我方赢得宝贵情报！
+            </p>
+            <div class="result-stats"
+                style="background: rgba(0, 184, 148, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 30px;">
+                <p style="color: #00b894; font-size: 1.1rem;">达成胜利条件：</p>
+                <p id="victoryConditions" style="color: #dfe6e9; font-size: 1rem; margin-top: 10px;"></p>
+            </div>
+            <div class="result-buttons" style="display: flex; gap: 20px;">
+                <button class="result-btn restart" id="victoryRestartBtn"
+                    style="flex: 1; padding: 18px; background: #00b894; border: none; border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-redo"></i> 再来一局
+                </button>
+                <button class="result-btn home" id="victoryHomeBtn"
+                    style="flex: 1; padding: 18px; background: #636e72; border: none; border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-home"></i> 返回主页
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="result-modal" id="defeatModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 3000; align-items: center; justify-content: center; animation: fadeIn 0.5s ease;">
+        <div class="result-content"
+            style="background: #1a1a2e; border-radius: 25px; padding: 40px; max-width: 500px; width: 90%; text-align: center; border: 5px solid #e74c3c; box-shadow: 0 0 50px rgba(231, 76, 60, 0.5);">
+            <div class="result-icon" style="font-size: 8rem; color: #e74c3c; margin-bottom: 20px;">
+                <i class="fas fa-skull"></i>
+            </div>
+            <h2 class="result-title"
+                style="color: #e74c3c; font-size: 3rem; margin-bottom: 20px; text-shadow: 0 0 15px rgba(231, 76, 60, 0.5);">
+                任务失败</h2>
+            <p class="result-message" id="defeatMessage"
+                style="color: #dfe6e9; font-size: 1.2rem; margin-bottom: 30px; line-height: 1.6;">
+                密码被敌方破译，行动暴露！
+            </p>
+            <div class="result-stats"
+                style="background: rgba(231, 76, 60, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 30px;">
+                <p style="color: #e74c3c; font-size: 1.1rem;">触发失败条件：</p>
+                <p id="defeatConditions" style="color: #dfe6e9; font-size: 1rem; margin-top: 10px;"></p>
+            </div>
+            <div class="result-buttons" style="display: flex; gap: 20px;">
+                <button class="result-btn restart" id="defeatRestartBtn"
+                    style="flex: 1; padding: 18px; background: #e74c3c; border: none; border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-redo"></i> 重试任务
+                </button>
+                <button class="result-btn home" id="defeatHomeBtn"
+                    style="flex: 1; padding: 18px; background: #636e72; border: none; border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-home"></i> 返回主页
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- 密码本页面 -->
+    <div id="codebookPage">
+        <button class="back-btn" id="backFromCodebook">
+            <i class="fas fa-arrow-left"></i>
         </button>
-    </div>
-</div>
-<!-- 在密码本页面之前添加游戏配置页面 -->
-<div id="configPage" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a2e; padding: 20px; overflow-y: auto; z-index: 100;">
-    <button class="back-btn" id="backFromConfig">
-        <i class="fas fa-arrow-left"></i>
-    </button>
-    <h2 class="page-title">本次行动规则</h2>
+        <h2 class="page-title">密码本</h2>
 
-    <div class="config-container" style="max-width: 500px; margin: 0 auto;">
-        <!-- 我方胜利条件 -->
-        <div class="config-section" style="background: rgba(0, 184, 148, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 25px; border: 2px solid #00b894;">
-            <h3 style="color: #00b894; margin-bottom: 20px; text-align: center;">
-                <i class="fas fa-flag-checkered"></i> 胜利条件
-            </h3>
-
-            <div class="config-item" style="margin-bottom: 15px;">
-                <label style="display: block; color: #dfe6e9; margin-bottom: 8px; font-size: 1rem;">
-                    <i class="fas fa-code"></i> 破译敌方密码 <span id="crackEnemyValue">3</span> 次
-                </label>
-                <input type="range" id="crackEnemyRange" min="1" max="10" value="3"
-                       style="width: 100%; height: 8px; -webkit-appearance: none; background: #2d3436; border-radius: 4px; outline: none;">
-            </div>
-
-            <div class="config-item">
-                <label style="display: block; color: #dfe6e9; margin-bottom: 8px; font-size: 1rem;">
-                    <i class="fas fa-times-circle"></i> 敌方传递失败 <span id="enemyTransmitFailValue">2</span> 次
-                </label>
-                <input type="range" id="enemyTransmitFailRange" min="1" max="10" value="2"
-                       style="width: 100%; height: 8px; -webkit-appearance: none; background: #2d3436; border-radius: 4px; outline: none;">
-            </div>
+        <div class="cards-container" id="cardsContainer">
+            <!-- 卡片将通过JS动态生成 -->
         </div>
-
-        <!-- 我方失败条件 -->
-        <div class="config-section" style="background: rgba(231, 76, 60, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 30px; border: 2px solid #e74c3c;">
-            <h3 style="color: #e74c3c; margin-bottom: 20px; text-align: center;">
-                <i class="fas fa-skull-crossbones"></i> 失败条件
-            </h3>
-
-            <div class="config-item" style="margin-bottom: 15px;">
-                <label style="display: block; color: #dfe6e9; margin-bottom: 8px; font-size: 1rem;">
-                    <i class="fas fa-code-branch"></i> 敌方破译密码 <span id="enemyCrackValue">3</span> 次
-                </label>
-                <input type="range" id="enemyCrackRange" min="1" max="10" value="3"
-                       style="width: 100%; height: 8px; -webkit-appearance: none; background: #2d3436; border-radius: 4px; outline: none;">
-            </div>
-
-            <div class="config-item">
-                <label style="display: block; color: #dfe6e9; margin-bottom: 8px; font-size: 1rem;">
-                    <i class="fas fa-times-circle"></i> 我方传递失败 <span id="transmitFailValue">2</span> 次
-                </label>
-                <input type="range" id="transmitFailRange" min="1" max="10" value="2"
-                       style="width: 100%; height: 8px; -webkit-appearance: none; background: #2d3436; border-radius: 4px; outline: none;">
-            </div>
-        </div>
-
-        <button id="startGameBtn" style="width: 100%; padding: 20px; background: linear-gradient(135deg, #006266 0%, #00a8a8 100%); border: none; border-radius: 15px; color: white; font-size: 1.4rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 15px;">
-            <i class="fas fa-play"></i> 开始行动
-        </button>
-    </div>
-</div>
-
-<!-- 在确认弹窗之后添加胜利/失败结算画面 -->
-<div class="result-modal" id="victoryModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 3000; align-items: center; justify-content: center; animation: fadeIn 0.5s ease;">
-    <div class="result-content" style="background: #1a1a2e; border-radius: 25px; padding: 40px; max-width: 500px; width: 90%; text-align: center; border: 5px solid #00b894; box-shadow: 0 0 50px rgba(0, 184, 148, 0.5);">
-        <div class="result-icon" style="font-size: 8rem; color: #00b894; margin-bottom: 20px;">
-            <i class="fas fa-trophy"></i>
-        </div>
-        <h2 class="result-title" style="color: #00b894; font-size: 3rem; margin-bottom: 20px; text-shadow: 0 0 15px rgba(0, 184, 148, 0.5);">任务成功！</h2>
-        <p class="result-message" id="victoryMessage" style="color: #dfe6e9; font-size: 1.2rem; margin-bottom: 30px; line-height: 1.6;">
-            成功破译敌方密码，为我方赢得宝贵情报！
-        </p>
-        <div class="result-stats" style="background: rgba(0, 184, 148, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 30px;">
-            <p style="color: #00b894; font-size: 1.1rem;">达成胜利条件：</p>
-            <p id="victoryConditions" style="color: #dfe6e9; font-size: 1rem; margin-top: 10px;"></p>
-        </div>
-        <div class="result-buttons" style="display: flex; gap: 20px;">
-            <button class="result-btn restart" id="victoryRestartBtn" style="flex: 1; padding: 18px; background: #00b894; border: none; border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
-                <i class="fas fa-redo"></i> 再来一局
-            </button>
-            <button class="result-btn home" id="victoryHomeBtn" style="flex: 1; padding: 18px; background: #636e72; border: none; border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
-                <i class="fas fa-home"></i> 返回主页
-            </button>
-        </div>
-    </div>
-</div>
-
-<div class="result-modal" id="defeatModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 3000; align-items: center; justify-content: center; animation: fadeIn 0.5s ease;">
-    <div class="result-content" style="background: #1a1a2e; border-radius: 25px; padding: 40px; max-width: 500px; width: 90%; text-align: center; border: 5px solid #e74c3c; box-shadow: 0 0 50px rgba(231, 76, 60, 0.5);">
-        <div class="result-icon" style="font-size: 8rem; color: #e74c3c; margin-bottom: 20px;">
-            <i class="fas fa-skull"></i>
-        </div>
-        <h2 class="result-title" style="color: #e74c3c; font-size: 3rem; margin-bottom: 20px; text-shadow: 0 0 15px rgba(231, 76, 60, 0.5);">任务失败</h2>
-        <p class="result-message" id="defeatMessage" style="color: #dfe6e9; font-size: 1.2rem; margin-bottom: 30px; line-height: 1.6;">
-            密码被敌方破译，行动暴露！
-        </p>
-        <div class="result-stats" style="background: rgba(231, 76, 60, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 30px;">
-            <p style="color: #e74c3c; font-size: 1.1rem;">触发失败条件：</p>
-            <p id="defeatConditions" style="color: #dfe6e9; font-size: 1rem; margin-top: 10px;"></p>
-        </div>
-        <div class="result-buttons" style="display: flex; gap: 20px;">
-            <button class="result-btn restart" id="defeatRestartBtn" style="flex: 1; padding: 18px; background: #e74c3c; border: none; border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
-                <i class="fas fa-redo"></i> 重试任务
-            </button>
-            <button class="result-btn home" id="defeatHomeBtn" style="flex: 1; padding: 18px; background: #636e72; border: none; border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
-                <i class="fas fa-home"></i> 返回主页
-            </button>
-        </div>
-    </div>
-</div>
-<!-- 密码本页面 -->
-<div id="codebookPage">
-    <button class="back-btn" id="backFromCodebook">
-        <i class="fas fa-arrow-left"></i>
-    </button>
-    <h2 class="page-title">密码本</h2>
-
-    <div class="cards-container" id="cardsContainer">
-        <!-- 卡片将通过JS动态生成 -->
-    </div>
 
         <!-- 修改后的统计区域 -->
         <div class="stats-section-container">
@@ -1665,363 +2174,593 @@ input[type="range"]::-webkit-slider-thumb {
                 </div>
             </div>
         </div>
-    <!-- 新增：再来一局按钮 -->
-    <div class="restart-section">
-        <button class="restart-btn" id="restartGameBtn">
-            <i class="fas fa-redo"></i> 再来一局
-        </button>
-        <p class="restart-hint">重置所有统计和密码本词语</p>
-    </div>
-</div>
-
-<!-- 电报机页面 -->
-<div id="telegraphPage">
-    <button class="back-btn" id="backFromTelegraph">
-        <i class="fas fa-arrow-left"></i>
-    </button>
-    <div class="telegraph-container">
-        <div class="telegraph-screen">
-            <div class="telegraph-number" id="telegraphCode">1.3.2</div>
-        </div>
-        <div class="telegraph-controls">
-            <button class="telegraph-btn" id="changeCodeBtn">
-                <i class="fas fa-random"></i>
+        <!-- 新增：再来一局按钮 -->
+        <div class="restart-section">
+            <button class="restart-btn" id="restartGameBtn">
+                <i class="fas fa-redo"></i> 再来一局
             </button>
+            <p class="restart-hint">重置所有统计和密码本词语</p>
         </div>
     </div>
-</div>
 
-<!-- 确认弹窗 -->
-<div class="confirm-modal" id="confirmModal">
-    <div class="confirm-content">
-        <p class="confirm-text" id="confirmText">确定要更换电报码吗？</p>
-        <div class="confirm-buttons">
-            <button class="confirm-btn confirm-yes" id="confirmYes">确定</button>
-            <button class="confirm-btn confirm-no" id="confirmNo">取消</button>
-        </div>
-    </div>
-</div>
-
-<!-- ==================== 新增：全局底部反馈入口 ==================== -->
-<div id="globalFooter" class="global-footer">
-    <div class="footer-content">
-        <a href="#" id="feedbackTrigger" class="feedback-link">
-            <i class="fas fa-comment-alt"></i> 支持开发者 / 反馈BUG
-        </a>
-    </div>
-</div>
-
-<!-- ==================== 新增：反馈弹窗 ==================== -->
-<div id="feedbackModal" class="feedback-modal">
-    <div class="modal-content">
-        <!-- 关闭按钮 -->
-        <span class="close-modal">&times;</span>
-
-        <!-- 开发者信息 -->
-        <div class="developer-info">
-            <div class="developer-message" style="margin-left: 15px; padding-left: 0;">
-                <h1 style="color: #00b894; font-size: 2rem; margin-bottom: 10px;">窃听风云</h1>
-                <p style="color: #b2bec3; font-size: 14px;">一款基于密码破译的间谍主题游戏</p>
+    <!-- 电报机页面 -->
+    <div id="telegraphPage">
+        <button class="back-btn" id="backFromTelegraph">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="telegraph-container">
+            <div class="telegraph-screen">
+                <div class="telegraph-number" id="telegraphCode">1.3.2</div>
             </div>
-        </div>
-
-        <!-- 对话区域 -->
-        <div class="chat-area">
-            <div class="message-bubble">
-                <div class="message-avatar">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=spyagent" alt="开发者头像">
-                </div>
-                <div class="message-content">
-                    <p>您好，有什么可以帮到您呢？</p>
-                </div>
-            </div>
-
-            <!-- 玩家输入区域 -->
-            <div class="user-input-area">
-                <textarea id="userMessage"
-                          placeholder="请输入您的问题/建议（如：我发现一个BUG）"
-                          rows="4"></textarea>
-                <button id="sendEmailBtn" class="btn btn-primary"
-                        style="float: right; width: auto; padding: 16px 30px;">
-                    <i class="fas fa-paper-plane"></i> 发送
+            <div class="telegraph-controls">
+                <button class="telegraph-btn" id="changeCodeBtn">
+                    <i class="fas fa-random"></i>
                 </button>
-                <div style="clear: both;"></div> <!-- 清除浮动 -->
             </div>
         </div>
-        <!-- 点赞支持区域 -->
-        <div class="donation-section">
-            <h4><i class="fas fa-hand-holding-usd"></i> 支持开发者</h4>
+    </div>
 
+    <!-- 确认弹窗 -->
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-content">
+            <p class="confirm-text" id="confirmText">确定要更换电报码吗？</p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn confirm-yes" id="confirmYes">确定</button>
+                <button class="confirm-btn confirm-no" id="confirmNo">取消</button>
+            </div>
         </div>
-        <div class="qrcode-container">
-            <div
-                    style="width: 100%; background: #f8f9fa; padding: 8px; border-radius: 6px; box-sizing: border-box;">
-                <div style="display: flex; flex-direction: column; width: 100%;">
-                    <!-- 第一行 -->
-                    <div style="display: flex; width: 100%; height: 120px; margin-bottom: 0;">
-                        <!-- 图片1 -->
-                        <div style="flex: 1; overflow: hidden; margin-right: 0;">
-                            <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1397.JPG"
-                                 style="width: 100%; height: 120px; object-fit: cover; display: block;" alt="游戏截图1">
-                        </div>
-                        <!-- 图片2 -->
-                        <div style="flex: 1; overflow: hidden;">
-                            <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1398.JPG"
-                                 style="width: 100%; height: 120px; object-fit: cover; display: block;" alt="游戏截图2">
-                        </div>
-                    </div>
+    </div>
 
-                    <!-- 第二行 -->
-                    <div style="display: flex; width: 100%; height: 120px;">
-                        <!-- 图片3 -->
-                        <div style="flex: 1; overflow: hidden; margin-right: 0;">
-                            <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1399.JPG"
-                                 style="width: 100%; height: 120px; object-fit: cover; display: block;" alt="游戏截图3">
+    <!-- ==================== 新增：全局底部反馈入口 ==================== -->
+    <div id="globalFooter" class="global-footer">
+        <div class="footer-content">
+            <a href="#" id="feedbackTrigger" class="feedback-link">
+                <i class="fas fa-comment-alt"></i> 支持开发者 / 反馈BUG
+            </a>
+        </div>
+    </div>
+
+    <!-- ==================== 新增：反馈弹窗 ==================== -->
+    <div id="feedbackModal" class="feedback-modal">
+        <div class="modal-content">
+            <!-- 关闭按钮 -->
+            <span class="close-modal">&times;</span>
+
+            <!-- 开发者信息 -->
+            <div class="developer-info">
+                <div class="developer-message" style="margin-left: 15px; padding-left: 0;">
+                    <h1 style="color: #00b894; font-size: 2rem; margin-bottom: 10px;">窃听风云</h1>
+                    <p style="color: #b2bec3; font-size: 14px;">一款基于密码破译的间谍主题游戏</p>
+                </div>
+            </div>
+
+            <!-- 对话区域 -->
+            <div class="chat-area">
+                <div class="message-bubble">
+                    <div class="message-avatar">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=spyagent" alt="开发者头像">
+                    </div>
+                    <div class="message-content">
+                        <p>您好，有什么可以帮到您呢？</p>
+                    </div>
+                </div>
+
+                <!-- 玩家输入区域 -->
+                <div class="user-input-area">
+                    <textarea id="userMessage" placeholder="请输入您的问题/建议（如：我发现一个BUG）" rows="4"></textarea>
+                    <button id="sendEmailBtn" class="btn btn-primary"
+                        style="float: right; width: auto; padding: 16px 30px;">
+                        <i class="fas fa-paper-plane"></i> 发送
+                    </button>
+                    <div style="clear: both;"></div> <!-- 清除浮动 -->
+                </div>
+            </div>
+            <!-- 点赞支持区域 -->
+            <div class="donation-section">
+                <h4><i class="fas fa-hand-holding-usd"></i> 支持开发者</h4>
+
+            </div>
+            <div class="qrcode-container">
+                <div
+                    style="width: 100%; background: #f8f9fa; padding: 8px; border-radius: 6px; box-sizing: border-box;">
+                    <div style="display: flex; flex-direction: column; width: 100%;">
+                        <!-- 第一行 -->
+                        <div style="display: flex; width: 100%; height: 120px; margin-bottom: 0;">
+                            <!-- 图片1 -->
+                            <div style="flex: 1; overflow: hidden; margin-right: 0;">
+                                <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1397.JPG"
+                                    style="width: 100%; height: 120px; object-fit: cover; display: block;" alt="游戏截图1">
+                            </div>
+                            <!-- 图片2 -->
+                            <div style="flex: 1; overflow: hidden;">
+                                <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1398.JPG"
+                                    style="width: 100%; height: 120px; object-fit: cover; display: block;" alt="游戏截图2">
+                            </div>
                         </div>
-                        <!-- 图片4 -->
-                        <div style="flex: 1; overflow: hidden;">
-                            <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1400.JPG"
-                                 style="width: 100%; height: 120px; object-fit: cover; display: block;" alt="游戏截图4">
+
+                        <!-- 第二行 -->
+                        <div style="display: flex; width: 100%; height: 120px;">
+                            <!-- 图片3 -->
+                            <div style="flex: 1; overflow: hidden; margin-right: 0;">
+                                <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1399.JPG"
+                                    style="width: 100%; height: 120px; object-fit: cover; display: block;" alt="游戏截图3">
+                            </div>
+                            <!-- 图片4 -->
+                            <div style="flex: 1; overflow: hidden;">
+                                <img src="https://raw.githubusercontent.com/fankaiming2/XPengGames/main/image/IMG_1400.JPG"
+                                    style="width: 100%; height: 120px; object-fit: cover; display: block;" alt="游戏截图4">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- 开发者信息 -->
-        <div class="developer-info">
-            <div class="developer-message" style="margin-left: 15px; padding-left: 0; margin-top: 15px;">
-                <p class="developer-email">联系邮箱：<a href="mailto:ming95ming@126.com">ming95ming@126.com</a></p>
-                <p style="color: #b2bec3; font-size: 13px; margin-top: 8px;">您的反馈对我们非常重要！</p>
+            <!-- 开发者信息 -->
+            <div class="developer-info">
+                <div class="developer-message" style="margin-left: 15px; padding-left: 0; margin-top: 15px;">
+                    <p class="developer-email">联系邮箱：<a href="mailto:ming95ming@126.com">ming95ming@126.com</a></p>
+                    <p style="color: #b2bec3; font-size: 13px; margin-top: 8px;">您的反馈对我们非常重要！</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- 加载动画 -->
-<div class="loading" id="loading">
-    <div class="spinner"></div>
-    <p style="color: #00b894; font-size: 1.2rem;">加载中...</p>
-</div>
+    <!-- 加载动画 -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="color: #00b894; font-size: 1.2rem;">加载中...</p>
+    </div>
+    <!-- ==================== 游戏向导 ==================== -->
+    <!-- 向导悬浮按钮 -->
+    <div class="guide-float-btn" id="guideFloatBtn">
+        <i class="fas fa-question-circle"></i>
+    </div>
 
-<script>
-    // 游戏状态
-    const gameState = {
-        words: [],
-        currentWords: ['', '', '', ''],
-        stats: {
-            crackEnemy: 0,
-            transmitFail: 0,
-            enemyCrack: 0,
-            enemyTransmitFail: 0
-        },
-        telegraphCode: '1.3.2',
-        // 新增：游戏配置
-    config: {
-        victoryCrack: 3,    // 胜利条件：破译次数
-        victoryTransmitFail: 2, // 胜利条件：敌方传递失败次数
-        defeatCrack: 3,     // 失败条件：敌方破译次数
-        defeatTransmitFail: 2  // 失败条件：我方传递失败次数
-    },
-    gameStatus: 'playing' // playing, victory, defeat
-    };
+    <!-- 向导弹窗 -->
+    <div class="guide-modal" id="guideModal">
+        <div class="guide-content">
+            <!-- 关闭按钮 -->
+            <span class="guide-close" id="guideClose">&times;</span>
 
-    // DOM元素
-    const elements = {
-    configPage: document.getElementById('configPage'),
-    backFromConfig: document.getElementById('backFromConfig'),
-    startGameBtn: document.getElementById('startGameBtn'),
-    victoryModal: document.getElementById('victoryModal'),
-    defeatModal: document.getElementById('defeatModal'),
-    victoryMessage: document.getElementById('victoryMessage'),
-    defeatMessage: document.getElementById('defeatMessage'),
-    victoryConditions: document.getElementById('victoryConditions'),
-    defeatConditions: document.getElementById('defeatConditions'),
-    victoryRestartBtn: document.getElementById('victoryRestartBtn'),
-    victoryHomeBtn: document.getElementById('victoryHomeBtn'),
-    defeatRestartBtn: document.getElementById('defeatRestartBtn'),
-    defeatHomeBtn: document.getElementById('defeatHomeBtn'),
-    // 配置滑块元素
-    crackEnemyRange: document.getElementById('crackEnemyRange'),
-    enemyTransmitFailRange: document.getElementById('enemyTransmitFailRange'),
-    enemyCrackRange: document.getElementById('enemyCrackRange'),
-    transmitFailRange: document.getElementById('transmitFailRange'),
-    crackEnemyValue: document.getElementById('crackEnemyValue'),
-    enemyTransmitFailValue: document.getElementById('enemyTransmitFailValue'),
-    enemyCrackValue: document.getElementById('enemyCrackValue'),
-    transmitFailValue: document.getElementById('transmitFailValue'),
-    restartGameBtn: document.getElementById('restartGameBtn'),
-        homePage: document.getElementById('homePage'),
-        codebookPage: document.getElementById('codebookPage'),
-        telegraphPage: document.getElementById('telegraphPage'),
-        cardsContainer: document.getElementById('cardsContainer'),
-        telegraphCode: document.getElementById('telegraphCode'),
-        confirmModal: document.getElementById('confirmModal'),
-        confirmText: document.getElementById('confirmText'),
-        confirmYes: document.getElementById('confirmYes'),
-        confirmNo: document.getElementById('confirmNo'),
-        loading: document.getElementById('loading'),
-        feedbackModal: document.getElementById('feedbackModal'),
-        userMessage: document.getElementById('userMessage'),
-        sendEmailBtn: document.getElementById('sendEmailBtn')
-    };
+            <!-- 向导头部 -->
+            <div class="guide-header">
+                <h2 class="guide-title">窃听风云 · 游戏向导</h2>
+                <p class="guide-subtitle">间谍主题密码破译对战游戏</p>
+            </div>
 
-    // 页面切换
-    function showPage(page) {
-    elements.homePage.style.display = 'none';
-    elements.configPage.style.display = 'none';
-    elements.codebookPage.style.display = 'none';
-    elements.telegraphPage.style.display = 'none';
+            <!-- 向导主体 -->
+            <div class="guide-body">
+                <!-- 第1步：游戏准备 -->
+                <div class="step-container step-prepare">
+                    <div class="step-title">
+                        <div class="step-number">1</div>
+                        <span>游戏准备</span>
+                    </div>
+                    <div class="step-content">
+                        <p>《窃听风云》是一款至少需要4人参与的阵营对战游戏，玩家分为两个阵营进行密码攻防战。</p>
+                        <ul>
+                            <li><strong>阵营分配</strong>：所有玩家分为红方和蓝方两个阵营</li>
+                            <li><strong>人员要求</strong>：每方至少2名玩家（可更多）</li>
+                            <li><strong>设备需求</strong>：每方需要2台手机，共需4台手机</li>
+                            <li><strong>游戏目标</strong>：通过密码传递和破译，率先完成己方任务</li>
+                        </ul>
+                    </div>
+                </div>
 
-    if (page === 'home') {
-        elements.homePage.style.display = 'flex';
-    } else if (page === 'config') {
-        elements.configPage.style.display = 'block';
-        initConfigPage();
-    } else if (page === 'codebook') {
-        elements.codebookPage.style.display = 'block';
-        initCodebook();
-    } else if (page === 'telegraph') {
-        elements.telegraphPage.style.display = 'block';
-        updateTelegraphCode();
-    }
+                <!-- 第2步：设备分工 -->
+                <div class="step-container step-equipment">
+                    <div class="step-title">
+                        <div class="step-number">2</div>
+                        <span>设备分工</span>
+                    </div>
+                    <div class="step-content">
+                        <p>每方使用2台手机，1台当密码本，1台当电报机：</p>
 
-    window.scrollTo(0, 0);
-}
-// 新增：初始化配置页面
-// 修改 initConfigPage 函数
-function initConfigPage() {
-    // 设置滑块初始值
-    elements.crackEnemyRange.value = gameState.config.victoryCrack;
-    elements.enemyTransmitFailRange.value = gameState.config.victoryTransmitFail;
-    elements.enemyCrackRange.value = gameState.config.defeatCrack;
-    elements.transmitFailRange.value = gameState.config.defeatTransmitFail;
+                        <div class="equipment-diagram">
+                            <div class="equipment-grid">
+                                <!-- 红方设备 -->
+                                <div class="team-section">
+                                    <div class="device-item password-book">
+                                        <div class="device-icon"><i class="fas fa-book"></i></div>
+                                        <div class="device-name">密码本</div>
+                                        <div class="device-desc">我方全员可见 · 查看与设置密钥词 · 敌方不可见 </div>
+                                        <div class="device-users">👥 队员共用</div>
+                                    </div>
 
-    // 更新显示值
-    updateConfigDisplay();
+                                    <div class="device-item telegraph">
+                                        <div class="device-icon"><i class="fas fa-broadcast-tower"></i></div>
+                                        <div class="device-name">电报机</div>
+                                        <div class="device-desc">仅通信员操作 · 接收行动密码</div>
+                                        <div class="device-users">👤 通信员专用</div>
+                                    </div>
+                                </div>
 
-    // 添加滑块事件监听
-    elements.crackEnemyRange.addEventListener('input', function() {
-        elements.crackEnemyValue.textContent = this.value;
-        gameState.config.victoryCrack = parseInt(this.value);
-    });
 
-    elements.enemyTransmitFailRange.addEventListener('input', function() {
-        elements.enemyTransmitFailValue.textContent = this.value;
-        gameState.config.victoryTransmitFail = parseInt(this.value);
-    });
+                            </div>
 
-    elements.enemyCrackRange.addEventListener('input', function() {
-        elements.enemyCrackValue.textContent = this.value;
-        gameState.config.defeatCrack = parseInt(this.value);
-    });
 
-    elements.transmitFailRange.addEventListener('input', function() {
-        elements.transmitFailValue.textContent = this.value;
-        gameState.config.defeatTransmitFail = parseInt(this.value);
-    });
+                        </div>
+                    </div>
+                </div>
 
-    // 确保在配置页面也加载词语
-    if (gameState.words.length === 0) {
-        loadWords();
-    }
-}
-// 修改结算画面按钮事件处理
-// 新增：结算画面按钮事件
-elements.victoryRestartBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    // 先关闭胜利模态框
-    elements.victoryModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+                <!-- 第3步：游戏流程 -->
+                <div class="step-container step-process">
+                    <div class="step-title">
+                        <div class="step-number">3</div>
+                        <span>游戏流程</span>
+                    </div>
+                    <div class="step-content">
+                        <p>游戏按照以下流程循环进行，直到一方达成胜利条件：</p>
 
-    // 重置游戏状态
-    resetGame();
+                        <div class="process-flow">
+                            <!-- A. 准备阶段 -->
+                            <div class="flow-step">
+                                <h4>A. 准备阶段（每方内部）</h4>
+                                <ol>
+                                    <li><strong>配置规则</strong>：首次进入需设置胜负条件（后续游戏可沿用）</li>
+                                    <li><strong>查看密码本</strong>：进入"密码本"页面，查看4个密钥词</li>
+                                    <li><strong>选定词语</strong>：选择本局密钥词（点击词语可自定义，游戏开始后不能更改）</li>
+                                    <li><strong>指派通信员</strong>：选择1名队员操作"电报机"（可轮岗）</li>
+                                </ol>
+                            </div>
 
-    // 回到密码本页面（使用现有配置）
-    showPage('codebook');
-}, false);
+                            <div class="flow-arrow">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
 
-elements.victoryHomeBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    elements.victoryModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-    showPage('home');
-}, false);
+                            <!-- B. 行动阶段 -->
+                            <div class="flow-step us">
+                                <h4>B. 行动阶段（以红方行动为例）</h4>
+                                <ol>
+                                    <li>红方通信员进入"电报机"页面</li>
+                                    <li>获取本次行动密码（如"1.3.2"）</li>
+                                    <li>根据密码本，向队友隐晦传达密码</li>
+                                    <li>队友讨论猜测本次行动密码</li>
+                                </ol>
+                            </div>
 
-elements.defeatRestartBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    // 先关闭失败模态框
-    elements.defeatModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+                            <div class="flow-arrow">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
 
-    // 重置游戏状态
-    resetGame();
+                            <!-- C. 破译阶段 -->
+                            <div class="flow-step enemy">
+                                <h4>C. 破译阶段（双方对决）</h4>
+                                <p><strong>1.蓝方尝试破译</strong></p>
+                                <ul>
+                                    <li>✅ 蓝方猜对 → 点击"敌方破译密码次数+1"</li>
+                                    <li>❌ 蓝方猜错 → 红方解码</li>
+                                </ul>
 
-    // 回到密码本页面（使用现有配置）
-    showPage('codebook');
-}, false);
+                                <p style="margin-top: 10px;"><strong>2.红方解码</strong></p>
+                                <ul>
+                                    <li>✅ 红方解码成功 → 无事发生，轮到蓝方行动，重复B.C阶段</li>
+                                    <li>❌ 红方解码失败 → 点击我方"通信失败次数+1"</li>
+                                </ul>
+                            </div>
 
-elements.defeatHomeBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    elements.defeatModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-    showPage('home');
-}, false);
-// 修改原有的resetGame函数，添加一个参数来控制是否显示消息
-function resetGame(showMessage = true) {
-    // 保存当前配置
-    const savedConfig = { ...gameState.config };
+                            <div class="flow-arrow">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    // 重置统计数字
-    gameState.stats = {
-        crackEnemy: 0,
-        transmitFail: 0,
-        enemyCrack: 0,
-        enemyTransmitFail: 0
-    };
+                <!-- 第4步：胜负条件 -->
+                <div class="step-container step-victory">
+                    <div class="step-title">
+                        <div class="step-number">4</div>
+                        <span>胜负条件</span>
+                    </div>
+                    <div class="step-content">
+                        <p>游戏开始前可在配置页面设置胜负条件：</p>
 
-    // 重置游戏状态
-    gameState.gameStatus = 'playing';
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+                            <!-- 胜利条件 -->
+                            <div
+                                style="background: rgba(0, 184, 148, 0.1); padding: 15px; border-radius: 10px; border: 2px solid #00b894;">
+                                <h4 style="color: #00b894; margin-bottom: 10px;">✅ 胜利条件</h4>
+                                <ul>
+                                    <li><strong>破译敌方密码</strong>：达到设定次数</li>
+                                    <li><strong>敌方通信失败</strong>：达到设定次数</li>
+                                </ul>
+                                <p style="margin-top: 10px; font-size: 0.9em; color: #b2bec3;">
+                                    <i class="fas fa-lightbulb"></i> 达成任一条件即获胜
+                                </p>
+                            </div>
 
-    // 恢复配置
-    gameState.config = savedConfig;
+                            <!-- 失败条件 -->
+                            <div
+                                style="background: rgba(231, 76, 60, 0.1); padding: 15px; border-radius: 10px; border: 2px solid #e74c3c;">
+                                <h4 style="color: #e74c3c; margin-bottom: 10px;">❌ 失败条件</h4>
+                                <ul>
+                                    <li><strong>敌方破译密码</strong>：达到设定次数</li>
+                                    <li><strong>我方通信失败</strong>：达到设定次数</li>
+                                </ul>
+                                <p style="margin-top: 10px; font-size: 0.9em; color: #b2bec3;">
+                                    <i class="fas fa-exclamation-triangle"></i> 触发任一条件即失败
+                                </p>
+                            </div>
+                        </div>
 
-    // 更新UI统计数字
-    Object.keys(gameState.stats).forEach(stat => {
-        const element = document.getElementById(stat);
-        if (element) {
-            element.textContent = gameState.stats[stat];
+                        <p><strong>配置方法</strong>：点击首页"密码本"按钮 → 进入规则配置页 → 拖动滑块调整 → 点击"开始行动"</p>
+                    </div>
+                </div>
+
+                <!-- 第5步：技巧提示 -->
+                <div class="step-container step-tips">
+                    <div class="step-title">
+                        <div class="step-number">5</div>
+                        <span>技巧与提示</span>
+                    </div>
+                    <div class="step-content">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <h4 style="color: #00b894;">🎯 密码本策略</h4>
+                                <ul>
+                                    <li>选择有关联的词语组（如：间谍、密码、电台、情报）</li>
+                                    <li>可设置"陷阱词"迷惑对手</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 style="color: #0984e3;">🗣️ 传达技巧</h4>
+                                <ul>
+                                    <li>避免直接说出数字或明显关联</li>
+                                    <li>不同通信员可使用不同暗示风格</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 style="color: #e74c3c;">🔄 轮岗优势</h4>
+                                <ul>
+                                    <li>定期更换通信员，打乱对手节奏</li>
+                                    <li>不同队员可能有不同的思维模式</li>
+                                    <li>可针对性地选择擅长表达的队员</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 style="color: #f39c12;">⚔️ 对战策略</h4>
+                                <ul>
+                                    <li>优先完成容易达成的胜利条件</li>
+                                    <li>注意观察对手的破译模式</li>
+                                    <li>适时调整自己的传达策略</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快速开始按钮 -->
+                <button class="quick-start-btn" id="quickStartBtn">
+                    <i class="fas fa-rocket"></i> 老子晓得了
+                </button>
+
+                <p style="text-align: center; margin-top: 20px; color: #b2bec3; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i> 向导可随时通过右下角问号按钮再次打开
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 游戏状态
+        const gameState = {
+            words: [],
+            currentWords: ['', '', '', ''],
+            stats: {
+                crackEnemy: 0,
+                transmitFail: 0,
+                enemyCrack: 0,
+                enemyTransmitFail: 0
+            },
+            telegraphCode: '1.3.2',
+            // 新增：游戏配置
+            config: {
+                victoryCrack: 3,    // 胜利条件：破译次数
+                victoryTransmitFail: 2, // 胜利条件：敌方传递失败次数
+                defeatCrack: 3,     // 失败条件：敌方破译次数
+                defeatTransmitFail: 2  // 失败条件：我方传递失败次数
+            },
+            gameStatus: 'playing' // playing, victory, defeat
+        };
+
+        // DOM元素
+        const elements = {
+            configPage: document.getElementById('configPage'),
+            backFromConfig: document.getElementById('backFromConfig'),
+            startGameBtn: document.getElementById('startGameBtn'),
+            victoryModal: document.getElementById('victoryModal'),
+            defeatModal: document.getElementById('defeatModal'),
+            victoryMessage: document.getElementById('victoryMessage'),
+            defeatMessage: document.getElementById('defeatMessage'),
+            victoryConditions: document.getElementById('victoryConditions'),
+            defeatConditions: document.getElementById('defeatConditions'),
+            victoryRestartBtn: document.getElementById('victoryRestartBtn'),
+            victoryHomeBtn: document.getElementById('victoryHomeBtn'),
+            defeatRestartBtn: document.getElementById('defeatRestartBtn'),
+            defeatHomeBtn: document.getElementById('defeatHomeBtn'),
+            // 配置滑块元素
+            crackEnemyRange: document.getElementById('crackEnemyRange'),
+            enemyTransmitFailRange: document.getElementById('enemyTransmitFailRange'),
+            enemyCrackRange: document.getElementById('enemyCrackRange'),
+            transmitFailRange: document.getElementById('transmitFailRange'),
+            crackEnemyValue: document.getElementById('crackEnemyValue'),
+            enemyTransmitFailValue: document.getElementById('enemyTransmitFailValue'),
+            enemyCrackValue: document.getElementById('enemyCrackValue'),
+            transmitFailValue: document.getElementById('transmitFailValue'),
+            restartGameBtn: document.getElementById('restartGameBtn'),
+            homePage: document.getElementById('homePage'),
+            codebookPage: document.getElementById('codebookPage'),
+            telegraphPage: document.getElementById('telegraphPage'),
+            cardsContainer: document.getElementById('cardsContainer'),
+            telegraphCode: document.getElementById('telegraphCode'),
+            confirmModal: document.getElementById('confirmModal'),
+            confirmText: document.getElementById('confirmText'),
+            confirmYes: document.getElementById('confirmYes'),
+            confirmNo: document.getElementById('confirmNo'),
+            loading: document.getElementById('loading'),
+            feedbackModal: document.getElementById('feedbackModal'),
+            userMessage: document.getElementById('userMessage'),
+            sendEmailBtn: document.getElementById('sendEmailBtn')
+        };
+
+        // 页面切换
+        function showPage(page) {
+            elements.homePage.style.display = 'none';
+            elements.configPage.style.display = 'none';
+            elements.codebookPage.style.display = 'none';
+            elements.telegraphPage.style.display = 'none';
+
+            if (page === 'home') {
+                elements.homePage.style.display = 'flex';
+            } else if (page === 'config') {
+                elements.configPage.style.display = 'block';
+                initConfigPage();
+            } else if (page === 'codebook') {
+                elements.codebookPage.style.display = 'block';
+                initCodebook();
+            } else if (page === 'telegraph') {
+                elements.telegraphPage.style.display = 'block';
+                updateTelegraphCode();
+            }
+
+            window.scrollTo(0, 0);
         }
-    });
+        // 新增：初始化配置页面
+        // 修改 initConfigPage 函数
+        function initConfigPage() {
+            // 设置滑块初始值
+            elements.crackEnemyRange.value = gameState.config.victoryCrack;
+            elements.enemyTransmitFailRange.value = gameState.config.victoryTransmitFail;
+            elements.enemyCrackRange.value = gameState.config.defeatCrack;
+            elements.transmitFailRange.value = gameState.config.defeatTransmitFail;
 
-    // 重置词语
-    for (let i = 0; i < 4; i++) {
-        gameState.currentWords[i] = getRandomWord();
-    }
+            // 更新显示值
+            updateConfigDisplay();
 
-    // 重新渲染卡片
-    renderCards();
+            // 添加滑块事件监听
+            elements.crackEnemyRange.addEventListener('input', function () {
+                elements.crackEnemyValue.textContent = this.value;
+                gameState.config.victoryCrack = parseInt(this.value);
+            });
 
-    // 保存重置后的状态
-    saveStats();
+            elements.enemyTransmitFailRange.addEventListener('input', function () {
+                elements.enemyTransmitFailValue.textContent = this.value;
+                gameState.config.victoryTransmitFail = parseInt(this.value);
+            });
 
-    // 关闭结算画面
-    elements.victoryModal.style.display = 'none';
-    elements.defeatModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+            elements.enemyCrackRange.addEventListener('input', function () {
+                elements.enemyCrackValue.textContent = this.value;
+                gameState.config.defeatCrack = parseInt(this.value);
+            });
 
-    // 可选显示消息
-    if (showMessage) {
-        showTemporaryMessage('游戏已重置！');
-    }
-}
+            elements.transmitFailRange.addEventListener('input', function () {
+                elements.transmitFailValue.textContent = this.value;
+                gameState.config.defeatTransmitFail = parseInt(this.value);
+            });
 
-// 新增：显示临时消息
-function showTemporaryMessage(message) {
-    // 创建消息元素
-    const messageEl = document.createElement('div');
-    messageEl.className = 'temp-message';
-    messageEl.textContent = message;
-    messageEl.style.cssText = `
+            // 确保在配置页面也加载词语
+            if (gameState.words.length === 0) {
+                loadWords();
+            }
+        }
+        // 修改结算画面按钮事件处理
+        // 新增：结算画面按钮事件
+        elements.victoryRestartBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // 先关闭胜利模态框
+            elements.victoryModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+
+            // 重置游戏状态
+            resetGame();
+
+            // 回到密码本页面（使用现有配置）
+            showPage('codebook');
+        }, false);
+
+        elements.victoryHomeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            elements.victoryModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            showPage('home');
+        }, false);
+
+        elements.defeatRestartBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // 先关闭失败模态框
+            elements.defeatModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+
+            // 重置游戏状态
+            resetGame();
+
+            // 回到密码本页面（使用现有配置）
+            showPage('codebook');
+        }, false);
+
+        elements.defeatHomeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            elements.defeatModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            showPage('home');
+        }, false);
+        // 修改原有的resetGame函数，添加一个参数来控制是否显示消息
+        function resetGame(showMessage = true) {
+            // 保存当前配置
+            const savedConfig = { ...gameState.config };
+
+            // 重置统计数字
+            gameState.stats = {
+                crackEnemy: 0,
+                transmitFail: 0,
+                enemyCrack: 0,
+                enemyTransmitFail: 0
+            };
+
+            // 重置游戏状态
+            gameState.gameStatus = 'playing';
+
+            // 恢复配置
+            gameState.config = savedConfig;
+
+            // 更新UI统计数字
+            Object.keys(gameState.stats).forEach(stat => {
+                const element = document.getElementById(stat);
+                if (element) {
+                    element.textContent = gameState.stats[stat];
+                }
+            });
+
+            // 重置词语
+            for (let i = 0; i < 4; i++) {
+                gameState.currentWords[i] = getRandomWord();
+            }
+
+            // 重新渲染卡片
+            renderCards();
+
+            // 保存重置后的状态
+            saveStats();
+
+            // 关闭结算画面
+            elements.victoryModal.style.display = 'none';
+            elements.defeatModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+
+            // 可选显示消息
+            if (showMessage) {
+                showTemporaryMessage('游戏已重置！');
+            }
+        }
+
+        // 新增：显示临时消息
+        function showTemporaryMessage(message) {
+            // 创建消息元素
+            const messageEl = document.createElement('div');
+            messageEl.className = 'temp-message';
+            messageEl.textContent = message;
+            messageEl.style.cssText = `
         position: fixed;
         top: 50%;
         left: 50%;
@@ -2037,11 +2776,11 @@ function showTemporaryMessage(message) {
         animation: fadeInOut 2s ease;
     `;
 
-    // 添加动画关键帧
-    if (!document.querySelector('#tempMessageStyle')) {
-        const style = document.createElement('style');
-        style.id = 'tempMessageStyle';
-        style.textContent = `
+            // 添加动画关键帧
+            if (!document.querySelector('#tempMessageStyle')) {
+                const style = document.createElement('style');
+                style.id = 'tempMessageStyle';
+                style.textContent = `
             @keyframes fadeInOut {
                 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
                 20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -2049,141 +2788,141 @@ function showTemporaryMessage(message) {
                 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
             }
         `;
-        document.head.appendChild(style);
-    }
+                document.head.appendChild(style);
+            }
 
-    document.body.appendChild(messageEl);
+            document.body.appendChild(messageEl);
 
-    // 2秒后移除消息
-    setTimeout(() => {
-        if (messageEl.parentNode) {
-            messageEl.parentNode.removeChild(messageEl);
-        }
-    }, 2000);
-}
-
-// 修改confirmResetGame函数
-function confirmResetGame() {
-    elements.confirmText.textContent = '确定要重新开始游戏吗？\n\n这将重置所有统计数字和密码本词语，但保留游戏规则设置。';
-    elements.confirmModal.style.display = 'flex';
-
-    // 设置确认按钮的行为
-    const confirmHandler = (e) => {
-        e.stopPropagation();
-        resetGame();
-        elements.confirmModal.style.display = 'none';
-        // 移除事件监听器，避免重复绑定
-        elements.confirmYes.removeEventListener('click', confirmHandler);
-    };
-
-    // 添加一次性事件监听器
-    elements.confirmYes.addEventListener('click', confirmHandler, { once: true });
-}
-    // 加载词语文件
-    // 加载词语文件
-async function loadWords() {
-    showLoading(true);
-    try {
-        // 从 words/words.txt 文件加载词语
-        const response = await fetch('words/war.txt');
-
-        if (!response.ok) {
-            throw new Error(`无法加载词语文件: ${response.status} ${response.statusText}`);
+            // 2秒后移除消息
+            setTimeout(() => {
+                if (messageEl.parentNode) {
+                    messageEl.parentNode.removeChild(messageEl);
+                }
+            }, 2000);
         }
 
-        const text = await response.text();
-        const words = text.split('\n')
-            .map(word => word.trim())
-            .filter(word => word.length > 0 && !word.startsWith('#') && !word.startsWith('//'));
+        // 修改confirmResetGame函数
+        function confirmResetGame() {
+            elements.confirmText.textContent = '确定要重新开始游戏吗？\n\n这将重置所有统计数字和密码本词语，但保留游戏规则设置。';
+            elements.confirmModal.style.display = 'flex';
 
-        if (words.length === 0) {
-            // 如果文件为空，使用默认词语
-            console.warn('词语文件为空，使用默认词语');
-            gameState.words = getDefaultWords();
-        } else {
-            gameState.words = words;
+            // 设置确认按钮的行为
+            const confirmHandler = (e) => {
+                e.stopPropagation();
+                resetGame();
+                elements.confirmModal.style.display = 'none';
+                // 移除事件监听器，避免重复绑定
+                elements.confirmYes.removeEventListener('click', confirmHandler);
+            };
+
+            // 添加一次性事件监听器
+            elements.confirmYes.addEventListener('click', confirmHandler, { once: true });
         }
+        // 加载词语文件
+        // 加载词语文件
+        async function loadWords() {
+            showLoading(true);
+            try {
+                // 从 words/words.txt 文件加载词语
+                const response = await fetch('words/war.txt');
 
-        console.log(`加载了 ${gameState.words.length} 个词语`);
-        return true;
-    } catch (error) {
-        console.error('加载词语失败:', error);
+                if (!response.ok) {
+                    throw new Error(`无法加载词语文件: ${response.status} ${response.statusText}`);
+                }
 
-        // 尝试备用路径
-        console.log('尝试从备用路径加载词语...');
-        try {
-            const backupResponse = await fetch('war.txt');
-            if (backupResponse.ok) {
-                const text = await backupResponse.text();
+                const text = await response.text();
                 const words = text.split('\n')
                     .map(word => word.trim())
                     .filter(word => word.length > 0 && !word.startsWith('#') && !word.startsWith('//'));
 
-                if (words.length > 0) {
+                if (words.length === 0) {
+                    // 如果文件为空，使用默认词语
+                    console.warn('词语文件为空，使用默认词语');
+                    gameState.words = getDefaultWords();
+                } else {
                     gameState.words = words;
-                    console.log(`从备用路径加载了 ${gameState.words.length} 个词语`);
-                    return true;
+                }
+
+                console.log(`加载了 ${gameState.words.length} 个词语`);
+                return true;
+            } catch (error) {
+                console.error('加载词语失败:', error);
+
+                // 尝试备用路径
+                console.log('尝试从备用路径加载词语...');
+                try {
+                    const backupResponse = await fetch('war.txt');
+                    if (backupResponse.ok) {
+                        const text = await backupResponse.text();
+                        const words = text.split('\n')
+                            .map(word => word.trim())
+                            .filter(word => word.length > 0 && !word.startsWith('#') && !word.startsWith('//'));
+
+                        if (words.length > 0) {
+                            gameState.words = words;
+                            console.log(`从备用路径加载了 ${gameState.words.length} 个词语`);
+                            return true;
+                        }
+                    }
+                } catch (backupError) {
+                    console.error('备用路径加载也失败:', backupError);
+                }
+
+                // 所有加载都失败，使用默认词语
+                console.log('使用默认词语');
+                gameState.words = getDefaultWords();
+                return true;
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // 默认词语（备用）
+        function getDefaultWords() {
+            return [
+                '情报', '密码', '电台', '间谍', '监听', '解密', '加密', '电报',
+                '暗号', '代号', '行动', '任务', '目标', '地点', '时间', '人员',
+                '文件', '资料', '证据', '线索', '嫌疑', '追踪', '监视', '卧底',
+                '接头', '信号', '频率', '波长', '干扰', '扫描', '分析', '破译',
+                '通讯', '网络', '系统', '程序', '代码', '密钥', '算法', '协议',
+                '安全', '机密', '绝密', '公开', '秘密', '内部', '外部', '边界',
+                '防御', '攻击', '保护', '破坏', '渗透', '反制', '对抗', '竞争'
+            ];
+        }
+
+        // 获取随机词语
+        function getRandomWord() {
+            if (gameState.words.length === 0) {
+                return '未加载';
+            }
+            const randomIndex = Math.floor(Math.random() * gameState.words.length);
+            return gameState.words[randomIndex];
+        }
+
+        // 初始化密码本
+        function initCodebook() {
+            // 确保有4个词语
+            for (let i = 0; i < 4; i++) {
+                if (!gameState.currentWords[i]) {
+                    gameState.currentWords[i] = getRandomWord();
                 }
             }
-        } catch (backupError) {
-            console.error('备用路径加载也失败:', backupError);
-        }
 
-        // 所有加载都失败，使用默认词语
-        console.log('使用默认词语');
-        gameState.words = getDefaultWords();
-        return true;
-    } finally {
-        showLoading(false);
-    }
-}
+            // 渲染卡片
+            renderCards();
 
-    // 默认词语（备用）
-    function getDefaultWords() {
-        return [
-            '情报', '密码', '电台', '间谍', '监听', '解密', '加密', '电报',
-            '暗号', '代号', '行动', '任务', '目标', '地点', '时间', '人员',
-            '文件', '资料', '证据', '线索', '嫌疑', '追踪', '监视', '卧底',
-            '接头', '信号', '频率', '波长', '干扰', '扫描', '分析', '破译',
-            '通讯', '网络', '系统', '程序', '代码', '密钥', '算法', '协议',
-            '安全', '机密', '绝密', '公开', '秘密', '内部', '外部', '边界',
-            '防御', '攻击', '保护', '破坏', '渗透', '反制', '对抗', '竞争'
-        ];
-    }
-
-    // 获取随机词语
-    function getRandomWord() {
-        if (gameState.words.length === 0) {
-            return '未加载';
-        }
-        const randomIndex = Math.floor(Math.random() * gameState.words.length);
-        return gameState.words[randomIndex];
-    }
-
-    // 初始化密码本
-    function initCodebook() {
-        // 确保有4个词语
-        for (let i = 0; i < 4; i++) {
-            if (!gameState.currentWords[i]) {
-                gameState.currentWords[i] = getRandomWord();
-            }
+            // 加载统计数据
+            loadStats();
         }
 
         // 渲染卡片
-        renderCards();
+        function renderCards() {
+            elements.cardsContainer.innerHTML = '';
 
-        // 加载统计数据
-        loadStats();
-    }
-
-    // 渲染卡片
-function renderCards() {
-    elements.cardsContainer.innerHTML = '';
-
-    for (let i = 0; i < 4; i++) {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
+            for (let i = 0; i < 4; i++) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
             <div class="card-number">${i + 1}</div>
             <div class="card-content">
                 <div class="card-word" data-index="${i}">
@@ -2194,39 +2933,39 @@ function renderCards() {
                 </button>
             </div>
         `;
-        elements.cardsContainer.appendChild(card);
-    }
+                elements.cardsContainer.appendChild(card);
+            }
 
-    // 为新生成的切换按钮添加事件监听
-    document.querySelectorAll('.change-word-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation(); // 防止事件冒泡
-            const index = parseInt(this.getAttribute('data-index'));
-            changeWord(index);
-        });
-    });
+            // 为新生成的切换按钮添加事件监听
+            document.querySelectorAll('.change-word-btn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation(); // 防止事件冒泡
+                    const index = parseInt(this.getAttribute('data-index'));
+                    changeWord(index);
+                });
+            });
 
-    // 为词语文本添加点击事件（新增）
-    document.querySelectorAll('.card-word').forEach(wordElement => {
-        wordElement.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const index = parseInt(this.getAttribute('data-index'));
-            editWord(index, this);
-        });
-    });
-}
+            // 为词语文本添加点击事件（新增）
+            document.querySelectorAll('.card-word').forEach(wordElement => {
+                wordElement.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const index = parseInt(this.getAttribute('data-index'));
+                    editWord(index, this);
+                });
+            });
+        }
 
-// 新增：编辑词语函数
-function editWord(index, wordElement) {
-    const currentWord = gameState.currentWords[index];
-    const wordTextElement = wordElement.querySelector('.word-text');
+        // 新增：编辑词语函数
+        function editWord(index, wordElement) {
+            const currentWord = gameState.currentWords[index];
+            const wordTextElement = wordElement.querySelector('.word-text');
 
-    // 创建输入框
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.value = currentWord;
-    input.className = 'word-edit-input';
-    input.style.cssText = `
+            // 创建输入框
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentWord;
+            input.className = 'word-edit-input';
+            input.style.cssText = `
         width: 100%;
         padding: 8px;
         font-size: 1.8rem;
@@ -2239,237 +2978,237 @@ function editWord(index, wordElement) {
         outline: none;
     `;
 
-    // 保存原始文本
-    const originalText = wordTextElement.textContent;
+            // 保存原始文本
+            const originalText = wordTextElement.textContent;
 
-    // 替换文本为输入框
-    wordTextElement.style.display = 'none';
-    wordElement.appendChild(input);
-    input.focus();
-    input.select();
+            // 替换文本为输入框
+            wordTextElement.style.display = 'none';
+            wordElement.appendChild(input);
+            input.focus();
+            input.select();
 
-    // 处理输入完成
-    function finishEdit() {
-        const newWord = input.value.trim();
+            // 处理输入完成
+            function finishEdit() {
+                const newWord = input.value.trim();
 
-        if (newWord === '') {
-            // 如果输入为空，恢复原词语
-            wordTextElement.textContent = originalText;
-            gameState.currentWords[index] = originalText;
-        } else {
-            // 更新词语
-            wordTextElement.textContent = newWord;
-            gameState.currentWords[index] = newWord;
-        }
+                if (newWord === '') {
+                    // 如果输入为空，恢复原词语
+                    wordTextElement.textContent = originalText;
+                    gameState.currentWords[index] = originalText;
+                } else {
+                    // 更新词语
+                    wordTextElement.textContent = newWord;
+                    gameState.currentWords[index] = newWord;
+                }
 
-        // 恢复显示
-        wordTextElement.style.display = 'block';
-        input.remove();
-    }
-
-    // 回车键保存
-    input.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            finishEdit();
-        } else if (e.key === 'Escape') {
-            // ESC键取消
-            wordTextElement.style.display = 'block';
-            input.remove();
-        }
-    });
-
-    // 失去焦点时保存
-    input.addEventListener('blur', finishEdit);
-
-    // 阻止事件冒泡，防止触发卡片其他事件
-    input.addEventListener('click', function(e) {
-        e.stopPropagation();
-    });
-}
-
-    // 更换单个词语
-    function changeWord(index) {
-        gameState.currentWords[index] = getRandomWord();
-        renderCards();
-    }
-
-// 更新配置显示
-function updateConfigDisplay() {
-    elements.crackEnemyValue.textContent = gameState.config.victoryCrack;
-    elements.enemyTransmitFailValue.textContent = gameState.config.victoryTransmitFail;
-    elements.enemyCrackValue.textContent = gameState.config.defeatCrack;
-    elements.transmitFailValue.textContent = gameState.config.defeatTransmitFail;
-}
-
-// 修改统计更新函数，添加游戏状态检查
-function changeStat(stat, delta, type) {
-    // 如果游戏已经结束，不允许修改统计
-    if (gameState.gameStatus !== 'playing') {
-        return;
-    }
-
-    // 只处理增加操作（delta > 0）
-    if (delta > 0) {
-        // 根据统计项显示不同的提示消息（从多个选项中随机选择）
-        let messages = [];
-        let message = '';
-
-        switch(stat) {
-            case 'crackEnemy':
-                messages = [
-                    '干得漂亮！成功破译敌方密码',
-                    '敌方密码已被我方掌握',
-                    '情报获取成功，密码已破解',
-                    '破译工作非常出色',
-                    '敌方通讯已被我方监听并破解',
-                    '成功截获并破译敌方密电',
-                    '敌方加密系统即将被我方攻破'
-                ];
-                break;
-            case 'transmitFail':
-                messages = [
-                    '不要气馁',
-                    '信号干扰严重，无法成功传递',
-                    '敌方干扰导致传递失败',
-                    '传递过程中出现技术故障',
-                    '协议不匹配，无法完成传输',
-                    '有没有搞错，犯这种低级错误',
-                    '卷铺盖走人吧，你不用来了',
-                    '小失误，不影响大局',
-                    '技术故障，非你之过',
-                    '数据包丢失严重',
-                    '通讯协议握手失败',
-                    '信号编码器出错',
-                    '密码本是不是拿错了，废物',
-                    '通讯流程执行错误',
-                    '不能再错了',
-                    '认真点，好吗',
-                    '你是卧底吗',
-                    '小心，有内鬼',
-                    '别灰心，再试一次'
-                ];
-                break;
-            case 'enemyCrack':
-                messages = [
-                    '糟糕！我方密码被敌方破译',
-                    '怎么搞的，情报十分重要，注意加密传递',
-                    '紧急情况：我方通讯已被敌方监听',
-                    '安全漏洞！密码系统被攻破',
-                    '敌方已掌握我方通讯内容',
-                    '情报泄露风险极高',
-                    '敌方破译能力超出预期',
-                    '哟呵，可劲的对手',
-                    '敌军有点东西',
-                    '是我们密文过于简单了不？！',
-                    '有点危险了',
-                    '让个靠谱的来吧',
-                    '我们运气不佳',
-                    '危险！敌方已成功渗透',
-                    '警报！加密防线被突破',
-                    '紧急！情报网出现漏洞',
-                    '红色警报！密码体系被破解',
-                    '最高警戒！通讯安全告急',
-                    '行动计划可能已泄露',
-                    '联络网面临暴露危险',
-                    '后续行动方案可能被知悉',
-                    '敌方密码分析能力升级',
-                    '敌方技术实力超出预估',
-                    '敌军装备了新型破译设备',
-                    '敌军投入了专业密码团队',
-                    '看来对方有高人指点',
-                    '敌军这回真不简单',
-                    '对手技术让人刮目相看',
-                    '防线失守，信息外泄',
-                    '全员进入紧急状态！',
-                    '立即启用备用加密方案！',
-                    '完了完了，要暴露了！',
-                    '建议加强后续加密措施',
-                    '通讯安全受到严重威胁'
-                ];
-                break;
-            case 'enemyTransmitFail':
-                messages = [
-                    '敌军简直草台班子',
-                    '敌军通讯技术真差劲',
-                    '敌方报务员手忙脚乱',
-                    '敌军操作员业务不熟',
-                    '敌方信号员培训不足',
-                    '敌军电报员频繁出错',
-                    '敌方通讯兵素质低下',
-                    '敌军技术员经验欠缺',
-                    '敌方通讯纪律涣散',
-                    '敌军操作流程混乱',
-                    '敌军通讯靠缘分',
-                    '敌方技术停留在上世纪',
-                    '敌军设备是拼多多买的吧',
-                    '敌军通讯漏洞百出',
-                    '敌方保障溃不成军',
-                    '敌军简直是一盘散沙',
-                    '敌方操作员水平有限',
-                    '敌军后勤保障太差',
-                    '敌方技术装备落后',
-                    '敌军通讯纪律松散'
-                ];
-                break;
-        }
-
-        if (messages.length > 0) {
-            // 随机选择一个消息
-            message = messages[Math.floor(Math.random() * messages.length)];
-
-            // 检查这个变化是否会导致游戏结束
-            const newValue = gameState.stats[stat] + delta;
-            let willEndGame = false;
-
-            // 如果是胜利条件的统计项
-            if ((stat === 'crackEnemy' && newValue >= gameState.config.victoryCrack) ||
-                (stat === 'enemyTransmitFail' && newValue >= gameState.config.victoryTransmitFail)) {
-                willEndGame = true;
+                // 恢复显示
+                wordTextElement.style.display = 'block';
+                input.remove();
             }
 
-            // 如果是失败条件的统计项
-            if ((stat === 'enemyCrack' && newValue >= gameState.config.defeatCrack) ||
-                (stat === 'transmitFail' && newValue >= gameState.config.defeatTransmitFail)) {
-                willEndGame = true;
-            }
+            // 回车键保存
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    finishEdit();
+                } else if (e.key === 'Escape') {
+                    // ESC键取消
+                    wordTextElement.style.display = 'block';
+                    input.remove();
+                }
+            });
 
-            // 如果不会导致游戏结束，才显示消息
-            if (!willEndGame) {
-                showStatMessage(message, type);
-            }
+            // 失去焦点时保存
+            input.addEventListener('blur', finishEdit);
+
+            // 阻止事件冒泡，防止触发卡片其他事件
+            input.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
         }
-    }
 
-    let newValue = gameState.stats[stat] + delta;
-    if (newValue < 0) newValue = 0;
-    gameState.stats[stat] = newValue;
-    document.getElementById(stat).textContent = newValue;
-    saveStats();
+        // 更换单个词语
+        function changeWord(index) {
+            gameState.currentWords[index] = getRandomWord();
+            renderCards();
+        }
 
-    // 检查游戏状态
-    checkGameStatus();
-}
-// 新增：显示统计操作消息（改进版）
-function showStatMessage(message, type) {
-    // 创建消息元素
-    const messageEl = document.createElement('div');
-    messageEl.className = 'stat-message';
-    messageEl.textContent = message;
+        // 更新配置显示
+        function updateConfigDisplay() {
+            elements.crackEnemyValue.textContent = gameState.config.victoryCrack;
+            elements.enemyTransmitFailValue.textContent = gameState.config.victoryTransmitFail;
+            elements.enemyCrackValue.textContent = gameState.config.defeatCrack;
+            elements.transmitFailValue.textContent = gameState.config.defeatTransmitFail;
+        }
 
-    // 根据类型设置不同的样式
-    const bgColor = type === 'our' ? 'rgba(0, 184, 148, 0.95)' : 'rgba(231, 76, 60, 0.95)';
-    const borderColor = type === 'our' ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.4)';
-    const textColor = 'white';
+        // 修改统计更新函数，添加游戏状态检查
+        function changeStat(stat, delta, type) {
+            // 如果游戏已经结束，不允许修改统计
+            if (gameState.gameStatus !== 'playing') {
+                return;
+            }
 
-    // 随机选择动画类型
-    const animationTypes = [
-        'statMessageFadeInOut',
-        'statMessageSlideIn',
-        'statMessageBounceIn'
-    ];
-    const randomAnimation = animationTypes[Math.floor(Math.random() * animationTypes.length)];
+            // 只处理增加操作（delta > 0）
+            if (delta > 0) {
+                // 根据统计项显示不同的提示消息（从多个选项中随机选择）
+                let messages = [];
+                let message = '';
 
-    messageEl.style.cssText = `
+                switch (stat) {
+                    case 'crackEnemy':
+                        messages = [
+                            '干得漂亮！成功破译敌方密码',
+                            '敌方密码已被我方掌握',
+                            '情报获取成功，密码已破解',
+                            '破译工作非常出色',
+                            '敌方通讯已被我方监听并破解',
+                            '成功截获并破译敌方密电',
+                            '敌方加密系统即将被我方攻破'
+                        ];
+                        break;
+                    case 'transmitFail':
+                        messages = [
+                            '不要气馁',
+                            '信号干扰严重，无法成功传递',
+                            '敌方干扰导致传递失败',
+                            '传递过程中出现技术故障',
+                            '协议不匹配，无法完成传输',
+                            '有没有搞错，犯这种低级错误',
+                            '卷铺盖走人吧，你不用来了',
+                            '小失误，不影响大局',
+                            '技术故障，非你之过',
+                            '数据包丢失严重',
+                            '通讯协议握手失败',
+                            '信号编码器出错',
+                            '密码本是不是拿错了，废物',
+                            '通讯流程执行错误',
+                            '不能再错了',
+                            '认真点，好吗',
+                            '你是卧底吗',
+                            '小心，有内鬼',
+                            '别灰心，再试一次'
+                        ];
+                        break;
+                    case 'enemyCrack':
+                        messages = [
+                            '糟糕！我方密码被敌方破译',
+                            '怎么搞的，情报十分重要，注意加密传递',
+                            '紧急情况：我方通讯已被敌方监听',
+                            '安全漏洞！密码系统被攻破',
+                            '敌方已掌握我方通讯内容',
+                            '情报泄露风险极高',
+                            '敌方破译能力超出预期',
+                            '哟呵，可劲的对手',
+                            '敌军有点东西',
+                            '是我们密文过于简单了不？！',
+                            '有点危险了',
+                            '让个靠谱的来吧',
+                            '我们运气不佳',
+                            '危险！敌方已成功渗透',
+                            '警报！加密防线被突破',
+                            '紧急！情报网出现漏洞',
+                            '红色警报！密码体系被破解',
+                            '最高警戒！通讯安全告急',
+                            '行动计划可能已泄露',
+                            '联络网面临暴露危险',
+                            '后续行动方案可能被知悉',
+                            '敌方密码分析能力升级',
+                            '敌方技术实力超出预估',
+                            '敌军装备了新型破译设备',
+                            '敌军投入了专业密码团队',
+                            '看来对方有高人指点',
+                            '敌军这回真不简单',
+                            '对手技术让人刮目相看',
+                            '防线失守，信息外泄',
+                            '全员进入紧急状态！',
+                            '立即启用备用加密方案！',
+                            '完了完了，要暴露了！',
+                            '建议加强后续加密措施',
+                            '通讯安全受到严重威胁'
+                        ];
+                        break;
+                    case 'enemyTransmitFail':
+                        messages = [
+                            '敌军简直草台班子',
+                            '敌军通讯技术真差劲',
+                            '敌方报务员手忙脚乱',
+                            '敌军操作员业务不熟',
+                            '敌方信号员培训不足',
+                            '敌军电报员频繁出错',
+                            '敌方通讯兵素质低下',
+                            '敌军技术员经验欠缺',
+                            '敌方通讯纪律涣散',
+                            '敌军操作流程混乱',
+                            '敌军通讯靠缘分',
+                            '敌方技术停留在上世纪',
+                            '敌军设备是拼多多买的吧',
+                            '敌军通讯漏洞百出',
+                            '敌方保障溃不成军',
+                            '敌军简直是一盘散沙',
+                            '敌方操作员水平有限',
+                            '敌军后勤保障太差',
+                            '敌方技术装备落后',
+                            '敌军通讯纪律松散'
+                        ];
+                        break;
+                }
+
+                if (messages.length > 0) {
+                    // 随机选择一个消息
+                    message = messages[Math.floor(Math.random() * messages.length)];
+
+                    // 检查这个变化是否会导致游戏结束
+                    const newValue = gameState.stats[stat] + delta;
+                    let willEndGame = false;
+
+                    // 如果是胜利条件的统计项
+                    if ((stat === 'crackEnemy' && newValue >= gameState.config.victoryCrack) ||
+                        (stat === 'enemyTransmitFail' && newValue >= gameState.config.victoryTransmitFail)) {
+                        willEndGame = true;
+                    }
+
+                    // 如果是失败条件的统计项
+                    if ((stat === 'enemyCrack' && newValue >= gameState.config.defeatCrack) ||
+                        (stat === 'transmitFail' && newValue >= gameState.config.defeatTransmitFail)) {
+                        willEndGame = true;
+                    }
+
+                    // 如果不会导致游戏结束，才显示消息
+                    if (!willEndGame) {
+                        showStatMessage(message, type);
+                    }
+                }
+            }
+
+            let newValue = gameState.stats[stat] + delta;
+            if (newValue < 0) newValue = 0;
+            gameState.stats[stat] = newValue;
+            document.getElementById(stat).textContent = newValue;
+            saveStats();
+
+            // 检查游戏状态
+            checkGameStatus();
+        }
+        // 新增：显示统计操作消息（改进版）
+        function showStatMessage(message, type) {
+            // 创建消息元素
+            const messageEl = document.createElement('div');
+            messageEl.className = 'stat-message';
+            messageEl.textContent = message;
+
+            // 根据类型设置不同的样式
+            const bgColor = type === 'our' ? 'rgba(0, 184, 148, 0.95)' : 'rgba(231, 76, 60, 0.95)';
+            const borderColor = type === 'our' ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.4)';
+            const textColor = 'white';
+
+            // 随机选择动画类型
+            const animationTypes = [
+                'statMessageFadeInOut',
+                'statMessageSlideIn',
+                'statMessageBounceIn'
+            ];
+            const randomAnimation = animationTypes[Math.floor(Math.random() * animationTypes.length)];
+
+            messageEl.style.cssText = `
         position: fixed;
         top: 50%;
         left: 50%;
@@ -2491,11 +3230,11 @@ function showStatMessage(message, type) {
         border: 2px solid ${borderColor};
     `;
 
-    // 添加动画关键帧（如果尚未添加）
-    if (!document.querySelector('#statMessageStyle')) {
-        const style = document.createElement('style');
-        style.id = 'statMessageStyle';
-        style.textContent = `
+            // 添加动画关键帧（如果尚未添加）
+            if (!document.querySelector('#statMessageStyle')) {
+                const style = document.createElement('style');
+                style.id = 'statMessageStyle';
+                style.textContent = `
             @keyframes statMessageFadeInOut {
                 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
                 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
@@ -2523,504 +3262,661 @@ function showStatMessage(message, type) {
                 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
             }
         `;
-        document.head.appendChild(style);
-    }
+                document.head.appendChild(style);
+            }
 
-    // 移除之前的消息（如果有）
-    const existingMessages = document.querySelectorAll('.stat-message');
-    existingMessages.forEach(msg => {
-        if (msg.parentNode) {
-            msg.parentNode.removeChild(msg);
+            // 移除之前的消息（如果有）
+            const existingMessages = document.querySelectorAll('.stat-message');
+            existingMessages.forEach(msg => {
+                if (msg.parentNode) {
+                    msg.parentNode.removeChild(msg);
+                }
+            });
+
+            document.body.appendChild(messageEl);
+
+            // 4秒后移除消息
+            setTimeout(() => {
+                if (messageEl.parentNode) {
+                    messageEl.parentNode.removeChild(messageEl);
+                }
+            }, 3500);
         }
-    });
+        // 新增：检查游戏状态
+        function checkGameStatus() {
+            // 检查胜利条件
+            if (gameState.stats.crackEnemy >= gameState.config.victoryCrack ||
+                gameState.stats.enemyTransmitFail >= gameState.config.victoryTransmitFail) {
+                gameState.gameStatus = 'victory';
+                showVictoryScreen();
+                return;
+            }
 
-    document.body.appendChild(messageEl);
-
-    // 4秒后移除消息
-    setTimeout(() => {
-        if (messageEl.parentNode) {
-            messageEl.parentNode.removeChild(messageEl);
+            // 检查失败条件
+            if (gameState.stats.enemyCrack >= gameState.config.defeatCrack ||
+                gameState.stats.transmitFail >= gameState.config.defeatTransmitFail) {
+                gameState.gameStatus = 'defeat';
+                showDefeatScreen();
+                return;
+            }
         }
-    }, 3500);
-}
-// 新增：检查游戏状态
-function checkGameStatus() {
-    // 检查胜利条件
-    if (gameState.stats.crackEnemy >= gameState.config.victoryCrack ||
-        gameState.stats.enemyTransmitFail >= gameState.config.victoryTransmitFail) {
-        gameState.gameStatus = 'victory';
-        showVictoryScreen();
-        return;
-    }
 
-    // 检查失败条件
-    if (gameState.stats.enemyCrack >= gameState.config.defeatCrack ||
-        gameState.stats.transmitFail >= gameState.config.defeatTransmitFail) {
-        gameState.gameStatus = 'defeat';
-        showDefeatScreen();
-        return;
-    }
-}
+        // 新增：显示胜利画面
+        function showVictoryScreen() {
+            let victoryReason = '';
+            let conditions = [];
+            let message = '';
 
-// 新增：显示胜利画面
-function showVictoryScreen() {
-    let victoryReason = '';
-    let conditions = [];
-    let message = '';
+            // 判断胜利原因
+            if (gameState.stats.crackEnemy >= gameState.config.victoryCrack) {
+                victoryReason = `成功破译敌方密码 ${gameState.stats.crackEnemy} 次（目标：${gameState.config.victoryCrack}次）`;
+                conditions.push(victoryReason);
+                message = '成功破译敌方密码，为我方赢得宝贵情报！';
+            }
 
-    // 判断胜利原因
-    if (gameState.stats.crackEnemy >= gameState.config.victoryCrack) {
-        victoryReason = `成功破译敌方密码 ${gameState.stats.crackEnemy} 次（目标：${gameState.config.victoryCrack}次）`;
-        conditions.push(victoryReason);
-        message = '成功破译敌方密码，为我方赢得宝贵情报！';
-    }
+            if (gameState.stats.enemyTransmitFail >= gameState.config.victoryTransmitFail) {
+                victoryReason = `敌方密文传递失败 ${gameState.stats.enemyTransmitFail} 次`;
+                conditions.push(victoryReason);
+                message = '敌方真蠢，传递虚假情报，不攻自破';
+            }
 
-    if (gameState.stats.enemyTransmitFail >= gameState.config.victoryTransmitFail) {
-        victoryReason = `敌方密文传递失败 ${gameState.stats.enemyTransmitFail} 次`;
-        conditions.push(victoryReason);
-        message = '敌方真蠢，传递虚假情报，不攻自破';
-    }
+            // 如果有多个胜利条件，使用第一个条件的消息
+            elements.victoryConditions.textContent = conditions.join(' 或 ');
+            elements.victoryMessage.textContent = message || '任务成功！';
+            elements.victoryModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
 
-    // 如果有多个胜利条件，使用第一个条件的消息
-    elements.victoryConditions.textContent = conditions.join(' 或 ');
-    elements.victoryMessage.textContent = message || '任务成功！';
-    elements.victoryModal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
+        // 新增：显示失败画面
+        function showDefeatScreen() {
+            let defeatReason = '';
+            let conditions = [];
+            let message = '';
 
-// 新增：显示失败画面
-function showDefeatScreen() {
-    let defeatReason = '';
-    let conditions = [];
-    let message = '';
+            // 判断失败原因
+            if (gameState.stats.enemyCrack >= gameState.config.defeatCrack) {
+                defeatReason = `敌方破译我方密码 ${gameState.stats.enemyCrack} 次`;
+                conditions.push(defeatReason);
+                message = '行动计划已被敌方截获，任务失败';
+            }
 
-    // 判断失败原因
-    if (gameState.stats.enemyCrack >= gameState.config.defeatCrack) {
-        defeatReason = `敌方破译我方密码 ${gameState.stats.enemyCrack} 次`;
-        conditions.push(defeatReason);
-        message = '行动计划已被敌方截获，任务失败';
-    }
+            if (gameState.stats.transmitFail >= gameState.config.defeatTransmitFail) {
+                defeatReason = `我方密文传递失败 ${gameState.stats.transmitFail} 次`;
+                conditions.push(defeatReason);
+                message = '密文传递出错，大本营未能按计划撤离全员阵亡';
+            }
 
-    if (gameState.stats.transmitFail >= gameState.config.defeatTransmitFail) {
-        defeatReason = `我方密文传递失败 ${gameState.stats.transmitFail} 次`;
-        conditions.push(defeatReason);
-        message = '密文传递出错，大本营未能按计划撤离全员阵亡';
-    }
-
-    // 如果有多个失败条件，使用第一个条件的消息
-    elements.defeatConditions.textContent = conditions.join(' 或 ');
-    elements.defeatMessage.textContent = message || '任务失败！';
-    elements.defeatModal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-   // 修改保存/加载函数
-function saveStats() {
-    localStorage.setItem('telegraph_stats', JSON.stringify(gameState.stats));
-    localStorage.setItem('game_config', JSON.stringify(gameState.config));
-    localStorage.setItem('game_words', JSON.stringify(gameState.currentWords));
-}
+            // 如果有多个失败条件，使用第一个条件的消息
+            elements.defeatConditions.textContent = conditions.join(' 或 ');
+            elements.defeatMessage.textContent = message || '任务失败！';
+            elements.defeatModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        // 修改保存/加载函数
+        function saveStats() {
+            localStorage.setItem('telegraph_stats', JSON.stringify(gameState.stats));
+            localStorage.setItem('game_config', JSON.stringify(gameState.config));
+            localStorage.setItem('game_words', JSON.stringify(gameState.currentWords));
+        }
 
 
-   // 修改loadStats函数
-function loadStats() {
-    // 加载统计
-    const savedStats = localStorage.getItem('telegraph_stats');
-    if (savedStats) {
-        try {
-            gameState.stats = JSON.parse(savedStats);
+        // 修改loadStats函数
+        function loadStats() {
+            // 加载统计
+            const savedStats = localStorage.getItem('telegraph_stats');
+            if (savedStats) {
+                try {
+                    gameState.stats = JSON.parse(savedStats);
+                    Object.keys(gameState.stats).forEach(stat => {
+                        const element = document.getElementById(stat);
+                        if (element) {
+                            element.textContent = gameState.stats[stat];
+                        }
+                    });
+                } catch (e) {
+                    console.error('加载统计失败:', e);
+                }
+            }
+
+            // 加载配置（只在游戏开始时加载，重置时不覆盖）
+            const savedConfig = localStorage.getItem('game_config');
+            if (savedConfig) {
+                try {
+                    // 只在配置页面或首次加载时更新配置
+                    if (elements.configPage.style.display === 'block' || Object.keys(gameState.config).length === 0) {
+                        gameState.config = JSON.parse(savedConfig);
+                    }
+                } catch (e) {
+                    console.error('加载配置失败:', e);
+                }
+            }
+
+            // 加载词语
+            const savedWords = localStorage.getItem('game_words');
+            if (savedWords) {
+                try {
+                    gameState.currentWords = JSON.parse(savedWords);
+                } catch (e) {
+                    console.error('加载词语失败:', e);
+                }
+            }
+        }
+
+        // 加载配置
+        const savedConfig = localStorage.getItem('game_config');
+        if (savedConfig) {
+            try {
+                gameState.config = JSON.parse(savedConfig);
+            } catch (e) {
+                console.error('加载配置失败:', e);
+            }
+        }
+
+        // 加载词语
+        const savedWords = localStorage.getItem('game_words');
+        if (savedWords) {
+            try {
+                gameState.currentWords = JSON.parse(savedWords);
+            } catch (e) {
+                console.error('加载词语失败:', e);
+            }
+        }
+
+
+        // 生成电报码
+        function generateTelegraphCode() {
+            const numbers = [1, 2, 3, 4];
+            // 随机打乱数组并取前3个
+            const shuffled = [...numbers].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, 3).join('.');
+        }
+
+        // 更新电报码
+        function updateTelegraphCode() {
+            gameState.telegraphCode = generateTelegraphCode();
+            elements.telegraphCode.textContent = gameState.telegraphCode;
+        }
+
+        // 确认更换电报码
+        function confirmChangeTelegraphCode() {
+            elements.confirmText.textContent = '确定要更换电报码吗？';
+            elements.confirmModal.style.display = 'flex';
+        }
+
+        // 显示/隐藏加载动画
+        function showLoading(show) {
+            elements.loading.style.display = show ? 'flex' : 'none';
+        }
+
+        // ==================== 新增：反馈功能 ====================
+        function initFeedbackModal() {
+            // 反馈入口点击事件
+            document.getElementById('feedbackTrigger').addEventListener('click', function (e) {
+                e.preventDefault();
+                elements.feedbackModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+
+            // 关闭按钮
+            document.querySelector('.close-modal').addEventListener('click', function () {
+                elements.feedbackModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+
+            // 点击蒙版关闭
+            elements.feedbackModal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            // 发送邮件按钮
+            elements.sendEmailBtn.addEventListener('click', function () {
+                const message = elements.userMessage.value.trim();
+
+                if (!message) {
+                    alert('请输入您的留言内容');
+                    elements.userMessage.focus();
+                    return;
+                }
+
+                // 获取用户设备信息
+                const deviceInfo = `设备信息: ${navigator.userAgent}`;
+                const gameVersion = `游戏版本: 窃听风云 v1.0`;
+                const currentPage = `当前页面: ${window.location.href}`;
+
+                // 构造邮件内容
+                const subject = encodeURIComponent('【窃听风云游戏】用户反馈');
+                const body = encodeURIComponent(`用户反馈内容：\n\n${message}\n\n───────────────\n${gameVersion}\n${deviceInfo}\n${currentPage}\n\n感谢您的反馈！`);
+
+                // 清空输入框
+                elements.userMessage.value = '';
+
+                // 显示成功提示
+                const sendBtn = this;
+                const originalText = sendBtn.innerHTML;
+                sendBtn.innerHTML = '<i class="fas fa-check"></i> 邮件客户端已打开';
+                sendBtn.style.background = '#00b894';
+
+                // 延迟一点时间，让用户看到按钮状态变化
+                setTimeout(() => {
+                    window.location.href = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
+                    // 恢复按钮状态
+                    setTimeout(() => {
+                        sendBtn.innerHTML = originalText;
+                        sendBtn.style.background = 'linear-gradient(135deg, #006266 0%, #00a8a8 100%)';
+                    }, 1000);
+                }, 300);
+            });
+
+            // 当弹窗打开时自动聚焦到输入框
+            elements.feedbackModal.addEventListener('click', function (e) {
+                if (e.target === this || e.target.classList.contains('close-modal')) {
+                    return;
+                }
+                setTimeout(() => {
+                    elements.userMessage.focus();
+                }, 300);
+            });
+
+            // 阻止在反馈弹窗内滚动时背景滚动
+            elements.feedbackModal.addEventListener('touchmove', function (e) {
+                if (e.target === this) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+
+        // 确保页面内容不会被底部栏遮挡
+        function adjustContentPadding() {
+            const footerHeight = document.getElementById('globalFooter').offsetHeight;
+            document.body.style.paddingBottom = footerHeight + 20 + 'px';
+        }
+        // 新增：根据新配置重置游戏的函数
+        function resetGameForNewConfig() {
+            // 重置统计数字
+            gameState.stats = {
+                crackEnemy: 0,
+                transmitFail: 0,
+                enemyCrack: 0,
+                enemyTransmitFail: 0
+            };
+
+            // 重置游戏状态
+            gameState.gameStatus = 'playing';
+
+            // 重置词语
+            for (let i = 0; i < 4; i++) {
+                gameState.currentWords[i] = getRandomWord();
+            }
+
+            // 更新UI统计数字（如果已经在密码本页面）
             Object.keys(gameState.stats).forEach(stat => {
                 const element = document.getElementById(stat);
                 if (element) {
                     element.textContent = gameState.stats[stat];
                 }
             });
-        } catch (e) {
-            console.error('加载统计失败:', e);
+
+            // 保存重置后的状态
+            saveStats();
+
+            // 显示提示
+            showTemporaryMessage('游戏已根据新配置开始！');
         }
-    }
+        // ==================== 游戏向导功能 ====================
+        // 向导DOM元素
+        const guideElements = {
+            guideFloatBtn: document.getElementById('guideFloatBtn'),
+            guideModal: document.getElementById('guideModal'),
+            guideClose: document.getElementById('guideClose'),
+            quickStartBtn: document.getElementById('quickStartBtn')
+        };
 
-    // 加载配置（只在游戏开始时加载，重置时不覆盖）
-    const savedConfig = localStorage.getItem('game_config');
-    if (savedConfig) {
-        try {
-            // 只在配置页面或首次加载时更新配置
-            if (elements.configPage.style.display === 'block' || Object.keys(gameState.config).length === 0) {
-                gameState.config = JSON.parse(savedConfig);
-            }
-        } catch (e) {
-            console.error('加载配置失败:', e);
-        }
-    }
+        // 初始化向导
+        function initGuide() {
+            // 显示向导悬浮按钮
+            guideElements.guideFloatBtn.style.display = 'flex';
 
-    // 加载词语
-    const savedWords = localStorage.getItem('game_words');
-    if (savedWords) {
-        try {
-            gameState.currentWords = JSON.parse(savedWords);
-        } catch (e) {
-            console.error('加载词语失败:', e);
-        }
-    }
-}
-
-    // 加载配置
-    const savedConfig = localStorage.getItem('game_config');
-    if (savedConfig) {
-        try {
-            gameState.config = JSON.parse(savedConfig);
-        } catch (e) {
-            console.error('加载配置失败:', e);
-        }
-    }
-
-    // 加载词语
-    const savedWords = localStorage.getItem('game_words');
-    if (savedWords) {
-        try {
-            gameState.currentWords = JSON.parse(savedWords);
-        } catch (e) {
-            console.error('加载词语失败:', e);
-        }
-    }
-
-
-    // 生成电报码
-    function generateTelegraphCode() {
-        const numbers = [1, 2, 3, 4];
-        // 随机打乱数组并取前3个
-        const shuffled = [...numbers].sort(() => Math.random() - 0.5);
-        return shuffled.slice(0, 3).join('.');
-    }
-
-    // 更新电报码
-    function updateTelegraphCode() {
-        gameState.telegraphCode = generateTelegraphCode();
-        elements.telegraphCode.textContent = gameState.telegraphCode;
-    }
-
-    // 确认更换电报码
-    function confirmChangeTelegraphCode() {
-        elements.confirmText.textContent = '确定要更换电报码吗？';
-        elements.confirmModal.style.display = 'flex';
-    }
-
-    // 显示/隐藏加载动画
-    function showLoading(show) {
-        elements.loading.style.display = show ? 'flex' : 'none';
-    }
-
-    // ==================== 新增：反馈功能 ====================
-    function initFeedbackModal() {
-        // 反馈入口点击事件
-        document.getElementById('feedbackTrigger').addEventListener('click', function (e) {
-            e.preventDefault();
-            elements.feedbackModal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        });
-
-        // 关闭按钮
-        document.querySelector('.close-modal').addEventListener('click', function () {
-            elements.feedbackModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        // 点击蒙版关闭
-        elements.feedbackModal.addEventListener('click', function (e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        });
-
-        // 发送邮件按钮
-        elements.sendEmailBtn.addEventListener('click', function () {
-            const message = elements.userMessage.value.trim();
-
-            if (!message) {
-                alert('请输入您的留言内容');
-                elements.userMessage.focus();
-                return;
-            }
-
-            // 获取用户设备信息
-            const deviceInfo = `设备信息: ${navigator.userAgent}`;
-            const gameVersion = `游戏版本: 窃听风云 v1.0`;
-            const currentPage = `当前页面: ${window.location.href}`;
-
-            // 构造邮件内容
-            const subject = encodeURIComponent('【窃听风云游戏】用户反馈');
-            const body = encodeURIComponent(`用户反馈内容：\n\n${message}\n\n───────────────\n${gameVersion}\n${deviceInfo}\n${currentPage}\n\n感谢您的反馈！`);
-
-            // 清空输入框
-            elements.userMessage.value = '';
-
-            // 显示成功提示
-            const sendBtn = this;
-            const originalText = sendBtn.innerHTML;
-            sendBtn.innerHTML = '<i class="fas fa-check"></i> 邮件客户端已打开';
-            sendBtn.style.background = '#00b894';
-
-            // 延迟一点时间，让用户看到按钮状态变化
-            setTimeout(() => {
-                window.location.href = `mailto:ming95ming@126.com?subject=${subject}&body=${body}`;
-                // 恢复按钮状态
-                setTimeout(() => {
-                    sendBtn.innerHTML = originalText;
-                    sendBtn.style.background = 'linear-gradient(135deg, #006266 0%, #00a8a8 100%)';
-                }, 1000);
-            }, 300);
-        });
-
-        // 当弹窗打开时自动聚焦到输入框
-        elements.feedbackModal.addEventListener('click', function (e) {
-            if (e.target === this || e.target.classList.contains('close-modal')) {
-                return;
-            }
-            setTimeout(() => {
-                elements.userMessage.focus();
-            }, 300);
-        });
-
-        // 阻止在反馈弹窗内滚动时背景滚动
-        elements.feedbackModal.addEventListener('touchmove', function (e) {
-            if (e.target === this) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-    }
-
-    // 确保页面内容不会被底部栏遮挡
-    function adjustContentPadding() {
-        const footerHeight = document.getElementById('globalFooter').offsetHeight;
-        document.body.style.paddingBottom = footerHeight + 20 + 'px';
-    }
-// 新增：根据新配置重置游戏的函数
-function resetGameForNewConfig() {
-    // 重置统计数字
-    gameState.stats = {
-        crackEnemy: 0,
-        transmitFail: 0,
-        enemyCrack: 0,
-        enemyTransmitFail: 0
-    };
-
-    // 重置游戏状态
-    gameState.gameStatus = 'playing';
-
-    // 重置词语
-    for (let i = 0; i < 4; i++) {
-        gameState.currentWords[i] = getRandomWord();
-    }
-
-    // 更新UI统计数字（如果已经在密码本页面）
-    Object.keys(gameState.stats).forEach(stat => {
-        const element = document.getElementById(stat);
-        if (element) {
-            element.textContent = gameState.stats[stat];
-        }
-    });
-
-    // 保存重置后的状态
-    saveStats();
-
-    // 显示提示
-    showTemporaryMessage('游戏已根据新配置开始！');
-}
-    // 事件监听器设置
-    function setupEventListeners() {
-         // 主菜单按钮
-    document.getElementById('codebookBtn').addEventListener('click', async (e) => {
-        e.stopPropagation();
-        // 不再直接加载词语和显示密码本页面
-        // 而是先显示配置页面
-        showPage('config');
-    }, false);
-
-        document.getElementById('telegraphBtn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            showPage('telegraph');
-        }, false);
- // 新增：配置页面返回按钮
-    elements.backFromConfig.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showPage('home');
-    }, false);
-      // 新增：开始游戏按钮
-   // 修改：开始游戏按钮点击事件
-elements.startGameBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-
-    // 保存配置到本地存储
-    localStorage.setItem('game_config', JSON.stringify(gameState.config));
-
-    // 根据新配置重置游戏统计
-    resetGameForNewConfig();
-
-    // 进入密码本页面
-    showPage('codebook');
-}, false);
-    // 修改结算画面按钮事件，传递false不显示消息
-elements.victoryRestartBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    // 先关闭胜利模态框
-    elements.victoryModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-
-    // 重置游戏状态（不显示消息）
-    resetGame(false);
-
-    // 回到密码本页面（使用现有配置）
-    showPage('codebook');
-}, false);
-    elements.victoryHomeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        elements.victoryModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        showPage('home');
-    }, false);
-
-   elements.defeatRestartBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    // 先关闭失败模态框
-    elements.defeatModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-
-    // 重置游戏状态（不显示消息）
-    resetGame(false);
-
-    // 回到密码本页面（使用现有配置）
-    showPage('codebook');
-}, false);
-
-    elements.defeatHomeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        elements.defeatModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        showPage('home');
-    }, false);
-
-    // 点击结算画面蒙版关闭
-    elements.victoryModal.addEventListener('click', (e) => {
-        if (e.target === elements.victoryModal) {
-            elements.victoryModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    });
-
-    elements.defeatModal.addEventListener('click', (e) => {
-        if (e.target === elements.defeatModal) {
-            elements.defeatModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    });
-        // 返回按钮
-        document.getElementById('backFromCodebook').addEventListener('click', (e) => {
-            e.stopPropagation();
-            showPage('home');
-        }, false);
-
-        document.getElementById('backFromTelegraph').addEventListener('click', (e) => {
-            e.stopPropagation();
-            showPage('home');
-        }, false);
-
-        // 电报机按钮
-        document.getElementById('changeCodeBtn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            confirmChangeTelegraphCode();
-        }, false);
-
-        // 确认弹窗按钮
-        elements.confirmYes.addEventListener('click', (e) => {
-            e.stopPropagation();
-            updateTelegraphCode();
-            elements.confirmModal.style.display = 'none';
-        }, false);
-
-        elements.confirmNo.addEventListener('click', (e) => {
-            e.stopPropagation();
-            elements.confirmModal.style.display = 'none';
-        }, false);
-
-        // 点击蒙版关闭确认框
-        elements.confirmModal.addEventListener('click', (e) => {
-            if (e.target === elements.confirmModal) {
-                elements.confirmModal.style.display = 'none';
-            }
-        }, false);
-
-        // 使用事件委托处理统计按钮
-        document.addEventListener('click', function(e) {
-            const btn = e.target.closest('.stat-btn');
-            if (btn) {
+            // 悬浮按钮点击事件
+            guideElements.guideFloatBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const stat = btn.getAttribute('data-stat');
-                const delta = parseInt(btn.getAttribute('data-delta'));
-                const type = btn.classList.contains('our-btn') ? 'our' : 'enemy';
-                changeStat(stat, delta, type);
-            }
-        }, false);
-
-        // 阻止按钮双击选中文本
-        document.querySelectorAll('button').forEach(btn => {
-            btn.addEventListener('mousedown', function(e) {
-                e.preventDefault();
+                guideElements.guideModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
             });
-        });
-        // 再来一局按钮
-elements.restartGameBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    confirmResetGame();
-}, false);
 
-    // 确保确认弹窗的其他部分正常工作
-    elements.confirmNo.addEventListener('click', (e) => {
-        e.stopPropagation();
-        elements.confirmModal.style.display = 'none';
-    }, false);
-    }
+            // 关闭按钮事件
+            guideElements.guideClose.addEventListener('click', (e) => {
+                e.stopPropagation();
+                guideElements.guideModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
 
-    // 修改初始加载函数
-document.addEventListener('DOMContentLoaded', async () => {
-    // 设置事件监听器
-    setupEventListeners();
+            // 点击蒙版关闭
+            guideElements.guideModal.addEventListener('click', (e) => {
+                if (e.target === guideElements.guideModal) {
+                    guideElements.guideModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
 
-    // 初始化反馈功能
-    initFeedbackModal();
+            // 快速开始按钮
+            guideElements.quickStartBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
 
-    // 预加载词语
-    await loadWords();
+                // 关闭向导
+                guideElements.guideModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
 
-    // 确保初始电报码
-    updateTelegraphCode();
+                // 显示提示消息
+                // showTemporaryMessage('正在引导您开始游戏...');
 
-    // 调整页面内边距
-    adjustContentPadding();
-    window.addEventListener('resize', adjustContentPadding);
+                // // 延迟后进入配置页面
+                // setTimeout(() => {
+                //     // 如果是首页，点击密码本按钮
+                //     if (elements.homePage.style.display === 'flex') {
+                //         document.getElementById('codebookBtn').click();
+                //     }
+                //     // 如果在其他页面，先返回首页
+                //     else {
+                //         showPage('home');
+                //         setTimeout(() => {
+                //             document.getElementById('codebookBtn').click();
+                //         }, 500);
+                //     }
+                // }, 1000);
+            });
 
-    // 添加键盘快捷键
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (elements.codebookPage.style.display === 'block' ||
-                elements.telegraphPage.style.display === 'block' ||
-                elements.configPage.style.display === 'block') {
-                showPage('home');
+            // 阻止向导内滚动时背景滚动
+            guideElements.guideModal.addEventListener('touchmove', function (e) {
+                if (e.target === this) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+
+        // 显示临时消息（复用现有函数）
+        function showGuideMessage(message) {
+            const messageEl = document.createElement('div');
+            messageEl.className = 'guide-message';
+            messageEl.textContent = message;
+            messageEl.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 184, 148, 0.9);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: bold;
+        z-index: 1003;
+        box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+        animation: slideInRight 0.5s ease;
+    `;
+
+            // 添加动画关键帧
+            if (!document.querySelector('#guideMessageStyle')) {
+                const style = document.createElement('style');
+                style.id = 'guideMessageStyle';
+                style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
             }
-            if (elements.feedbackModal.style.display === 'block') {
-                elements.feedbackModal.style.display = 'none';
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+                document.head.appendChild(style);
+            }
+
+            document.body.appendChild(messageEl);
+
+            // 3秒后移除消息
+            setTimeout(() => {
+                messageEl.style.animation = 'slideOutRight 0.5s ease';
+                setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.parentNode.removeChild(messageEl);
+                    }
+                }, 500);
+            }, 3000);
+        }
+
+        // 在DOM加载完成后初始化向导
+        document.addEventListener('DOMContentLoaded', () => {
+            // 原有的初始化代码...
+
+            // 初始化向导（延迟一点，确保其他元素已加载）
+            setTimeout(initGuide, 1000);
+        });
+
+        // 添加键盘快捷键支持向导
+        document.addEventListener('keydown', (e) => {
+            // F1键打开向导
+            if (e.key === 'F1') {
+                e.preventDefault();
+                guideElements.guideModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+
+            // ESC键关闭向导
+            if (e.key === 'Escape' && guideElements.guideModal.style.display === 'block') {
+                guideElements.guideModal.style.display = 'none';
                 document.body.style.overflow = 'auto';
             }
-            if (elements.victoryModal.style.display === 'block') {
+        });
+        // 事件监听器设置
+        function setupEventListeners() {
+            // 主菜单按钮
+            document.getElementById('codebookBtn').addEventListener('click', async (e) => {
+                e.stopPropagation();
+                // 不再直接加载词语和显示密码本页面
+                // 而是先显示配置页面
+                showPage('config');
+            }, false);
+
+            document.getElementById('telegraphBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showPage('telegraph');
+            }, false);
+            // 新增：配置页面返回按钮
+            elements.backFromConfig.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showPage('home');
+            }, false);
+            // 新增：开始游戏按钮
+            // 修改：开始游戏按钮点击事件
+            elements.startGameBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                // 保存配置到本地存储
+                localStorage.setItem('game_config', JSON.stringify(gameState.config));
+
+                // 根据新配置重置游戏统计
+                resetGameForNewConfig();
+
+                // 进入密码本页面
+                showPage('codebook');
+            }, false);
+            // 修改结算画面按钮事件，传递false不显示消息
+            elements.victoryRestartBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // 先关闭胜利模态框
                 elements.victoryModal.style.display = 'none';
                 document.body.style.overflow = 'auto';
-            }
-            if (elements.defeatModal.style.display === 'block') {
+
+                // 重置游戏状态（不显示消息）
+                resetGame(false);
+
+                // 回到密码本页面（使用现有配置）
+                showPage('codebook');
+            }, false);
+            elements.victoryHomeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                elements.victoryModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                showPage('home');
+            }, false);
+
+            elements.defeatRestartBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // 先关闭失败模态框
                 elements.defeatModal.style.display = 'none';
                 document.body.style.overflow = 'auto';
-            }
+
+                // 重置游戏状态（不显示消息）
+                resetGame(false);
+
+                // 回到密码本页面（使用现有配置）
+                showPage('codebook');
+            }, false);
+
+            elements.defeatHomeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                elements.defeatModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                showPage('home');
+            }, false);
+
+            // 点击结算画面蒙版关闭
+            elements.victoryModal.addEventListener('click', (e) => {
+                if (e.target === elements.victoryModal) {
+                    elements.victoryModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            elements.defeatModal.addEventListener('click', (e) => {
+                if (e.target === elements.defeatModal) {
+                    elements.defeatModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            // 返回按钮
+            document.getElementById('backFromCodebook').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showPage('home');
+            }, false);
+
+            document.getElementById('backFromTelegraph').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showPage('home');
+            }, false);
+
+            // 电报机按钮
+            document.getElementById('changeCodeBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                confirmChangeTelegraphCode();
+            }, false);
+
+            // 确认弹窗按钮
+            elements.confirmYes.addEventListener('click', (e) => {
+                e.stopPropagation();
+                updateTelegraphCode();
+                elements.confirmModal.style.display = 'none';
+            }, false);
+
+            elements.confirmNo.addEventListener('click', (e) => {
+                e.stopPropagation();
+                elements.confirmModal.style.display = 'none';
+            }, false);
+
+            // 点击蒙版关闭确认框
+            elements.confirmModal.addEventListener('click', (e) => {
+                if (e.target === elements.confirmModal) {
+                    elements.confirmModal.style.display = 'none';
+                }
+            }, false);
+
+            // 使用事件委托处理统计按钮
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('.stat-btn');
+                if (btn) {
+                    e.stopPropagation();
+                    const stat = btn.getAttribute('data-stat');
+                    const delta = parseInt(btn.getAttribute('data-delta'));
+                    const type = btn.classList.contains('our-btn') ? 'our' : 'enemy';
+                    changeStat(stat, delta, type);
+                }
+            }, false);
+
+            // 阻止按钮双击选中文本
+            document.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('mousedown', function (e) {
+                    e.preventDefault();
+                });
+            });
+            // 再来一局按钮
+            elements.restartGameBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                confirmResetGame();
+            }, false);
+
+            // 确保确认弹窗的其他部分正常工作
+            elements.confirmNo.addEventListener('click', (e) => {
+                e.stopPropagation();
+                elements.confirmModal.style.display = 'none';
+            }, false);
         }
-    });
-});
-</script>
+
+        // 修改初始加载函数
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 设置事件监听器
+            setupEventListeners();
+
+            // 初始化反馈功能
+            initFeedbackModal();
+
+            // 预加载词语
+            await loadWords();
+
+            // 确保初始电报码
+            updateTelegraphCode();
+
+            // 调整页面内边距
+            adjustContentPadding();
+            window.addEventListener('resize', adjustContentPadding);
+
+            // 添加键盘快捷键
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (elements.codebookPage.style.display === 'block' ||
+                        elements.telegraphPage.style.display === 'block' ||
+                        elements.configPage.style.display === 'block') {
+                        showPage('home');
+                    }
+                    if (elements.feedbackModal.style.display === 'block') {
+                        elements.feedbackModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                    if (elements.victoryModal.style.display === 'block') {
+                        elements.victoryModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                    if (elements.defeatModal.style.display === 'block') {
+                        elements.defeatModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>
