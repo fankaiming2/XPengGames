@@ -1766,15 +1766,20 @@
         .step-content li {
             margin-bottom: 8px;
             position: relative;
-            padding-left: 10px;
+            padding-left: 0;
         }
 
         .step-content li:before {
             content: "•";
             color: #00b894;
             position: absolute;
+            display: none; /* 隐藏序号 */
             left: -15px;
         }
+        /* 或者直接覆盖整个规则 */
+.flow-step ol li:before {
+    display: none;
+}
 
         /* 设备示意图 */
         .equipment-diagram {
@@ -1850,7 +1855,7 @@
 
         .flow-step {
             background: #2d3436;
-            padding: 15px;
+            padding: 18px;
             border-radius: 8px;
             margin: 15px 0;
             border-left: 4px solid #00b894;
