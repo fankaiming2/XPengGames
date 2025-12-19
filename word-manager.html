@@ -1024,16 +1024,7 @@ async function generateWordsWithAI() {
 
     try {
         // 构建提示词
-        let customPrompt = document.getElementById('aiCustomPrompt').value.trim();
-        let prompt;
-
-        if (customPrompt && customPrompt.includes('{topic}')) {
-            prompt = customPrompt.replace('{topic}', themeName);
-        } else if (customPrompt) {
-            prompt = customPrompt;
-        } else {
-            prompt = `我在玩"你说我猜"的游戏，请给与${themeName}有关的100个词语，用英文逗号分隔，无需序号，直接给我词语内容`;
-        }
+        let prompt = `我在玩"你说我猜"的游戏，请给与${themeName}有关的100个词语，用英文逗号分隔，无需序号，直接给我词语内容`;
 
         console.log('发送AI请求:', { theme: themeName, promptLength: prompt.length });
         const response = await callDeepSeekAPI(apiKey, prompt);
@@ -1567,9 +1558,11 @@ function renderThemes() {
             ModalManager.confirm(`确定要删除词库 "${themeName}" 吗？`, () => {
                 const result = WordManager.remove(themeName);
                 if (result.success) {
+
                     ModalManager.success(result.message, () => {
                         renderThemes();
                     });
+                    return;
                 } else {
                     ModalManager.error(result.message);
                 }
