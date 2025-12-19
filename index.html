@@ -1642,12 +1642,6 @@
             <!-- 时间选项将通过JS动态生成 -->
         </div>
 
-        <!-- 在themeSection中，时间选项后面添加 -->
-        <div class="game-controls" style="margin-top: 15px; margin-bottom: 15px;">
-            <button class="btn btn-info" id="aiWordsBtn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <i class="fas fa-robot"></i> AI生成词库
-            </button>
-        </div>
         <div class="game-controls">
             <button class="btn btn-primary" id="startGameBtn">
                 <i class="fas fa-play-circle"></i>进入游戏
@@ -4337,10 +4331,6 @@ if (!ensureAudioContext()) return;
         // 跳转到词库管理页面
         window.location.href = 'word-manager.html';
     });
-    // 在现有的事件监听部分添加
-document.getElementById('aiWordsBtn').addEventListener('click', () => {
-    window.open('word-ai.html', '_blank');
-});
     document.getElementById('startGameBtn').addEventListener('click', startGame);
     elements.startNowBtn.addEventListener('click', startGameNow);
     elements.cancelStartBtn.addEventListener('click', () => showSection('theme'));
