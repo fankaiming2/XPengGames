@@ -1641,8 +1641,13 @@
         <div class="time-options" id="timeOptions">
             <!-- 时间选项将通过JS动态生成 -->
         </div>
-        <!-- 添加隐藏的词库管理按钮 -->
 
+        <!-- 在themeSection中，时间选项后面添加 -->
+        <div class="game-controls" style="margin-top: 15px; margin-bottom: 15px;">
+            <button class="btn btn-info" id="aiWordsBtn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <i class="fas fa-robot"></i> AI生成词库
+            </button>
+        </div>
         <div class="game-controls">
             <button class="btn btn-primary" id="startGameBtn">
                 <i class="fas fa-play-circle"></i>进入游戏
@@ -3012,26 +3017,43 @@ function getBeijingTimestamp() {
             if (customThemes) {
                 const themes = JSON.parse(customThemes);
                 themes.forEach(theme => {
-                    // 为自定义主题生成唯一的ID
-                    const themeId = `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                    // 检查是否已存在相同名称的主题
+                    const existingIndex = gameState.themes.findIndex(t => t.name === theme.name);
 
-                    gameState.themes.push({
-                        id: themeId,
-                        name: theme.name,
-                        icon: theme.icon,
-                        color: '#ff9f43', // 自定义主题使用橙色
-                        words: theme.words,
-                        isCustom: true, // 标记为自定义主题
-                        createdAt: theme.createdAt
-                    });
+                    if (existingIndex !== -1) {
+                        // 更新现有主题
+                        gameState.themes[existingIndex] = {
+                            ...gameState.themes[existingIndex],
+                            ...theme,
+                            id: theme.id || `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+                        };
+                        console.log(`更新自定义主题: ${theme.name}`);
+                    } else {
+                        // 添加新主题
+                        const themeId = theme.id || `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-                    console.log(`添加自定义主题: ${theme.name} (${theme.words.length}个词语)`);
+                        gameState.themes.push({
+                            id: themeId,
+                            name: theme.name,
+                            icon: theme.icon || getThemeIcon(theme.name),
+                            color: theme.color || getThemeColor(theme.name) || '#ff9f43',
+                            words: theme.words,
+                            isCustom: true,
+                            isAI: theme.isAI || false,
+                            createdAt: theme.createdAt || new Date().toISOString()
+                        });
+
+                        console.log(`添加自定义主题: ${theme.name} (${theme.words.length}个词语)`);
+                    }
                 });
+
+                // 重新初始化主题选择界面
+                initThemeSelection();
             }
         } catch (error) {
             console.error('加载自定义主题时出错:', error);
-        }
     }
+}
     // 3. 初始化主题选择界面
     function initThemeSelection() {
         elements.themeGrid.innerHTML = '';
@@ -4315,6 +4337,10 @@ if (!ensureAudioContext()) return;
         // 跳转到词库管理页面
         window.location.href = 'word-manager.html';
     });
+    // 在现有的事件监听部分添加
+document.getElementById('aiWordsBtn').addEventListener('click', () => {
+    window.open('word-ai.html', '_blank');
+});
     document.getElementById('startGameBtn').addEventListener('click', startGame);
     elements.startNowBtn.addEventListener('click', startGameNow);
     elements.cancelStartBtn.addEventListener('click', () => showSection('theme'));
@@ -4339,6 +4365,36 @@ if (!ensureAudioContext()) return;
     // elements.showReviewBtn.addEventListener('click', showReview);
 
     // ==================== 初始化 ====================
+    // 监听来自AI词库页面的消息
+window.addEventListener('message', (event) => {
+    if (event.data.type === 'THEME_ADDED') {
+        console.log('收到新主题:', event.data.theme);
+
+        // 添加到主题列表
+        const theme = event.data.theme;
+        const themeId = theme.id || `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+        gameState.themes.push({
+            id: themeId,
+            name: theme.name,
+            icon: theme.icon || getThemeIcon(theme.name),
+            color: theme.color || getThemeColor(theme.name) || '#ff9f43',
+            words: theme.words,
+            isCustom: true,
+            isAI: true,
+            createdAt: theme.createdAt || new Date().toISOString()
+        });
+
+        // 刷新主题选择界面
+        initThemeSelection();
+
+        // 自动选择新添加的主题
+        selectTheme(themeId);
+
+        // 显示提示
+        alert(`"${theme.name}" 词库已成功添加！\n包含 ${theme.words.length} 个词语。`);
+    }
+});
     // 修改初始化函数
     window.addEventListener('DOMContentLoaded', () => {
         initAllThemes();
