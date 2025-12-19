@@ -6,6 +6,75 @@
     <title>词库管理 - 你说我猜</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* AI相关样式 */
+.input-with-icon {
+    position: relative;
+}
+
+.toggle-visibility {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.toggle-visibility:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.spinner {
+    border: 4px solid rgba(37, 117, 252, 0.2);
+    border-top: 4px solid #2575fc;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.word-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.word-tag {
+    background: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 响应式调整 */
+@media (max-width: 600px) {
+    .button-group {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
         /* ==================== 密码验证界面样式 ==================== */
         .password-overlay {
             position: fixed;
@@ -621,16 +690,24 @@
                 font-size: 1.1rem;
             }
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+/* 添加淡入动画 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
         @keyframes slideUp {
             from { transform: translateY(50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+        #aiResult, #aiError {
+    animation: fadeIn 0.3s ease;
+}
+/* AI部分的特殊样式 */
+#aiSection {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border: 2px solid rgba(102, 126, 234, 0.3);
+}
     </style>
 </head>
 <body>
@@ -742,7 +819,105 @@
                     <i class="fas fa-plus"></i> 添加/更新词库
                 </button>
             </div>
+            <!-- 在"添加新词库"section之后，"已添加的词库"section之前添加 -->
 
+            <!-- AI词库生成 -->
+            <div class="section" id="aiSection">
+                <h2><i class="fas fa-robot"></i> AI智能生成词库</h2>
+
+                <div class="hint-box" style="background: #f0f7ff; border-color: #2575fc; margin-bottom: 20px;">
+                    <h4><i class="fas fa-bolt"></i> AI生成说明</h4>
+                    <ul>
+                        <li>使用DeepSeek AI自动生成词库内容</li>
+                        <li>需要有效的DeepSeek API密钥</li>
+                        <li>AI将根据主题生成100个相关词语</li>
+                        <li>生成的词库会添加到自定义词库列表中</li>
+                    </ul>
+                </div>
+
+                <div class="form-group">
+                    <label for="aiApiKey"><i class="fas fa-key"></i> DeepSeek API密钥</label>
+                    <div class="input-with-icon">
+                        <input type="password" id="aiApiKey" class="form-control"
+                               placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                               style="padding-right: 40px;">
+                        <button type="button" class="toggle-visibility" onclick="toggleAiPasswordVisibility()">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <small style="color: #666; display: block; margin-top: 5px; font-size: 0.85rem;">
+                        密钥以"sk-"开头，共32-64位字符。密钥仅保存在浏览器本地
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="aiThemeName"><i class="fas fa-tags"></i> 主题名称</label>
+                    <input type="text" id="aiThemeName" class="form-control"
+                           placeholder="例如：动物、电影、成语、明星、美食...">
+                </div>
+
+                <div class="form-group">
+                    <label for="aiThemeIcon">选择图标</label>
+                    <select id="aiThemeIcon" class="form-control">
+                        <option value="fas fa-film">电影</option>
+                        <option value="fas fa-music">音乐</option>
+                        <option value="fas fa-gamepad">游戏</option>
+                        <option value="fas fa-utensils">美食</option>
+                        <option value="fas fa-futbol">运动</option>
+                        <option value="fas fa-graduation-cap">学习</option>
+                        <option value="fas fa-heart">爱好</option>
+                        <option value="fas fa-star">明星</option>
+                        <option value="fas fa-book">书籍</option>
+                        <option value="fas fa-palette">艺术</option>
+                        <option value="fas fa-robot">科技/AI</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="aiCustomPrompt"><i class="fas fa-comment-alt"></i> 自定义提示词（可选）</label>
+                    <textarea id="aiCustomPrompt" class="form-control" rows="3"
+                              placeholder="默认提示词：我在玩'你说我猜'中文版的游戏，请给与{topic}有关的100个中文词语，用逗号分隔，无需序号，直接给我词语内容"></textarea>
+                </div>
+
+                <!-- AI生成状态 -->
+                <div id="aiLoading" style="display: none; text-align: center; padding: 20px;">
+                    <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto 15px;"></div>
+                    <p>AI正在思考中，请稍候...</p>
+                    <small style="color: #666;">通常需要10-20秒</small>
+                </div>
+
+                <!-- AI生成结果预览 -->
+                <div id="aiResult" style="display: none; margin-top: 20px;">
+                    <div class="result-header" style="background: #e8f7ef; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 2px solid #2ed573;">
+                        <h4 style="color: #25b562; margin: 0;">
+                            <i class="fas fa-check-circle"></i> 生成成功！
+                            <span id="aiWordCount" style="font-size: 0.9em; color: #2ed573; margin-left: 10px;">0个词语</span>
+                        </h4>
+                    </div>
+
+                    <div class="word-preview" style="max-height: 150px; overflow-y: auto; padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e9ecef;">
+                        <p style="margin-bottom: 10px; color: #666;">词语预览（前20个）：</p>
+                        <div id="aiWordPreview" class="word-tags">
+                            <!-- 词语会动态添加到这里 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI错误提示 -->
+                <div id="aiError" style="display: none; background: #fff5f5; color: #ff4757; padding: 15px; border-radius: 8px; margin-top: 15px; border: 2px solid #ff6b81;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="aiErrorMessage">出错了</span>
+                </div>
+
+                <div class="button-group" style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-primary" id="aiGenerateBtn" style="flex: 2; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-magic"></i> AI生成词库
+                    </button>
+                    <button class="btn btn-success" id="aiAddToGameBtn" style="flex: 1; display: none;">
+                        <i class="fas fa-plus-circle"></i> 添加
+                    </button>
+                </div>
+            </div>
             <!-- 已添加的词库 -->
             <div class="section">
                 <h2><i class="fas fa-list"></i> 已添加的词库</h2>
@@ -772,6 +947,300 @@
         </div>
     </div>
     <script>
+        // ==================== AI词库生成功能 ====================
+const AIState = {
+    apiKey: '',
+    generatedWords: [],
+    themeName: '',
+    themeIcon: 'fas fa-film',
+    isGenerating: false
+};
+
+// 初始化AI功能
+function initAIFunction() {
+    // 从localStorage加载保存的API密钥
+    const savedKey = localStorage.getItem('deepseek_api_key');
+    if (savedKey) {
+        document.getElementById('aiApiKey').value = savedKey;
+        AIState.apiKey = savedKey;
+    }
+
+    // 绑定事件
+    document.getElementById('aiGenerateBtn').addEventListener('click', generateWordsWithAI);
+    document.getElementById('aiAddToGameBtn').addEventListener('click', addAIToGame);
+    document.getElementById('aiThemeIcon').addEventListener('change', (e) => {
+        AIState.themeIcon = e.target.value;
+    });
+}
+
+// 切换密码可见性
+function toggleAiPasswordVisibility() {
+    const input = document.getElementById('aiApiKey');
+    const icon = input.parentNode.querySelector('i');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+// 使用AI生成词语
+async function generateWordsWithAI() {
+    const apiKey = document.getElementById('aiApiKey').value.trim();
+    const themeName = document.getElementById('aiThemeName').value.trim();
+
+    // 验证输入
+    if (!apiKey) {
+        showAIError('请输入DeepSeek API密钥');
+        return;
+    }
+
+    if (!apiKey.startsWith('sk-')) {
+        showAIError('API密钥格式不正确，应以"sk-"开头');
+        return;
+    }
+
+    if (!themeName) {
+        showAIError('请输入主题名称');
+        return;
+    }
+
+    // 保存API密钥
+    localStorage.setItem('deepseek_api_key', apiKey);
+    AIState.apiKey = apiKey;
+    AIState.themeName = themeName;
+    AIState.themeIcon = document.getElementById('aiThemeIcon').value;
+
+    // 设置加载状态
+    AIState.isGenerating = true;
+    document.getElementById('aiLoading').style.display = 'block';
+    document.getElementById('aiResult').style.display = 'none';
+    document.getElementById('aiError').style.display = 'none';
+    document.getElementById('aiGenerateBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
+    document.getElementById('aiGenerateBtn').disabled = true;
+
+    try {
+        // 构建提示词
+        let customPrompt = document.getElementById('aiCustomPrompt').value.trim();
+        let prompt;
+
+        if (customPrompt && customPrompt.includes('{topic}')) {
+            prompt = customPrompt.replace('{topic}', themeName);
+        } else if (customPrompt) {
+            prompt = customPrompt;
+        } else {
+            prompt = `我在玩"你说我猜"的游戏，请给与${themeName}有关的100个词语，用英文逗号分隔，无需序号，直接给我词语内容`;
+        }
+
+        console.log('发送AI请求:', { theme: themeName, promptLength: prompt.length });
+        const response = await callDeepSeekAPI(apiKey, prompt);
+
+        // 处理返回的词语
+        AIState.generatedWords = processAIWords(response);
+
+        if (AIState.generatedWords.length === 0) {
+            throw new Error('未生成有效词语，请尝试其他主题名称');
+        }
+
+        // 显示结果
+        showAIResult();
+
+    } catch (error) {
+        console.error('AI生成失败:', error);
+        showAIError(`生成失败: ${error.message}`);
+    } finally {
+        AIState.isGenerating = false;
+        document.getElementById('aiLoading').style.display = 'none';
+        document.getElementById('aiGenerateBtn').innerHTML = '<i class="fas fa-magic"></i> AI生成词库';
+        document.getElementById('aiGenerateBtn').disabled = false;
+    }
+}
+
+// 调用DeepSeek API
+async function callDeepSeekAPI(apiKey, prompt) {
+    const apiUrl = 'https://api.deepseek.com/chat/completions';
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            model: 'deepseek-chat',
+             messages: [{
+        role: 'user',
+        content: prompt
+    }, {
+        role: 'system', // 添加系统提示，确保使用中文
+        content: '你是一个中文助手，请始终使用中文回复。输出格式：纯中文词语，用逗号分隔。'
+    }],
+            max_tokens: 2000,
+            temperature: 0.7,
+            stream: false
+        })
+    });
+
+    if (!response.ok) {
+        let errorMessage = `API请求失败: ${response.status}`;
+        try {
+            const errorData = await response.json();
+            errorMessage = errorData.error?.message || errorMessage;
+        } catch (e) {
+            // 忽略解析错误
+        }
+        throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    console.log('API响应:', data);
+
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+        throw new Error('API返回格式不正确');
+    }
+
+    return data.choices[0].message.content.trim();
+}
+
+// 处理AI返回的词语
+function processAIWords(text) {
+    console.log('原始AI响应:', text);
+
+    // 清理文本
+    let cleanedText = text
+        .replace(/[\n\r]+/g, ',')           // 换行符转逗号
+        .replace(/，/g, ',')                // 中文逗号转英文逗号
+        .replace(/；/g, ',')                // 中文分号转英文逗号
+        .replace(/;/g, ',')                 // 英文分号转逗号
+        .replace(/、/g, ',')                // 顿号转逗号
+        .replace(/\./g, ',')                // 句号转逗号
+        .replace(/\d+[\.、]?\s*/g, '')      // 移除序号
+        .replace(/[\[\]【】()（）"']/g, '') // 移除各种括号和引号
+        .replace(/\s+/g, '')                // 移除所有空白字符
+        .replace(/,,+/g, ',')               // 合并多个逗号
+        .replace(/^,|,$/g, '');             // 移除首尾逗号
+
+    // 分割词语
+    let words = cleanedText.split(',')
+        .map(word => word.trim())
+        .filter(word => {
+            // 过滤空值
+            if (!word) return false;
+            // 过滤过长词语（超过10个字符）
+            if (word.length > 10) {
+                console.log('过滤过长词语:', word);
+                return false;
+            }
+            // 过滤包含标点符号的词语
+            if (/[，。；！？、]/.test(word)) return false;
+            return true;
+        })
+        .map(word => word.substring(0, 10)); // 截断超长部分
+
+    // 去重
+    words = [...new Set(words)];
+
+    // 限制数量
+    if (words.length > 100) {
+        words = words.slice(0, 100);
+    }
+
+    console.log('处理后词语:', words.length, '个');
+    return words;
+}
+
+// 显示AI生成结果
+function showAIResult() {
+    // 更新计数
+    document.getElementById('aiWordCount').textContent = `${AIState.generatedWords.length}个词语`;
+
+    // 显示预览
+    const previewContainer = document.getElementById('aiWordPreview');
+    const previewWords = AIState.generatedWords.slice(0, 20);
+
+    previewContainer.innerHTML = previewWords
+        .map(word => `<span class="word-tag">${word}</span>`)
+        .join('');
+
+    // 显示结果区域
+    document.getElementById('aiResult').style.display = 'block';
+    document.getElementById('aiAddToGameBtn').style.display = 'inline-flex';
+
+    // 滚动到结果区域
+    document.getElementById('aiResult').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    ModalManager.success(`AI成功生成${AIState.generatedWords.length}个词语！`);
+}
+
+// 显示AI错误
+function showAIError(message) {
+    document.getElementById('aiErrorMessage').textContent = message;
+    document.getElementById('aiError').style.display = 'block';
+}
+
+// 添加AI生成的词库到游戏
+function addAIToGame() {
+    if (AIState.generatedWords.length === 0) {
+        showAIError('没有可添加的词语');
+        return;
+    }
+
+    try {
+        // 构建词库对象
+        const newTheme = {
+            name: AIState.themeName,
+            icon: AIState.themeIcon,
+            words: AIState.generatedWords,
+            createdAt: new Date().toISOString(),
+            isCustom: true,
+            isAI: true
+        };
+
+        // 添加到词库管理器
+        const result = WordManager.add(newTheme);
+
+        if (result.success) {
+            ModalManager.success(`"${AIState.themeName}"词库已添加成功！包含${AIState.generatedWords.length}个词语`, () => {
+                // 重新渲染词库列表
+                renderThemes();
+
+                // 清空AI表单
+                document.getElementById('aiThemeName').value = '';
+                document.getElementById('aiCustomPrompt').value = '';
+                document.getElementById('aiResult').style.display = 'none';
+                document.getElementById('aiAddToGameBtn').style.display = 'none';
+
+                // 滚动到词库列表
+                document.getElementById('themesContainer').scrollIntoView({ behavior: 'smooth' });
+            });
+        } else {
+            // 如果已存在，尝试更新
+            const themes = WordManager.getAll();
+            const existingTheme = themes.find(t => t.name === AIState.themeName);
+
+            if (existingTheme) {
+                ModalManager.confirm(`词库"${AIState.themeName}"已存在，是否覆盖？`, () => {
+                    const updateResult = WordManager.update(AIState.themeName, newTheme);
+                    if (updateResult.success) {
+                        ModalManager.success(updateResult.message, () => {
+                            renderThemes();
+                        });
+                    }
+                });
+            } else {
+                ModalManager.error(result.message);
+            }
+        }
+
+    } catch (error) {
+        console.error('添加AI主题失败:', error);
+        ModalManager.error(`添加失败: ${error.message}`);
+    }
+}
         // ==================== 密码验证模块 ====================
         const PasswordManager = {
             // 生成当前时间的密码（分+时+日，都是两位数）
@@ -947,7 +1416,8 @@
         function initWordManager() {
             updateWordCount();
             renderThemes();
-            
+                initAIFunction(); // 添加这行
+
             // 从URL获取参数（用于编辑）
             const urlParams = new URLSearchParams(window.location.search);
             const editThemeName = urlParams.get('edit');
@@ -980,53 +1450,61 @@
             elements.wordCount.textContent = count;
         }
     
-        function renderThemes() {
-            const themes = WordManager.getAll();
-            
-            if (themes.length === 0) {
-                elements.emptyThemes.style.display = 'block';
-                elements.themesContainer.innerHTML = '';
-                elements.themesContainer.appendChild(elements.emptyThemes);
-                return;
-            }
-            
-            elements.emptyThemes.style.display = 'none';
-            
-            const themesHTML = themes.map((theme, index) => `
-                <div class="theme-item" data-index="${index}">
-                    <div class="theme-header">
-                        <div class="theme-name">
-                            <i class="${theme.icon}"></i> ${theme.name}
-                        </div>
-                        <div class="theme-meta">
-                            <span><i class="fas fa-hashtag"></i> ${theme.words.length} 词</span>
-                            <span><i class="fas fa-clock"></i> ${new Date(theme.createdAt).toLocaleTimeString()}</span>
-                        </div>
-                    </div>
-                    <div class="word-count">
-                        <i class="fas fa-info-circle"></i> 预览前5个词语：
-                    </div>
-                    <div class="word-list">
-                        ${theme.words.slice(0, 5).map(word => 
-                            `<span class="word-tag">${word}</span>`
-                        ).join('')}
-                        ${theme.words.length > 5 ? 
-                            `<span class="word-tag">...还有${theme.words.length - 5}个</span>` : 
-                            ''}
-                    </div>
-                    <div class="theme-actions">
-                        <button class="action-btn action-edit" onclick="editTheme('${theme.name}')">
-                            <i class="fas fa-edit"></i> 编辑
-                        </button>
-                        <button class="action-btn action-delete" onclick="deleteTheme('${theme.name}')">
-                            <i class="fas fa-trash"></i> 删除
-                        </button>
-                    </div>
+        // 修改renderThemes函数，显示AI生成的标记
+function renderThemes() {
+    const themes = WordManager.getAll();
+
+    if (themes.length === 0) {
+        elements.emptyThemes.style.display = 'block';
+        elements.themesContainer.innerHTML = '';
+        elements.themesContainer.appendChild(elements.emptyThemes);
+        return;
+    }
+
+    elements.emptyThemes.style.display = 'none';
+
+    const themesHTML = themes.map((theme, index) => {
+        // 检查是否为AI生成的词库
+        const isAI = theme.isAI || theme.aiGenerated;
+
+        return `
+        <div class="theme-item" data-index="${index}">
+            <div class="theme-header">
+                <div class="theme-name">
+                    <i class="${theme.icon}"></i> ${theme.name}
+                    ${isAI ? '<span style="font-size: 0.7em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 10px; margin-left: 8px;">AI</span>' : ''}
                 </div>
-            `).join('');
-            
-            elements.themesContainer.innerHTML = themesHTML;
-        }
+                <div class="theme-meta">
+                    <span><i class="fas fa-hashtag"></i> ${theme.words.length} 词</span>
+                    <span><i class="fas fa-clock"></i> ${new Date(theme.createdAt).toLocaleTimeString()}</span>
+                    ${isAI ? '<span style="color: #667eea;"><i class="fas fa-robot"></i> AI生成</span>' : ''}
+                </div>
+            </div>
+            <div class="word-count">
+                <i class="fas fa-info-circle"></i> 预览前5个词语：
+            </div>
+            <div class="word-list">
+                ${theme.words.slice(0, 5).map(word =>
+                    `<span class="word-tag">${word}</span>`
+                ).join('')}
+                ${theme.words.length > 5 ?
+                    `<span class="word-tag">...还有${theme.words.length - 5}个</span>` :
+                    ''}
+            </div>
+            <div class="theme-actions">
+                <button class="action-btn action-edit" onclick="editTheme('${theme.name}')">
+                    <i class="fas fa-edit"></i> 编辑
+                </button>
+                <button class="action-btn action-delete" onclick="deleteTheme('${theme.name}')">
+                    <i class="fas fa-trash"></i> 删除
+                </button>
+            </div>
+        </div>
+        `;
+    }).join('');
+
+    elements.themesContainer.innerHTML = themesHTML;
+}
     
         function addTheme() {
             const name = elements.themeName.value.trim();
@@ -1098,27 +1576,36 @@
             });
         }
     
-        function editTheme(themeName) {
-            const themes = WordManager.getAll();
-            const theme = themes.find(t => t.name === themeName);
-            
-            if (!theme) return;
-            
-            // 填充表单
-            elements.themeName.value = theme.name;
-            elements.themeIcon.value = theme.icon;
-            elements.themeWords.value = theme.words.join('\n');
-            updateWordCount();
-            
-            // 设置编辑状态
-            editingTheme = themeName;
-            
+        // 修改editTheme函数以支持编辑AI词库
+function editTheme(themeName) {
+    const themes = WordManager.getAll();
+    const theme = themes.find(t => t.name === themeName);
+
+    if (!theme) return;
+
+    // 填充表单
+    elements.themeName.value = theme.name;
+    elements.themeIcon.value = theme.icon;
+    elements.themeWords.value = theme.words.join('\n');
+    updateWordCount();
+
+    // 设置编辑状态
+    editingTheme = themeName;
+
+    // 如果是AI生成的词库，提示用户
+    if (theme.isAI || theme.aiGenerated) {
+        ModalManager.success(`已加载AI生成的词库"${themeName}"到编辑区`, () => {
             // 滚动到表单
             elements.themeName.scrollIntoView({ behavior: 'smooth' });
             elements.themeName.focus();
-            
-            ModalManager.success(`已加载词库"${themeName}"到编辑区`);
-        }
+        });
+    } else {
+        ModalManager.success(`已加载词库"${themeName}"到编辑区`, () => {
+            elements.themeName.scrollIntoView({ behavior: 'smooth' });
+            elements.themeName.focus();
+        });
+    }
+}
     
         function clearAllThemes() {
             if (WordManager.getAll().length === 0) {
@@ -1167,17 +1654,27 @@
             },
             
             // 添加新词库
-            add: function(theme) {
-                const themes = this.getAll();
-                // 检查是否已存在同名词库
-                if (themes.some(t => t.name === theme.name)) {
-                    return { success: false, message: '已存在同名词库' };
-                }
-                
-                themes.push(theme);
-                this.saveAll(themes);
-                return { success: true, message: '词库添加成功' };
-            },
+            // 修改add函数以支持AI词库
+    add: function(theme) {
+        const themes = this.getAll();
+
+        // 检查是否已存在同名词库
+        const existingIndex = themes.findIndex(t => t.name === theme.name);
+
+        if (existingIndex !== -1) {
+            return { success: false, message: '已存在同名词库' };
+        }
+
+        // 为AI生成的词库添加标记
+        if (theme.isAI) {
+            theme.aiGenerated = true;
+            theme.generatedAt = new Date().toISOString();
+        }
+
+        themes.push(theme);
+        this.saveAll(themes);
+        return { success: true, message: '词库添加成功' };
+    },
             
             // 删除词库
             remove: function(themeName) {
@@ -1193,39 +1690,66 @@
                 return { success: true, message: '所有词库已清空' };
             },
             
-            // 更新词库
-            update: function(oldName, newTheme) {
-                const themes = this.getAll();
-                const index = themes.findIndex(t => t.name === oldName);
-                
-                if (index === -1) {
-                    return { success: false, message: '词库不存在' };
-                }
-                
-                themes[index] = newTheme;
-                this.saveAll(themes);
-                return { success: true, message: '词库更新成功' };
-            }
+            // 修改update函数以保持AI标记
+    update: function(oldName, newTheme) {
+        const themes = this.getAll();
+        const index = themes.findIndex(t => t.name === oldName);
+
+        if (index === -1) {
+            return { success: false, message: '词库不存在' };
+        }
+
+        // 保留原有的AI标记
+        const oldTheme = themes[index];
+        newTheme.isAI = oldTheme.isAI || newTheme.isAI;
+        newTheme.aiGenerated = oldTheme.aiGenerated || newTheme.aiGenerated;
+        newTheme.generatedAt = oldTheme.generatedAt || newTheme.generatedAt;
+
+        themes[index] = newTheme;
+        this.saveAll(themes);
+        return { success: true, message: '词库更新成功' };
+    },
         };
     
-        // ==================== 事件绑定 ====================
-        function bindWordManagerEvents() {
-            elements.themeWords.addEventListener('input', updateWordCount);
-            elements.addThemeBtn.addEventListener('click', addTheme);
-            elements.backToGame.addEventListener('click', () => {
-                window.location.href = 'index.html';
-            });
-            elements.saveAndPlayBtn.addEventListener('click', saveAndPlay);
-            elements.clearAllBtn.addEventListener('click', clearAllThemes);
-            
-            // 表单提交快捷键
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.key === 'Enter') {
-                    e.preventDefault();
-                    addTheme();
-                }
-            });
+        // 修改现有的bindWordManagerEvents函数，添加快捷键支持
+function bindWordManagerEvents() {
+    elements.themeWords.addEventListener('input', updateWordCount);
+    elements.addThemeBtn.addEventListener('click', addTheme);
+    elements.backToGame.addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
+    elements.saveAndPlayBtn.addEventListener('click', saveAndPlay);
+    elements.clearAllBtn.addEventListener('click', clearAllThemes);
+
+    // AI表单的Enter键提交
+    document.getElementById('aiThemeName').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.ctrlKey) {
+            e.preventDefault();
+            generateWordsWithAI();
         }
+    });
+
+    // 表单提交快捷键
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+Enter 提交普通表单
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            if (document.activeElement === elements.themeName ||
+                document.activeElement === elements.themeWords) {
+                addTheme();
+            }
+        }
+
+        // Alt+Enter 提交AI表单
+        if (e.altKey && e.key === 'Enter') {
+            e.preventDefault();
+            if (document.activeElement === document.getElementById('aiThemeName') ||
+                document.activeElement === document.getElementById('aiCustomPrompt')) {
+                generateWordsWithAI();
+            }
+        }
+    });
+}
     
         // ==================== 初始化 ====================
         document.addEventListener('DOMContentLoaded', () => {
@@ -1251,6 +1775,10 @@
                 }
             });
         });
+        // 将AI相关函数暴露给全局作用域
+window.toggleAiPasswordVisibility = toggleAiPasswordVisibility;
+window.generateWordsWithAI = generateWordsWithAI;
+window.addAIToGame = addAIToGame;
     </script>
 </body>
 </html>
