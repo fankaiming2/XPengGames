@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI词库生成 - 你说我猜</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        h1 {
+            color: #2575fc;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            font-size: 1.1rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #2575fc;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 18px 30px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f1f2f6;
+            color: #333;
+            margin-top: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e2e9;
+        }
+        
+        .result-section {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .word-preview {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px dashed #ddd;
+        }
+        
+        .word-preview h4 {
+            color: #2575fc;
+            margin-bottom: 15px;
+        }
+        
+        .word-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .word-tag {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .word-tag.correct {
+            background: #e8f7ef;
+            border-color: #2ed573;
+            color: #25b562;
+        }
+        
+        .word-tag.skipped {
+            background: #fff5f5;
+            border-color: #ff6b81;
+            color: #ff4757;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 5px solid rgba(37, 117, 252, 0.2);
+            border-top: 5px solid #2575fc;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #e8f7ef;
+            border: 2px solid #2ed573;
+            color: #25b562;
+        }
+        
+        .alert-error {
+            background: #fff5f5;
+            border: 2px solid #ff6b81;
+            color: #ff4757;
+        }
+        
+        .alert-info {
+            background: #f0f7ff;
+            border: 2px solid #2575fc;
+            color: #2575fc;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .stat-value.success {
+            color: #2ed573;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .instructions {
+            background: #f0f7ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 2px dashed #2575fc;
+        }
+        
+        .instructions h3 {
+            color: #2575fc;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .api-key-group {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                border-radius: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 15px 20px;
+                font-size: 1.1rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-robot"></i> AI词库生成</h1>
+            <p class="subtitle">使用DeepSeek API智能生成游戏词库</p>
+        </div>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-lightbulb"></i> 使用说明</h3>
+            <ul>
+                <li>需要DeepSeek API密钥（可在官网申请）</li>
+                <li>输入主题名称（如：动物、电影、成语等）</li>
+                <li>AI将生成100个相关词语</li>
+                <li>生成后会自动添加到游戏中</li>
+            </ul>
+        </div>
+        
+        <div class="alert alert-info" id="infoAlert">
+            <i class="fas fa-info-circle"></i> 请确保已获取有效的DeepSeek API密钥
+        </div>
+        
+        <div class="alert alert-success" id="successAlert" style="display: none;">
+            <i class="fas fa-check-circle"></i> 词库生成成功！已添加到游戏中
+        </div>
+        
+        <div class="alert alert-error" id="errorAlert" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i> <span id="errorMessage"></span>
+        </div>
+        
+        <div class="form-group">
+            <label for="apiKey"><i class="fas fa-key"></i> DeepSeek API密钥</label>
+            <div class="api-key-group">
+                <input type="password" id="apiKey" placeholder="请输入您的DeepSeek API密钥">
+                <button type="button" class="toggle-password" id="togglePassword">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="themeName"><i class="fas fa-tags"></i> 主题名称</label>
+            <input type="text" id="themeName" placeholder="例如：动物、电影、成语、明星、美食...">
+        </div>
+        
+        <div class="form-group">
+            <label for="customPrompt"><i class="fas fa-comment-alt"></i> 自定义提示词（可选）</label>
+            <textarea id="customPrompt" placeholder="默认提示词：我在玩'你说我猜'的游戏，请给与{topic}有关的100个词语，用英文逗号分隔，无需序号，直接给我词语内容"></textarea>
+        </div>
+        
+        <button class="btn btn-primary" id="generateBtn">
+            <i class="fas fa-magic"></i> 生成词库
+        </button>
+        
+        <button class="btn btn-secondary" id="backBtn">
+            <i class="fas fa-arrow-left"></i> 返回游戏
+        </button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>AI正在生成词库，请稍候...</p>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">这可能需要10-20秒时间</p>
+        </div>
+        
+        <div class="result-section" id="resultSection">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value success" id="wordCount">0</div>
+                    <div class="stat-label">生成词语数量</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="themeNameDisplay">-</div>
+                    <div class="stat-label">主题名称</div>
+                </div>
+            </div>
+            
+            <div class="word-preview">
+                <h4>生成的词语预览（前20个）</h4>
+                <div class="word-list" id="wordPreview">
+                    <!-- 词语将在这里显示 -->
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 25px;">
+                <label for="iconSelect"><i class="fas fa-icons"></i> 选择主题图标</label>
+                <select id="iconSelect" class="icon-select">
+                    <option value="fas fa-book-open">📚 书籍</option>
+                    <option value="fas fa-film">🎬 电影</option>
+                    <option value="fas fa-music">🎵 音乐</option>
+                    <option value="fas fa-gamepad">🎮 游戏</option>
+                    <option value="fas fa-utensils">🍴 美食</option>
+                    <option value="fas fa-futbol">⚽ 运动</option>
+                    <option value="fas fa-car">🚗 交通</option>
+                    <option value="fas fa-graduation-cap">🎓 教育</option>
+                    <option value="fas fa-heart">❤️ 健康</option>
+                    <option value="fas fa-building">🏢 城市</option>
+                    <option value="fas fa-tree">🌳 自然</option>
+                    <option value="fas fa-flask">🔬 科学</option>
+                    <option value="fas fa-palette">🎨 艺术</option>
+                    <option value="fas fa-robot">🤖 科技</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" id="addToGameBtn" style="background: linear-gradient(135deg, #2ed573 0%, #25b562 100%);">
+                <i class="fas fa-plus-circle"></i> 添加到游戏
+            </button>
+            
+            <button class="btn btn-secondary" id="downloadBtn">
+                <i class="fas fa-download"></i> 下载词库文件
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 状态管理
+        const appState = {
+            generatedWords: [],
+            themeName: '',
+            apiKey: '',
+            themeIcon: 'fas fa-book-open'
+        };
+        
+        // DOM元素
+        const elements = {
+            apiKey: document.getElementById('apiKey'),
+            themeName: document.getElementById('themeName'),
+            customPrompt: document.getElementById('customPrompt'),
+            generateBtn: document.getElementById('generateBtn'),
+            backBtn: document.getElementById('backBtn'),
+            loading: document.getElementById('loading'),
+            resultSection: document.getElementById('resultSection'),
+            wordCount: document.getElementById('wordCount'),
+            themeNameDisplay: document.getElementById('themeNameDisplay'),
+            wordPreview: document.getElementById('wordPreview'),
+            iconSelect: document.getElementById('iconSelect'),
+            addToGameBtn: document.getElementById('addToGameBtn'),
+            downloadBtn: document.getElementById('downloadBtn'),
+            successAlert: document.getElementById('successAlert'),
+            errorAlert: document.getElementById('errorAlert'),
+            errorMessage: document.getElementById('errorMessage'),
+            togglePassword: document.getElementById('togglePassword')
+        };
+        
+        // 事件监听
+        elements.generateBtn.addEventListener('click', generateWords);
+        elements.backBtn.addEventListener('click', () => {
+            if (window.opener) {
+                window.close();
+            } else {
+                window.history.back();
+            }
+        });
+        
+        elements.addToGameBtn.addEventListener('click', addToGame);
+        elements.downloadBtn.addEventListener('click', downloadWordFile);
+        elements.iconSelect.addEventListener('change', (e) => {
+            appState.themeIcon = e.target.value;
+        });
+        
+        elements.togglePassword.addEventListener('click', () => {
+            const type = elements.apiKey.type === 'password' ? 'text' : 'password';
+            elements.apiKey.type = type;
+            elements.togglePassword.innerHTML = type === 'password' ? 
+                '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+        
+        // 从localStorage加载保存的API密钥
+        function loadSavedApiKey() {
+            const savedKey = localStorage.getItem('deepseek_api_key');
+            if (savedKey) {
+                elements.apiKey.value = savedKey;
+                appState.apiKey = savedKey;
+            }
+        }
+        
+        // 生成词语
+        async function generateWords() {
+            const apiKey = elements.apiKey.value.trim();
+            const themeName = elements.themeName.value.trim();
+            
+            // 验证输入
+            if (!apiKey) {
+                showError('请输入DeepSeek API密钥');
+                return;
+            }
+            
+            if (!themeName) {
+                showError('请输入主题名称');
+                return;
+            }
+            
+            // 保存API密钥到localStorage
+            localStorage.setItem('deepseek_api_key', apiKey);
+            
+            // 设置状态
+            appState.apiKey = apiKey;
+            appState.themeName = themeName;
+            
+            // 显示加载中
+            showLoading(true);
+            hideAlerts();
+            
+            try {
+                // 构建提示词
+                let prompt = elements.customPrompt.value.trim();
+                if (!prompt) {
+                    prompt = `我在玩"你说我猜"的游戏，请给与${themeName}有关的100个词语，用英文逗号分隔，无需序号，直接给我词语内容`;
+                } else {
+                    prompt = prompt.replace('{topic}', themeName);
+                }
+                
+                // 调用DeepSeek API
+                const words = await callDeepSeekAPI(apiKey, prompt);
+                
+                // 处理返回的词语
+                appState.generatedWords = processWords(words);
+                
+                // 显示结果
+                showResult();
+                
+            } catch (error) {
+                showError(`生成失败: ${error.message}`);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // 调用DeepSeek API
+        async function callDeepSeekAPI(apiKey, prompt) {
+            const apiUrl = 'https://api.deepseek.com/chat/completions';
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'deepseek-chat',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    max_tokens: 2000,
+                    temperature: 0.7
+                })
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error?.message || `API请求失败: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            return data.choices[0].message.content.trim();
+        }
+        
+        // 处理返回的词语
+        function processWords(text) {
+            // 清理文本，移除可能的序号、标点等
+            let cleanedText = text
+                .replace(/\d+[\.、]?\s*/g, '') // 移除序号
+                .replace(/[\[\]【】()（）]/g, '') // 移除括号
+                .replace(/\n/g, ',') // 换行符转逗号
+                .replace(/，/g, ',') // 中文逗号转英文逗号
+                .replace(/\s+/g, '') // 移除空格
+                .replace(/;/g, ','); // 分号转逗号
+            
+            // 分割词语
+            let words = cleanedText.split(',')
+                .map(word => word.trim())
+                .filter(word => word && word.length > 0 && word.length <= 10);
+            
+            // 去重
+            words = [...new Set(words)];
+            
+            // 限制最多100个
+            if (words.length > 100) {
+                words = words.slice(0, 100);
+            }
+            
+            return words;
+        }
+        
+        // 显示加载中
+        function showLoading(show) {
+            elements.loading.style.display = show ? 'block' : 'none';
+            elements.generateBtn.disabled = show;
+            elements.generateBtn.innerHTML = show ? 
+                '<i class="fas fa-spinner fa-spin"></i> 生成中...' : 
+                '<i class="fas fa-magic"></i> 生成词库';
+        }
+        
+        // 显示结果
+        function showResult() {
+            elements.resultSection.style.display = 'block';
+            elements.wordCount.textContent = appState.generatedWords.length;
+            elements.themeNameDisplay.textContent = appState.themeName;
+            
+            // 显示预览
+            const previewWords = appState.generatedWords.slice(0, 20);
+            elements.wordPreview.innerHTML = previewWords.map(word => 
+                `<span class="word-tag">${word}</span>`
+            ).join('');
+            
+            // 滚动到结果区域
+            elements.resultSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 添加到游戏
+        function addToGame() {
+            if (appState.generatedWords.length === 0) {
+                showError('没有可添加的词语');
+                return;
+            }
+            
+            try {
+                // 构建主题对象
+                const theme = {
+                    id: `ai_${Date.now()}_${appState.themeName}`,
+                    name: appState.themeName,
+                    icon: appState.themeIcon,
+                    color: getRandomColor(),
+                    words: appState.generatedWords,
+                    isCustom: true,
+                    isAI: true,
+                    createdAt: new Date().toISOString()
+                };
+                
+                // 获取现有的自定义主题
+                let customThemes = [];
+                try {
+                    const saved = sessionStorage.getItem('custom_themes');
+                    if (saved) {
+                        customThemes = JSON.parse(saved);
+                    }
+                } catch (error) {
+                    console.error('读取自定义主题失败:', error);
+                }
+                
+                // 添加新主题
+                customThemes.push(theme);
+                
+                // 保存到sessionStorage
+                sessionStorage.setItem('custom_themes', JSON.stringify(customThemes));
+                
+                // 显示成功消息
+                showSuccess();
+                
+                // 通知主页面刷新主题（如果主页面存在）
+                if (window.opener) {
+                    try {
+                        window.opener.postMessage({
+                            type: 'THEME_ADDED',
+                            theme: theme
+                        }, '*');
+                    } catch (error) {
+                        console.log('无法通知主页面:', error);
+                    }
+                }
+                
+            } catch (error) {
+                showError(`添加失败: ${error.message}`);
+            }
+        }
+        
+        // 下载词库文件
+        function downloadWordFile() {
+            if (appState.generatedWords.length === 0) {
+                showError('没有可下载的词语');
+                return;
+            }
+            
+            const content = appState.generatedWords.join('\n');
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            const filename = `你说我猜_${appState.themeName}_${new Date().toISOString().split('T')[0]}.txt`;
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // 辅助函数
+        function getRandomColor() {
+            const colors = [
+                '#2575fc', '#ff9f43', '#2ed573', '#6c5ce7', 
+                '#00d2d3', '#a55eea', '#fd79a8', '#34495e'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        function showSuccess() {
+            elements.successAlert.style.display = 'block';
+            elements.errorAlert.style.display = 'none';
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                elements.successAlert.style.display = 'none';
+            }, 3000);
+        }
+        
+        function showError(message) {
+            elements.errorMessage.textContent = message;
+            elements.errorAlert.style.display = 'block';
+            elements.successAlert.style.display = 'none';
+        }
+        
+        function hideAlerts() {
+            elements.successAlert.style.display = 'none';
+            elements.errorAlert.style.display = 'none';
+        }
+        
+        // 初始化
+        function init() {
+            loadSavedApiKey();
+            hideAlerts();
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
