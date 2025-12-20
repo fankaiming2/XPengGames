@@ -1554,20 +1554,22 @@ function renderThemes() {
             }
         }
     
-        function deleteTheme(themeName) {
-            ModalManager.confirm(`确定要删除词库 "${themeName}" 吗？`, () => {
-                const result = WordManager.remove(themeName);
-                if (result.success) {
-
-                    ModalManager.success(result.message, () => {
-                        renderThemes();
-                    });
-                    return;
-                } else {
-                    ModalManager.error(result.message);
-                }
-            });
+function deleteTheme(themeName) {
+    ModalManager.confirm(`确定要删除词库 "${themeName}" 吗？`, () => {
+        const result = WordManager.remove(themeName);
+        if (result.success) {
+<!--            // 修改这里：删除成功后应该立即重新渲染-->
+<!--            ModalManager.success(result.message, () => {-->
+<!--                renderThemes(); // 重新渲染列表-->
+<!--            });-->
+            // 或者更简单的方式：删除后立即重新渲染
+            renderThemes(); // 直接调用渲染
+            ModalManager.success(result.message); // 只显示成功消息
+        } else {
+            ModalManager.error(result.message);
         }
+    });
+}
     
         // 修改editTheme函数以支持编辑AI词库
 function editTheme(themeName) {
