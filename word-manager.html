@@ -708,6 +708,109 @@
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
     border: 2px solid rgba(102, 126, 234, 0.3);
 }
+        /* ==================== 滑动切换相关样式 ==================== */
+.section-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+    position: relative;
+}
+
+.section-tab {
+    flex: 1;
+    text-align: center;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.section-tab:hover {
+    color: #2575fc;
+    background-color: rgba(37, 117, 252, 0.05);
+}
+
+.section-tab.active {
+    color: #2575fc;
+}
+
+.section-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #2575fc;
+    border-radius: 3px 3px 0 0;
+}
+
+.section-tab-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    margin-left: 5px;
+}
+
+.tab-content {
+    position: relative;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.touch-indicator {
+    text-align: center;
+    color: #666;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .touch-indicator {
+        display: block;
+    }
+}
+
+/* 触摸滑动提示 */
+.swipe-hint {
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #2575fc;
+    font-size: 1.5rem;
+    animation: swipeHint 2s infinite;
+    display: none;
+}
+
+@keyframes swipeHint {
+    0%, 100% { transform: translateY(-50%) translateX(0); }
+    50% { transform: translateY(-50%) translateX(-10px); }
+}
+
+@media (max-width: 600px) {
+    .swipe-hint {
+        display: block;
+    }
+}
     </style>
 </head>
 <body>
@@ -784,138 +887,141 @@
                 <i class="fas fa-exclamation-circle"></i> 操作失败，请检查输入！
             </div>
 
-            <!-- 添加新词库 -->
-            <div class="section">
-                <h2><i class="fas fa-plus-circle"></i> 添加新词库</h2>
-                <div class="form-group">
-                    <label for="themeName">主题名称</label>
-                    <input type="text" id="themeName" class="form-control" 
-                        placeholder="例如：动漫角色、电影名称、历史人物..." maxlength="20">
+            <!-- 滑动切换标签 -->
+            <div class="section-tabs">
+                <div class="section-tab active" data-tab="manual">
+                    <i class="fas fa-plus-circle"></i> 手动添加
                 </div>
-                <div class="form-group">
-                    <label for="themeIcon">选择图标</label>
-                    <select id="themeIcon" class="form-control">
-                        <option value="fas fa-film">电影</option>
-                        <option value="fas fa-music">音乐</option>
-                        <option value="fas fa-gamepad">游戏</option>
-                        <option value="fas fa-utensils">美食</option>
-                        <option value="fas fa-futbol">运动</option>
-                        <option value="fas fa-graduation-cap">学习</option>
-                        <option value="fas fa-heart">爱好</option>
-                        <option value="fas fa-star">明星</option>
-                        <option value="fas fa-book">书籍</option>
-                        <option value="fas fa-palette">艺术</option>
-                    </select>
+                <div class="section-tab" data-tab="ai">
+                    <i class="fas fa-robot"></i> AI生成
+                    <span class="section-tab-badge">NEW</span>
                 </div>
-                <div class="form-group">
-                    <label for="themeWords">词语列表（每行一个）</label>
-                    <textarea id="themeWords" class="form-control" 
-                            placeholder="请输入词语，每行一个...&#10;例如：&#10;蜘蛛侠&#10;钢铁侠&#10;美国队长"></textarea>
-                    <div style="text-align: right; margin-top: 5px; color: #666; font-size: 0.9rem;">
-                        <span id="wordCount">0</span> 个词语
-                    </div>
-                </div>
-                <button class="btn btn-primary" id="addThemeBtn">
-                    <i class="fas fa-plus"></i> 添加/更新词库
-                </button>
             </div>
-            <!-- 在"添加新词库"section之后，"已添加的词库"section之前添加 -->
 
-            <!-- AI词库生成 -->
-            <div class="section" id="aiSection">
-                <h2><i class="fas fa-robot"></i> AI智能生成词库</h2>
+            <div class="touch-indicator">
+                <i class="fas fa-hand-point-up"></i> 左滑切换
+            </div>
 
-                <div class="hint-box" style="background: #f0f7ff; border-color: #2575fc; margin-bottom: 20px;">
-                    <h4><i class="fas fa-bolt"></i> AI生成说明</h4>
-                    <ul>
-                        <li>使用DeepSeek AI自动生成词库内容</li>
-                        <li>需要有效的DeepSeek API密钥</li>
-                        <li>AI将根据主题生成100个相关词语</li>
-                        <li>生成的词库会添加到自定义词库列表中</li>
-                    </ul>
-                </div>
-
-                <div class="form-group">
-                    <label for="aiApiKey"><i class="fas fa-key"></i> DeepSeek API密钥</label>
-                    <div class="input-with-icon">
-                        <input type="password" id="aiApiKey" class="form-control"
-                               placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                               style="padding-right: 40px;">
-                        <button type="button" class="toggle-visibility" onclick="toggleAiPasswordVisibility()">
-                            <i class="fas fa-eye"></i>
-                        </button>
+            <!-- 内容区域 -->
+            <div class="tab-content">
+                <!-- 手动添加词库 -->
+                <div id="manualTab" class="tab-pane section active">
+                    <h2><i class="fas fa-plus-circle"></i> 添加新词库</h2>
+                    <!-- 原有的手动添加表单内容保持不变 -->
+                    <div class="form-group">
+                        <label for="themeName">主题名称</label>
+                        <input type="text" id="themeName" class="form-control"
+                               placeholder="例如：动漫角色、电影名称、历史人物..." maxlength="20">
                     </div>
-                    <small style="color: #666; display: block; margin-top: 5px; font-size: 0.85rem;">
-                        密钥以"sk-"开头，共32-64位字符。密钥仅保存在浏览器本地
-                    </small>
-                </div>
-
-                <div class="form-group">
-                    <label for="aiThemeName"><i class="fas fa-tags"></i> 主题名称</label>
-                    <input type="text" id="aiThemeName" class="form-control"
-                           placeholder="例如：动物、电影、成语、明星、美食...">
-                </div>
-
-                <div class="form-group">
-                    <label for="aiThemeIcon">选择图标</label>
-                    <select id="aiThemeIcon" class="form-control">
-                        <option value="fas fa-film">电影</option>
-                        <option value="fas fa-music">音乐</option>
-                        <option value="fas fa-gamepad">游戏</option>
-                        <option value="fas fa-utensils">美食</option>
-                        <option value="fas fa-futbol">运动</option>
-                        <option value="fas fa-graduation-cap">学习</option>
-                        <option value="fas fa-heart">爱好</option>
-                        <option value="fas fa-star">明星</option>
-                        <option value="fas fa-book">书籍</option>
-                        <option value="fas fa-palette">艺术</option>
-                        <option value="fas fa-robot">科技/AI</option>
-                    </select>
-                </div>
-
-<!--                <div class="form-group">-->
-<!--                    <label for="aiCustomPrompt"><i class="fas fa-comment-alt"></i> 自定义提示词（可选）</label>-->
-<!--                    <textarea id="aiCustomPrompt" class="form-control" rows="3"-->
-<!--                              placeholder="默认提示词：我在玩'你说我猜'中文版的游戏，请给与{topic}有关的100个中文词语，用逗号分隔，无需序号，直接给我词语内容"></textarea>-->
-<!--                </div>-->
-
-                <!-- AI生成状态 -->
-                <div id="aiLoading" style="display: none; text-align: center; padding: 20px;">
-                    <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto 15px;"></div>
-                    <p>AI正在思考中，请稍候...</p>
-                    <small style="color: #666;">通常需要10-20秒</small>
-                </div>
-
-                <!-- AI生成结果预览 -->
-                <div id="aiResult" style="display: none; margin-top: 20px;">
-                    <div class="result-header" style="background: #e8f7ef; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 2px solid #2ed573;">
-                        <h4 style="color: #25b562; margin: 0;">
-                            <i class="fas fa-check-circle"></i> 生成成功！
-                            <span id="aiWordCount" style="font-size: 0.9em; color: #2ed573; margin-left: 10px;">0个词语</span>
-                        </h4>
+                    <div class="form-group">
+                        <label for="themeIcon">选择图标</label>
+                        <select id="themeIcon" class="form-control">
+                            <option value="fas fa-film">电影</option>
+                            <option value="fas fa-music">音乐</option>
+                            <option value="fas fa-gamepad">游戏</option>
+                            <option value="fas fa-utensils">美食</option>
+                            <option value="fas fa-futbol">运动</option>
+                            <option value="fas fa-graduation-cap">学习</option>
+                            <option value="fas fa-heart">爱好</option>
+                            <option value="fas fa-star">明星</option>
+                            <option value="fas fa-book">书籍</option>
+                            <option value="fas fa-palette">艺术</option>
+                        </select>
                     </div>
-
-                    <div class="word-preview" style="max-height: 150px; overflow-y: auto; padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e9ecef;">
-                        <p style="margin-bottom: 10px; color: #666;">词语预览（前20个）：</p>
-                        <div id="aiWordPreview" class="word-tags">
-                            <!-- 词语会动态添加到这里 -->
+                    <div class="form-group">
+                        <label for="themeWords">词语列表（每行一个）</label>
+                        <textarea id="themeWords" class="form-control"
+                                  placeholder="请输入词语，每行一个...&#10;例如：&#10;蜘蛛侠&#10;钢铁侠&#10;美国队长"></textarea>
+                        <div style="text-align: right; margin-top: 5px; color: #666; font-size: 0.9rem;">
+                            <span id="wordCount">0</span> 个词语
                         </div>
                     </div>
+                    <button class="btn btn-primary" id="addThemeBtn">
+                        <i class="fas fa-plus"></i> 添加/更新词库
+                    </button>
                 </div>
 
-                <!-- AI错误提示 -->
-                <div id="aiError" style="display: none; background: #fff5f5; color: #ff4757; padding: 15px; border-radius: 8px; margin-top: 15px; border: 2px solid #ff6b81;">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span id="aiErrorMessage">出错了</span>
-                </div>
-
-                <div class="button-group" style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button class="btn btn-primary" id="aiGenerateBtn" style="flex: 2; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <i class="fas fa-magic"></i> AI生成词库
-                    </button>
-                    <button class="btn btn-success" id="aiAddToGameBtn" style="flex: 1; display: none;">
-                        <i class="fas fa-plus-circle"></i> 添加
-                    </button>
+                <!-- AI词库生成 -->
+                <div id="aiTab" class="tab-pane section" id="aiSection">
+                    <h2><i class="fas fa-robot"></i> AI智能生成词库</h2>
+                    <!-- 原有的AI生成表单内容保持不变 -->
+                    <div class="hint-box" style="background: #f0f7ff; border-color: #2575fc; margin-bottom: 20px;">
+                        <h4><i class="fas fa-bolt"></i> AI生成说明</h4>
+                        <ul>
+                            <li>使用DeepSeek AI自动生成词库内容</li>
+                            <li>需要有效的DeepSeek API密钥</li>
+                            <li>AI将根据主题生成100个相关词语</li>
+                            <li>生成的词库会添加到自定义词库列表中</li>
+                        </ul>
+                    </div>
+                    <!-- 原有的AI表单内容保持不变 -->
+                    <div class="form-group">
+                        <label for="aiApiKey"><i class="fas fa-key"></i> DeepSeek API密钥</label>
+                        <div class="input-with-icon">
+                            <input type="password" id="aiApiKey" class="form-control"
+                                   placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                                   style="padding-right: 40px;">
+                            <button type="button" class="toggle-visibility" onclick="toggleAiPasswordVisibility()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small style="color: #666; display: block; margin-top: 5px; font-size: 0.85rem;">
+                            密钥以"sk-"开头，共32-64位字符。密钥仅保存在浏览器本地
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="aiThemeName"><i class="fas fa-tags"></i> 主题名称</label>
+                        <input type="text" id="aiThemeName" class="form-control"
+                               placeholder="例如：动物、电影、成语、明星、美食...">
+                    </div>
+                    <div class="form-group">
+                        <label for="aiThemeIcon">选择图标</label>
+                        <select id="aiThemeIcon" class="form-control">
+                            <option value="fas fa-film">电影</option>
+                            <option value="fas fa-music">音乐</option>
+                            <option value="fas fa-gamepad">游戏</option>
+                            <option value="fas fa-utensils">美食</option>
+                            <option value="fas fa-futbol">运动</option>
+                            <option value="fas fa-graduation-cap">学习</option>
+                            <option value="fas fa-heart">爱好</option>
+                            <option value="fas fa-star">明星</option>
+                            <option value="fas fa-book">书籍</option>
+                            <option value="fas fa-palette">艺术</option>
+                            <option value="fas fa-robot">科技/AI</option>
+                        </select>
+                    </div>
+                    <!-- AI生成状态和结果区域保持不变 -->
+                    <div id="aiLoading" style="display: none; text-align: center; padding: 20px;">
+                        <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto 15px;"></div>
+                        <p>AI正在思考中，请稍候...</p>
+                        <small style="color: #666;">通常需要10-20秒</small>
+                    </div>
+                    <div id="aiResult" style="display: none; margin-top: 20px;">
+                        <div class="result-header" style="background: #e8f7ef; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 2px solid #2ed573;">
+                            <h4 style="color: #25b562; margin: 0;">
+                                <i class="fas fa-check-circle"></i> 生成成功！
+                                <span id="aiWordCount" style="font-size: 0.9em; color: #2ed573; margin-left: 10px;">0个词语</span>
+                            </h4>
+                        </div>
+                        <div class="word-preview" style="max-height: 150px; overflow-y: auto; padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e9ecef;">
+                            <p style="margin-bottom: 10px; color: #666;">词语预览（前20个）：</p>
+                            <div id="aiWordPreview" class="word-tags">
+                                <!-- 词语会动态添加到这里 -->
+                            </div>
+                        </div>
+                    </div>
+                    <div id="aiError" style="display: none; background: #fff5f5; color: #ff4757; padding: 15px; border-radius: 8px; margin-top: 15px; border: 2px solid #ff6b81;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="aiErrorMessage">出错了</span>
+                    </div>
+                    <div class="button-group" style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="btn btn-primary" id="aiGenerateBtn" style="flex: 2; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <i class="fas fa-magic"></i> AI生成词库
+                        </button>
+                        <button class="btn btn-success" id="aiAddToGameBtn" style="flex: 1; display: none;">
+                            <i class="fas fa-plus-circle"></i> 添加
+                        </button>
+                    </div>
                 </div>
             </div>
             <!-- 已添加的词库 -->
@@ -1407,6 +1513,7 @@ function addAIToGame() {
             updateWordCount();
             renderThemes();
                 initAIFunction(); // 添加这行
+    initTabSwitching(); // 添加这行
 
             // 从URL获取参数（用于编辑）
             const urlParams = new URLSearchParams(window.location.search);
@@ -1418,7 +1525,119 @@ function addAIToGame() {
             // 绑定事件
             bindWordManagerEvents();
         }
-    
+    // ==================== 滑动切换功能 ====================
+function initTabSwitching() {
+    const tabs = document.querySelectorAll('.section-tab');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    const tabContent = document.querySelector('.tab-content');
+
+    // 点击标签切换
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+            switchTab(tabId);
+        });
+    });
+
+    // 触摸滑动切换
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    tabContent.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    tabContent.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+
+    // 鼠标拖动支持
+    let isMouseDown = false;
+    let mouseStartX = 0;
+
+    tabContent.addEventListener('mousedown', (e) => {
+        isMouseDown = true;
+        mouseStartX = e.clientX;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isMouseDown) return;
+        e.preventDefault();
+    });
+
+    document.addEventListener('mouseup', (e) => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+
+        const mouseEndX = e.clientX;
+        if (Math.abs(mouseEndX - mouseStartX) > 50) { // 滑动阈值
+            if (mouseEndX < mouseStartX) {
+                // 向左滑动
+                switchToNextTab();
+            } else if (mouseEndX > mouseStartX) {
+                // 向右滑动
+                switchToPrevTab();
+            }
+        }
+    });
+
+    function handleSwipe() {
+        const swipeThreshold = 50; // 滑动阈值
+
+        if (touchStartX - touchEndX > swipeThreshold) {
+            // 向左滑动
+            switchToNextTab();
+        } else if (touchEndX - touchStartX > swipeThreshold) {
+            // 向右滑动
+            switchToPrevTab();
+        }
+    }
+
+    function switchToNextTab() {
+        const activeTab = document.querySelector('.section-tab.active');
+        const tabId = activeTab.getAttribute('data-tab');
+
+        if (tabId === 'manual') {
+            switchTab('ai');
+        } else {
+            switchTab('manual');
+        }
+    }
+
+    function switchToPrevTab() {
+        const activeTab = document.querySelector('.section-tab.active');
+        const tabId = activeTab.getAttribute('data-tab');
+
+        if (tabId === 'ai') {
+            switchTab('manual');
+        } else {
+            switchTab('ai');
+        }
+    }
+
+    // 初始显示手动添加标签
+    switchTab('manual');
+}
+
+function switchTab(tabId) {
+    // 更新标签
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelector(`.section-tab[data-tab="${tabId}"]`).classList.add('active');
+
+    // 更新内容
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('active');
+    });
+    document.getElementById(`${tabId}Tab`).classList.add('active');
+
+    // 如果是AI标签，滚动到顶部
+    if (tabId === 'ai') {
+        document.getElementById('aiTab').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
         // ==================== 词库管理功能 ====================
         function showAlert(alertElement, message) {
             alertElement.innerHTML = `<i class="fas ${alertElement.classList.contains('alert-success') ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
